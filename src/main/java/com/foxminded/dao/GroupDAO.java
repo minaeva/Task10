@@ -1,16 +1,17 @@
 package com.foxminded.dao;
 
-import com.foxminded.domain.Faculty;
+import com.foxminded.domain.Group;
+
 import java.sql.*;
 
-public class FacultyDAO {
+public class GroupDAO {
 
-    public Faculty insert(final String name) throws DAOException{
-        Faculty faculty = null;
+    public Group insert(final String name) throws DAOException{
+        Group group = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        String sql = "INSERT INTO faculties (id, name) VALUES (DEFAULT, (?));";
+        String sql = "INSERT INTO groups (id, name) VALUES (DEFAULT, (?));";
 
         try {
             connection = DAOFactory.getConnection();
@@ -21,11 +22,11 @@ public class FacultyDAO {
             resultSet = statement.getGeneratedKeys();
             resultSet.next();
 
-            faculty = new Faculty(resultSet.getString("name"));
-            faculty.setId(resultSet.getInt("id"));
+            group = new Group(resultSet.getString("name"));
+            group.setId(resultSet.getInt("id"));
         }
         catch (SQLException e) {
-            throw new DAOException("Cannot find faculty " + name, e);
+            throw new DAOException("Cannot find Group " + name, e);
         }
         catch (ClassNotFoundException e){
             e.printStackTrace();
@@ -43,19 +44,19 @@ public class FacultyDAO {
                 }
             }
             catch (SQLException e){
-                throw new DAOException("Cannot close connection/statement/resultSet when creating faculty " + name, e);
+                throw new DAOException("Cannot close connection/statement/resultSet when creating Group " + name, e);
             }
         }
-        return faculty;
+        return group;
     }
 
 
-    public Faculty getById(final long id) throws DAOException {
-        Faculty faculty = null;
+    public Group getById(final long id) throws DAOException {
+        Group group = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        String sql = "SELECT id, name FROM faculties WHERE id = (?)";
+        String sql = "SELECT id, name FROM groups WHERE id = (?)";
 
         try {
             connection = DAOFactory.getConnection();
@@ -65,12 +66,12 @@ public class FacultyDAO {
 
             resultSet = statement.executeQuery();
             if (resultSet.next()){
-                faculty = new Faculty(resultSet.getString("name"));
-                faculty.setId(resultSet.getInt("id"));
+                group = new Group(resultSet.getString("name"));
+                group.setId(resultSet.getInt("id"));
             }
         }
         catch (SQLException e) {
-            throw new DAOException("Cannot find faculty with id " + id, e);
+            throw new DAOException("Cannot find Group with id " + id, e);
         }
         catch (ClassNotFoundException e){
             e.printStackTrace();
@@ -88,29 +89,29 @@ public class FacultyDAO {
                 }
             }
             catch (SQLException e){
-                throw new DAOException("Cannot close connection/statement/resultSet when finding faculty with id " + id, e);
+                throw new DAOException("Cannot close connection/statement/resultSet when finding Group with id " + id, e);
             }
         }
-        return faculty;
+        return group;
     }
 
-    public Faculty update(final Faculty facultyToUpdate) throws DAOException{
-        Faculty faculty = null;
+    public Group update(final Group groupToUpdate) throws DAOException{
+        Group group = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        String sql = "UPDATE faculties SET name = (?) WHERE id = (?)";
+        String sql = "UPDATE groups SET name = (?) WHERE id = (?)";
 
         try {
             connection = DAOFactory.getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setLong(2, facultyToUpdate.getId());
-            statement.setString(1, facultyToUpdate.getName());
+            statement.setLong(2, groupToUpdate.getId());
+            statement.setString(1, groupToUpdate.getName());
             statement.execute();
             resultSet = statement.getGeneratedKeys();
         }
         catch (SQLException e) {
-            throw new DAOException("Cannot update faculty " + facultyToUpdate.getName(), e);
+            throw new DAOException("Cannot update Group " + groupToUpdate.getName(), e);
         }
         catch (ClassNotFoundException e){
             e.printStackTrace();
@@ -128,26 +129,26 @@ public class FacultyDAO {
                 }
             }
             catch (SQLException e){
-                throw new DAOException("Cannot close connection/statement/resultSet when updating faculty " + facultyToUpdate.getName(), e);
+                throw new DAOException("Cannot close connection/statement/resultSet when updating Group " + groupToUpdate.getName(), e);
             }
         }
-        return facultyToUpdate;
+        return groupToUpdate;
     }
 
-    public void delete(final Faculty facultyToDelete) throws DAOException {
+    public void delete(final Group groupToDelete) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        String sql = "DELETE FROM faculties WHERE id = (?)";
+        String sql = "DELETE FROM groups WHERE id = (?)";
 
         try {
             connection = DAOFactory.getConnection();
             statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setLong(1, facultyToDelete.getId());
+            statement.setLong(1, groupToDelete.getId());
             statement.execute();
         }
         catch (SQLException e) {
-            throw new DAOException("Cannot delete faculty " + facultyToDelete.getName(), e);
+            throw new DAOException("Cannot delete Group " + groupToDelete.getName(), e);
         }
         catch (ClassNotFoundException e){
             e.printStackTrace();
@@ -165,7 +166,7 @@ public class FacultyDAO {
                 }
             }
             catch (SQLException e){
-                throw new DAOException("Cannot close connection/statement/resultSet when deleting faculty " + facultyToDelete.getName(), e);
+                throw new DAOException("Cannot close connection/statement/resultSet when deleting Group " + groupToDelete.getName(), e);
             }
         }
     }

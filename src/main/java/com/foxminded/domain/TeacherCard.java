@@ -3,12 +3,13 @@ package com.foxminded.domain;
 import lombok.Data;
 
 @Data
-public class MentorCard {
+public class TeacherCard {
 
+    private long id;
     private String name;
     private String subjectName;
 
-    public MentorCard(String name){
+    public TeacherCard(String name){
         this.name = name;
     }
 

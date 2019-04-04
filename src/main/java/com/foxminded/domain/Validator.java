@@ -1,7 +1,6 @@
 package com.foxminded.domain;
 
-import com.foxminded.domain.WorkDay;
-
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.function.Predicate;
@@ -59,7 +58,7 @@ public class Validator {
     public static <T> T findObjectByWorkdayIfExists(List<T> list,
                                            Predicate<T> predicate,
                                            String object,
-                                           WorkDay day) throws IllegalArgumentException{
+                                           DayOfWeek day) throws IllegalArgumentException{
         return list
                 .stream()
                 .filter(predicate)

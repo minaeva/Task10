@@ -10,6 +10,7 @@ import static com.foxminded.domain.Validator.*;
 @Data
 public class Journal {
 
+    private long id;
     private List<Section> sections = new ArrayList<>();
 
     public Section createSection(String subjectName){

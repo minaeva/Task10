@@ -7,6 +7,7 @@ import static com.foxminded.domain.Validator.*;
 @Data
 public class Group {
 
+    private long id;
     private String name;
     private List<StudentCard> students = new ArrayList<>();
     private Journal journal;

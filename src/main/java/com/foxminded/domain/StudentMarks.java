@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 public class StudentMarks {
 
+    private long id;
     private String studentName;
     private String sectionName;
     private List<Integer> marks = new ArrayList<>();

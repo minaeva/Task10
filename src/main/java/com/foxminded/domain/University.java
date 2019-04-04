@@ -3,12 +3,12 @@ package com.foxminded.domain;
 import java.util.*;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-
 import static com.foxminded.domain.Validator.*;
 
 @Data
 public class University {
 
+    private long id;
     private String name;
     private List<Faculty> faculties = new ArrayList<>();
 

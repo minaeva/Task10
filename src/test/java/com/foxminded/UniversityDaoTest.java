@@ -20,48 +20,51 @@ public class UniversityDaoTest {
     }
 
     @Test
-    public void find_existing() throws DAOException {
-        University university = universityDao.find("KPI");
+    public void getById() throws DAOException {
+        University university = universityDao.getById(1);
         assertTrue("KPI".equals(university.getName()));
     }
 
     @Test
-    public  void create() throws DAOException{
-        University university = universityDao.create("OXFORD");
+    public  void insert() throws DAOException{
+        University university = universityDao.insert("OXFORD");
 
         assertTrue("OXFORD".equals(university.getName()));
 
-        universityDao.delete("OXFORD");
-        assertNull(universityDao.find("OXFORD"));
+        universityDao.delete(university);
+        assertNull(universityDao.getById(university.getId()));
     }
 
     @Test(expected = DAOException.class)
     public  void create_existing() throws DAOException{
-        universityDao.create("HARVARD");
-        universityDao.create("HARVARD");
+        universityDao.insert("HARVARD");
+        universityDao.insert("HARVARD");
     }
 
     @Test
-    public  void rename() throws DAOException{
-        universityDao.create("OXFORD");
+    public  void update() throws DAOException{
+        University university = universityDao.insert("OXFORD");
+        university.setName("NEWOXFORD");
 
-        University university = universityDao.rename("OXFORD", "NEWOXFORD");
+        University updatedUniversity = universityDao.update(university);
 
-        assertTrue("NEWOXFORD".equals(university.getName()));
+        assertTrue("NEWOXFORD".equals(updatedUniversity.getName()));
 
-        universityDao.delete("NEWOXFORD");
-        assertNull(universityDao.find("NEWOXFORD"));
+        Long id = updatedUniversity.getId();
+        universityDao.delete(updatedUniversity);
+        assertNull(universityDao.getById(id));
 
     }
 
     @Test
     public  void delete() throws DAOException{
-        universityDao.create("BERKLEY");
-        assertNotNull(universityDao.find("BERKLEY"));
+        University university = universityDao.insert("BERKLEY");
+        Long id = university.getId();
+        assertNotNull(universityDao.getById(id));
 
-        universityDao.delete("BERKLEY");
+        universityDao.delete(university);
 
-        assertNull(universityDao.find("BERKLEY"));
+        assertNull(universityDao.getById(id));
     }
 
 }

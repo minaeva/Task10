@@ -9,9 +9,10 @@ import static com.foxminded.domain.Validator.*;
 @Data
 public class Faculty {
 
+    private long id;
     private String name;
     private List<Group> groups = new ArrayList<>();
-    private List<MentorCard> mentors = new ArrayList<>();
+    private List<TeacherCard> teacherCards = new ArrayList<>();
     private List<Subject> subjects = new ArrayList<>();
     private List<Auditorium> auditoria = new ArrayList<>();
     private List<Journal> journals = new ArrayList<>();
@@ -101,24 +102,24 @@ public class Faculty {
         this.schedule = null;
     }
 
-    public MentorCard hireMentor(String mentorName){
-        if (StringUtils.isBlank(mentorName)){
+    public TeacherCard hireTeacher(String teacherName){
+        if (StringUtils.isBlank(teacherName)){
             throw new IllegalArgumentException("Name cannot be empty");
         }
-        MentorCard newMentor = new MentorCard(mentorName);
-        mentors.add(newMentor);
+        TeacherCard newMentor = new TeacherCard(teacherName);
+        teacherCards.add(newMentor);
         return newMentor;
     }
 
-    public MentorCard findMentor(String mentorName) {
-        return findObjectByNameIfExists(mentors,
-                mentor -> Objects.equals(mentor.getName(), mentorName),
+    public TeacherCard findTeacher(String teacherName) {
+        return findObjectByNameIfExists(teacherCards,
+                mentor -> Objects.equals(mentor.getName(), teacherName),
                 "Mentor",
-                mentorName);
+                teacherName);
     }
 
-    public boolean fireMentor(String mentorName) {
-        return mentors.removeIf(mentor -> Objects.equals(mentor.getName(), mentorName));
+    public boolean fireTeacher(String teacherName) {
+        return teacherCards.removeIf(mentor -> Objects.equals(mentor.getName(), teacherName));
     }
 
     public Auditorium addAuditorium(int auditoriumNumber){

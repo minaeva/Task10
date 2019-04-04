@@ -10,6 +10,7 @@ import static com.foxminded.domain.Validator.*;
 @Data
 public class Section {
 
+    private long id;
     private String sectionName;
     private List<StudentMarks> studentMarks = new ArrayList<>();
 

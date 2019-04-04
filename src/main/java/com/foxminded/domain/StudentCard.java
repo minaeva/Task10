@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class StudentCard {
 
+    private long id;
     private String name;
     private String groupName;
     private String facultyName;
