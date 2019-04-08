@@ -15,13 +15,13 @@ public class FacultyDAOImpl implements FacultyDAO {
             statement.setString(1, faculty.getName());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
-                throw new DAOException("Creating faculty failed, no rows affected.");
+                throw new DAOException("Creating faculty failed, no rows affected");
             }
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     faculty.setId(generatedKeys.getLong("id"));
                 } else {
-                    throw new DAOException("Creating faculty failed, no generated key obtained.");
+                    throw new DAOException("Creating faculty failed, no generated key obtained");
                 }
             }
         }
@@ -83,7 +83,7 @@ public class FacultyDAOImpl implements FacultyDAO {
             statement.setLong(2, faculty.getId());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
-                throw new DAOException("Updating faculty failed, no rows affected.");
+                throw new DAOException("Updating faculty failed, no rows affected");
             }
         }
         catch (SQLException e) {
@@ -100,14 +100,14 @@ public class FacultyDAOImpl implements FacultyDAO {
             statement.setLong(1, faculty.getId());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
-                throw new DAOException("Deleting faculty failed, no rows affected.");
+                throw new DAOException("Deleting faculty failed, no rows affected");
             }
             else {
                 faculty.setId(-1);
             }
         }
         catch (SQLException e) {
-            throw new DAOException("Deleting faculty failed", e);
+            throw new DAOException("Cannot delete faculty ", e);
         }
     }
 }
