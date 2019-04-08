@@ -85,13 +85,6 @@ public class FacultyDAOImpl implements FacultyDAO {
             if (rowsAffected == 0) {
                 throw new DAOException("Updating faculty failed, no rows affected.");
             }
-   /*         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (!generatedKeys.next()) {
-                    throw new DAOException("Updating faculty failed, no such record");
-                }
-            }
-
-    */
         }
         catch (SQLException e) {
             throw new DAOException("Cannot insert faculty " + faculty.getName(), e);
