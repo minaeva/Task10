@@ -6,24 +6,23 @@ import java.sql.SQLException;
 
 public class DAOFactory {
 
-    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+    public static Connection getConnection(){
+
+        ConfigPropertiesReader properties = new ConfigPropertiesReader();
+        String driver = properties.getDriver();
+        String url = properties.getUrl();
+        String login = properties.getLogin();
+        String password = properties.getPassword();
+
         try {
-            Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost/universitydb";
-            String username = "postgres";
-            String password = "admin";
-
-            Connection connection = DriverManager.getConnection(url, username, password);
-            return connection;
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            System.exit(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.exit(2);
+            Class.forName(driver);
+            return DriverManager.getConnection(url, login, password);
         }
-        return null;
+        catch (ClassNotFoundException ex){
+            throw new DAOException("JDBC driver cannot be initialized ", ex);
+        }
+        catch (SQLException ex) {
+            throw new DAOException("Connection to DB cannot be established ", ex);
+        }
     }
-
 }

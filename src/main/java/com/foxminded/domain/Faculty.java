@@ -15,7 +15,6 @@ public class Faculty {
     private List<TeacherCard> teacherCards = new ArrayList<>();
     private List<Subject> subjects = new ArrayList<>();
     private List<Auditorium> auditoria = new ArrayList<>();
-    private List<Journal> journals = new ArrayList<>();
     private Schedule schedule;
 
     public Faculty(String name) {
@@ -162,19 +161,4 @@ public class Faculty {
                 subjectName);
     }
 
-    public double calculateAverageMark() {
-        if (groups.size() == 0) {
-            return 0;
-        }
-        double result = 0.0;
-        int counter = 0;
-        for (Group group: groups) {
-            double midAverage = group.getJournal().calculateAverageMark();
-            if (midAverage != 0){
-                result += midAverage;
-                counter++;
-            }
-        }
-        return (result == 0) ? 0 : result/counter;
-    }
 }

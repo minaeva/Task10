@@ -1,12 +1,10 @@
 package com.foxminded.domain;
 
 import lombok.Data;
-
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import static com.foxminded.domain.Validator.*;
 
 @Data
@@ -27,7 +25,7 @@ public class Schedule {
 
     public DaySchedule findDaySchedule(DayOfWeek day) throws IllegalArgumentException{
         return findObjectByWorkdayIfExists(daySchedules,
-                daySchedule -> Objects.equals(daySchedule.getWorkDay(), equals(day)),
+                daySchedule -> Objects.equals(daySchedule.getWorkDay(), day),
                 "Day schedule",
                 day);
     }

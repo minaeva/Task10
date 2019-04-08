@@ -7,15 +7,10 @@ public class TeacherCard {
 
     private long id;
     private String name;
-    private String subjectName;
+    private Subject subject;
 
     public TeacherCard(String name){
         this.name = name;
-    }
-
-    public void addMark(String studentName, String subjectName,
-                        Journal journal, int mark){
-        journal.addMark(studentName, subjectName, mark);
     }
 
 }

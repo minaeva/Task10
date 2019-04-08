@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class GroupDAO {
 
-    public Group insert(final String name) throws DAOException{
+ /*   public Group insert(final String name) throws DAOException{
         Group group = null;
         Connection connection = null;
         PreparedStatement statement = null;
@@ -170,4 +170,6 @@ public class GroupDAO {
             }
         }
     }
+
+  */
 }
