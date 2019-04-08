@@ -5,9 +5,7 @@ import com.foxminded.dao.FacultyDAOImpl;
 import com.foxminded.domain.Faculty;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.util.List;
-
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
 
@@ -22,7 +20,7 @@ public class FacultyDaoTest {
 
     @Test
     public  void create() throws DAOException{
-        Faculty createdFaculty = facultyDAO.insert(new Faculty("Law"));
+        Faculty createdFaculty = facultyDAO.create(new Faculty("Law"));
 
         assertEquals("Law", createdFaculty.getName());
 
@@ -51,13 +49,13 @@ public class FacultyDaoTest {
 
     @Test(expected = DAOException.class)
     public  void create_existing() throws DAOException{
-        facultyDAO.insert(new Faculty("HARVARD"));
-        facultyDAO.insert(new Faculty("HARVARD"));
+        facultyDAO.create(new Faculty("HARVARD"));
+        facultyDAO.create(new Faculty("HARVARD"));
     }
 
     @Test
     public  void update() throws DAOException{
-        Faculty faculty = facultyDAO.insert(new Faculty("OXFORD"));
+        Faculty faculty = facultyDAO.create(new Faculty("OXFORD"));
         faculty.setName("NEW OXFORD");
 
         Faculty updatedFaculty = facultyDAO.update(faculty);
@@ -71,7 +69,7 @@ public class FacultyDaoTest {
 
     @Test
     public  void delete() throws DAOException{
-        Faculty faculty = facultyDAO.insert( new Faculty("BERKLEY"));
+        Faculty faculty = facultyDAO.create( new Faculty("BERKLEY"));
         Long id = faculty.getId();
         assertNotNull(facultyDAO.findById(id));
 

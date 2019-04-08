@@ -1,8 +1,8 @@
 package com.foxminded.dao;
 
 import lombok.Data;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 @Data
@@ -13,8 +13,9 @@ class ConfigPropertiesReader {
     private String login;
     private String password;
 
-    ConfigPropertiesReader() {
-        try (FileInputStream inputStream = new FileInputStream("src/main/resources/config.properties")) {
+    public void read() {
+
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties")){
             Properties property = new Properties();
             property.load(inputStream);
 

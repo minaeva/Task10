@@ -2,15 +2,15 @@ package com.foxminded.dao;
 
 public class DAOException extends RuntimeException {
 
-    DAOException(){
+    public DAOException(){
         super();
     }
 
-    DAOException(String message) {
+    public DAOException(String message) {
         super(message);
     }
 
-    DAOException(String message, Throwable cause) {
+    public DAOException(String message, Throwable cause) {
         super(message, cause);
     }
 }

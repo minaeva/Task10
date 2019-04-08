@@ -6,13 +6,17 @@ import java.sql.SQLException;
 
 public class DAOFactory {
 
-    public static Connection getConnection(){
+    static Config config = null;
 
-        ConfigPropertiesReader properties = new ConfigPropertiesReader();
-        String driver = properties.getDriver();
-        String url = properties.getUrl();
-        String login = properties.getLogin();
-        String password = properties.getPassword();
+    static Connection getConnection(){
+        if (config == null){
+            config = new Config();
+            config.takeDataFromReader();
+        }
+        String driver = config.getDriver();
+        String url = config.getUrl();
+        String login = config.getLogin();
+        String password = config.getPassword();
 
         try {
             Class.forName(driver);
