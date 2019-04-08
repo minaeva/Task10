@@ -87,7 +87,7 @@ public class FacultyDAOImpl implements FacultyDAO {
             }
         }
         catch (SQLException e) {
-            throw new DAOException("Cannot insert faculty " + faculty.getName(), e);
+            throw new DAOException("Cannot update faculty " + faculty.getName(), e);
         }
         return faculty;
     }
