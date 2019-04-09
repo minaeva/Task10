@@ -18,16 +18,14 @@ public class DaoFactory {
         if (classDriver == null){
             try {
                 classDriver = Class.forName(properties.getDriver());
-            }
-            catch (ClassNotFoundException ex){
+            } catch (ClassNotFoundException ex){
                 throw new DaoException("JDBC driver cannot be initialized ", ex);
             }
         }
 
         try {
             return DriverManager.getConnection(properties.getUrl(), properties.getLogin(), properties.getPassword());
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             throw new DaoException("Connection to DB cannot be established ", ex);
         }
     }

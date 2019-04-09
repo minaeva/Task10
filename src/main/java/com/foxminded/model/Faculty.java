@@ -3,7 +3,6 @@ package com.foxminded.model;
 import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
     @Data
     public class Faculty {
@@ -21,9 +20,6 @@ import org.apache.commons.lang3.StringUtils;
         }
 
         public Group createGroup(String groupName){
-            if (StringUtils.isBlank(groupName)){
-                throw new IllegalArgumentException("Name cannot be empty");
-            }
             Group newGroup = new Group(groupName);
             groups.add(newGroup);
             return newGroup;
@@ -103,9 +99,6 @@ import org.apache.commons.lang3.StringUtils;
         }
 
         public TeacherCard hireTeacher(String teacherName){
-            if (StringUtils.isBlank(teacherName)){
-                throw new IllegalArgumentException("Name cannot be empty");
-            }
             TeacherCard newTeacher = new TeacherCard(teacherName);
             teachers.add(newTeacher);
             return newTeacher;
@@ -131,9 +124,6 @@ import org.apache.commons.lang3.StringUtils;
         }
 
         public Auditorium addAuditorium(int auditoriumNumber){
-            if (auditoriumNumber <= 0) {
-                throw new IllegalArgumentException("Number should be positive");
-            }
             Auditorium auditorium = new Auditorium(auditoriumNumber);
             auditoria.add(auditorium);
             return auditorium;
@@ -159,9 +149,6 @@ import org.apache.commons.lang3.StringUtils;
         }
 
         public Subject addSubject(String subjectName){
-            if (StringUtils.isBlank(subjectName)){
-                throw new IllegalArgumentException("Subject cannot be empty");
-            }
             Subject subject = new Subject(subjectName);
             subjects.add(subject);
             return subject;

@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Config {
 
-    private static ConfigPropertiesReader properties;
+    private ConfigPropertiesReader properties;
 
     ConfigPropertiesReader readProperties() {
         properties = new ConfigPropertiesReader();
