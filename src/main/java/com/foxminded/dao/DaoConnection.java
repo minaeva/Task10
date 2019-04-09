@@ -4,20 +4,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DaoFactory {
+public class DaoConnection {
 
-    static ConfigPropertiesReader properties = null;
-    static Class classDriver = null;
+    private static DaoPropertiesReader properties = null;
 
     static Connection getConnection(){
         if (properties == null){
-            Config config = new Config();
+            DaoProperties config = new DaoProperties();
             properties = config.readProperties();
-        }
-
-        if (classDriver == null){
             try {
-                classDriver = Class.forName(properties.getDriver());
+                Class.forName(properties.getDriver());
             } catch (ClassNotFoundException ex){
                 throw new DaoException("JDBC driver cannot be initialized ", ex);
             }

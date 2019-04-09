@@ -5,12 +5,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FacultyDaoImpl implements GenericDao<Faculty> {
+public class FacultyDaoImpl implements CrudDao<Faculty> {
 
     public Faculty create(Faculty faculty) {
         String sql = "INSERT INTO faculties (name) VALUES (?);";
 
-        try (Connection connection = DaoFactory.getConnection();
+        try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, faculty.getName());
             statement.executeUpdate();
@@ -28,7 +28,7 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
        Faculty faculty = null;
        String sql = "SELECT id, name FROM faculties WHERE id = ?";
 
-       try (Connection connection = DaoFactory.getConnection();
+       try (Connection connection = DaoConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -47,7 +47,7 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
         List<Faculty> result = null;
         String sql = "SELECT * FROM faculties;";
 
-        try (Connection connection = DaoFactory.getConnection();
+        try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet == null){
@@ -71,7 +71,7 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
         }
         String sql = "UPDATE faculties SET name = (?) WHERE id = (?)";
 
-        try (Connection connection = DaoFactory.getConnection();
+        try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, faculty.getName());
             statement.setLong(2, faculty.getId());
@@ -85,7 +85,7 @@ public class FacultyDaoImpl implements GenericDao<Faculty> {
      public void delete(Faculty faculty) {
         String sql = "DELETE FROM faculties WHERE id = (?)";
 
-        try (Connection connection = DaoFactory.getConnection();
+        try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, faculty.getId());
             statement.executeUpdate();

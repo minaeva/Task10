@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 @Data
-class ConfigPropertiesReader {
+class DaoPropertiesReader {
 
     private String driver;
     private String url;

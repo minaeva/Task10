@@ -13,29 +13,4 @@ public class Group {
     public Group(String name){
         this.name = name;
     }
-
-    public StudentCard takeStudent(StudentCard studentCard){
-        students.add(studentCard);
-        studentCard.setGroupName(this.name);
-        return studentCard;
-    }
-
-    public StudentCard findStudent(String studentName){
-        for (StudentCard student: students) {
-            if (student.getName().equals(studentName)) {
-                return student;
-            }
-        }
-        return null;
-    }
-
-    public boolean dismissStudent(String studentName){
-        for (StudentCard student: students){
-            if (student.getName().equals(studentName)){
-                students.remove(student);
-                return true;
-            }
-        }
-        return false;
-    }
 }
