@@ -1,17 +1,17 @@
 package com.foxminded.dao;
 
-import com.foxminded.domain.Faculty;
+import com.foxminded.model.Faculty;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FacultyDAOImpl implements DAO<Faculty> {
+public class FacultyDaoImpl implements GenericDao<Faculty> {
 
     public Faculty create(Faculty faculty) {
         String sql = "INSERT INTO faculties (name) VALUES (?);";
 
-        try (Connection connection = DAOFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = DaoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, faculty.getName());
             statement.executeUpdate();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -19,7 +19,7 @@ public class FacultyDAOImpl implements DAO<Faculty> {
                 faculty.setId(generatedKeys.getLong("id"));
             }
         } catch (SQLException e) {
-            throw new DAOException("Cannot create faculty " + faculty.getName(), e);
+            throw new DaoException("Cannot create faculty " + faculty.getName(), e);
         }
         return faculty;
     }
@@ -28,7 +28,7 @@ public class FacultyDAOImpl implements DAO<Faculty> {
        Faculty faculty = null;
        String sql = "SELECT id, name FROM faculties WHERE id = ?";
 
-       try (Connection connection = DAOFactory.getConnection();
+       try (Connection connection = DaoFactory.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -38,7 +38,7 @@ public class FacultyDAOImpl implements DAO<Faculty> {
                 }
             }
        } catch (SQLException e) {
-            throw new DAOException("Cannot find faculty with id " + id, e);
+            throw new DaoException("Cannot find faculty with id " + id, e);
        }
        return faculty;
     }
@@ -47,7 +47,7 @@ public class FacultyDAOImpl implements DAO<Faculty> {
         List<Faculty> result = null;
         String sql = "SELECT * FROM faculties;";
 
-        try (Connection connection = DAOFactory.getConnection();
+        try (Connection connection = DaoFactory.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet == null){
@@ -60,24 +60,24 @@ public class FacultyDAOImpl implements DAO<Faculty> {
                     result.add(faculty);
                 }
             } catch (SQLException e) {
-                throw new DAOException("Cannot find all faculties", e);
+                throw new DaoException("Cannot find all faculties", e);
         }
         return result;
     }
 
     public Faculty update(final Faculty faculty) {
         if ((faculty.getId() == -1) || (faculty.getId() == 0)){
-            throw new DAOException("Updating faculty failed, faculty should be created before update");
+            throw new DaoException("Updating faculty failed, faculty should be created before update");
         }
         String sql = "UPDATE faculties SET name = (?) WHERE id = (?)";
 
-        try (Connection connection = DAOFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DaoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, faculty.getName());
             statement.setLong(2, faculty.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException("Cannot update faculty " + faculty.getName(), e);
+            throw new DaoException("Cannot update faculty " + faculty.getName(), e);
         }
         return faculty;
     }
@@ -85,13 +85,13 @@ public class FacultyDAOImpl implements DAO<Faculty> {
      public void delete(Faculty faculty) {
         String sql = "DELETE FROM faculties WHERE id = (?)";
 
-        try (Connection connection = DAOFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DaoFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, faculty.getId());
             statement.executeUpdate();
             faculty.setId(-1);
         } catch (SQLException e) {
-            throw new DAOException("Cannot delete faculty ", e);
+            throw new DaoException("Cannot delete faculty ", e);
         }
     }
 }

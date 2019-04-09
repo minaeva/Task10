@@ -1,8 +1,7 @@
-package com.foxminded.domain;
+package com.foxminded.model;
 
 import lombok.Data;
 import java.util.*;
-import static com.foxminded.domain.Validator.*;
 
 @Data
 public class Group {
@@ -22,13 +21,21 @@ public class Group {
     }
 
     public StudentCard findStudent(String studentName){
-        return findObjectByNameIfExists(students,
-                student -> Objects.equals(student.getName(), studentName),
-                "Student",
-                studentName);
+        for (StudentCard student: students) {
+            if (student.getName().equals(studentName)) {
+                return student;
+            }
+        }
+        return null;
     }
 
     public boolean dismissStudent(String studentName){
-        return students.removeIf(student -> Objects.equals(student.getName(), studentName));
+        for (StudentCard student: students){
+            if (student.getName().equals(studentName)){
+                students.remove(student);
+                return true;
+            }
+        }
+        return false;
     }
 }

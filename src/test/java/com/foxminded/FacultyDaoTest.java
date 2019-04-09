@@ -1,8 +1,8 @@
 package com.foxminded;
 
-import com.foxminded.dao.DAOException;
-import com.foxminded.dao.FacultyDAOImpl;
-import com.foxminded.domain.Faculty;
+import com.foxminded.dao.DaoException;
+import com.foxminded.dao.FacultyDaoImpl;
+import com.foxminded.model.Faculty;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
@@ -11,15 +11,15 @@ import static org.junit.Assert.*;
 
 public class FacultyDaoTest {
 
-    private FacultyDAOImpl facultyDAO;
+    private FacultyDaoImpl facultyDAO;
 
     @Before
     public void initDao(){
-        facultyDAO = new FacultyDAOImpl();
+        facultyDAO = new FacultyDaoImpl();
     }
 
     @Test
-    public  void create() throws DAOException{
+    public  void create() throws DaoException {
         Faculty createdFaculty = facultyDAO.create(new Faculty("Law"));
 
         assertEquals("Law", createdFaculty.getName());
@@ -47,14 +47,14 @@ public class FacultyDaoTest {
     }
 
 
-    @Test(expected = DAOException.class)
-    public  void create_existing() throws DAOException{
+    @Test(expected = DaoException.class)
+    public  void create_existing() throws DaoException {
         facultyDAO.create(new Faculty("HARVARD"));
         facultyDAO.create(new Faculty("HARVARD"));
     }
 
     @Test
-    public  void update() throws DAOException{
+    public  void update() throws DaoException {
         Faculty faculty = facultyDAO.create(new Faculty("OXFORD"));
         faculty.setName("NEW OXFORD");
 
@@ -68,7 +68,7 @@ public class FacultyDaoTest {
 
 
     @Test
-    public  void delete() throws DAOException{
+    public  void delete() throws DaoException {
         Faculty faculty = facultyDAO.create( new Faculty("BERKLEY"));
         Long id = faculty.getId();
         assertNotNull(facultyDAO.findById(id));

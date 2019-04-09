@@ -1,13 +1,11 @@
-package com.foxminded.domain;
+package com.foxminded.model;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import static com.foxminded.domain.Validator.*;
 
 @Data
 public class DaySchedule {
@@ -49,13 +47,21 @@ public class DaySchedule {
     }
 
     public Pair findPair(LocalTime startTime){
-        return findObjectByTimeIfExists(pairs,
-                pair -> Objects.equals(pair.getStartTime(), startTime),
-                "Pair",
-                startTime);
+        for (Pair pair: pairs) {
+            if (pair.getStartTime().equals(startTime)) {
+                return pair;
+            }
+        }
+        return null;
     }
 
     public boolean removePair(LocalTime startTime) {
-        return pairs.removeIf(pair -> Objects.equals(pair.getStartTime(), startTime));
+        for (Pair pair: pairs) {
+            if (pair.getStartTime().equals(startTime)) {
+                pairs.remove(pair);
+                return true;
+            }
+        }
+        return false;
     }
 }

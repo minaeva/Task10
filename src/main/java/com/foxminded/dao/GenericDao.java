@@ -2,7 +2,8 @@ package com.foxminded.dao;
 
 import java.util.List;
 
-public interface DAO<T> {
+public interface GenericDao<T> {
+             //? CrudDao<T>
     T create(T t);
 
     T findById(final long id);

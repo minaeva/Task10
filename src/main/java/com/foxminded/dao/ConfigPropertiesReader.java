@@ -14,17 +14,15 @@ class ConfigPropertiesReader {
     private String password;
 
     public void read() {
-
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties")){
             Properties property = new Properties();
             property.load(inputStream);
-
             driver = property.getProperty("db.postgre.driver");
             url = property.getProperty("db.postgre.url");
             login = property.getProperty("db.postgre.login");
             password = property.getProperty("db.postgre.password");
-        } catch (IOException ex) {
-            throw new DAOException("Property file cannot be reached ", ex);
+        } catch (IOException e) {
+            throw new DaoException("Property file cannot be reached ", e);
         }
     }
 }

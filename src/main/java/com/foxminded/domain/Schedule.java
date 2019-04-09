@@ -19,11 +19,11 @@ public class Schedule {
         return daySchedule;
     }
 
-    public boolean removeDaySchedule(DayOfWeek day) throws IllegalArgumentException{
+    public boolean removeDaySchedule(DayOfWeek day){
         return daySchedules.removeIf(daySchedule -> Objects.equals(daySchedule.getWorkDay(), day));
     }
 
-    public DaySchedule findDaySchedule(DayOfWeek day) throws IllegalArgumentException{
+    public DaySchedule findDaySchedule(DayOfWeek day){
         return findObjectByWorkdayIfExists(daySchedules,
                 daySchedule -> Objects.equals(daySchedule.getWorkDay(), day),
                 "Day schedule",

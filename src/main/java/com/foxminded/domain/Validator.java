@@ -7,12 +7,6 @@ import java.util.function.Predicate;
 
 public class Validator {
 
-    private static long id = 1;
-
-    public static long generateNewId(){
-        return id++;
-    }
-
      public static <T> void validateNameIsUnique(List<T> list,
                                                  Predicate<T> predicate,
                                                  String objectName,
@@ -67,4 +61,3 @@ public class Validator {
     }
 
 }
-

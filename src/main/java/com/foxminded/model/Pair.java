@@ -1,4 +1,4 @@
-package com.foxminded.domain;
+package com.foxminded.model;
 
 import lombok.Data;
 import java.time.LocalTime;

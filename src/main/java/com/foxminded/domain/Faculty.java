@@ -1,7 +1,6 @@
 package com.foxminded.domain;
 
 import java.util.*;
-
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import static com.foxminded.domain.Validator.*;
@@ -160,5 +159,4 @@ public class Faculty {
                 "Subject",
                 subjectName);
     }
-
 }
