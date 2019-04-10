@@ -11,14 +11,13 @@ public class DaoConnection {
 
     static Connection getConnection(){
         if (properties == null){
-             properties.read();
+            properties.read();
             try {
                 Class.forName(getPropertyValue("db.postgre.driver"));
             } catch (ClassNotFoundException ex){
                 throw new DaoException("JDBC driver cannot be initialized ", ex);
             }
         }
-
         try {
             return DriverManager.getConnection(
                     getPropertyValue("db.postgre.url"),

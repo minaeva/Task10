@@ -4,17 +4,16 @@ import lombok.Data;
 import java.time.LocalTime;
 
 @Data
-public class Pair {
+public class Lesson {
 
     private long id;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private String groupName;
-    private Subject subject;
+    private Group group;
     private TeacherCard teacher;
     private Auditorium auditorium;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
-    public Pair(LocalTime startTime){
+    public Lesson(LocalTime startTime) {
         this.startTime = startTime;
     }
 }

@@ -10,7 +10,7 @@ public class DaySchedule {
 
     private long id;
     private DayOfWeek workDay;
-    private List<Pair> pairs = new ArrayList<>();
+    private List<Lesson> lessons = new ArrayList<>();
 
     public DaySchedule(DayOfWeek workDay){
         this.workDay = workDay;

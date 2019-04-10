@@ -60,7 +60,7 @@ public class FacultyDaoImpl implements CrudDao<Faculty> {
                     result.add(faculty);
                 }
             } catch (SQLException e) {
-                throw new DaoException("Cannot find all faculties", e);
+                throw new DaoException("Cannot find all faculties ", e);
         }
         return result;
     }

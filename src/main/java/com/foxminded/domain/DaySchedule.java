@@ -51,7 +51,7 @@ public class DaySchedule {
     public Pair findPair(LocalTime startTime){
         return findObjectByTimeIfExists(pairs,
                 pair -> Objects.equals(pair.getStartTime(), startTime),
-                "Pair",
+                "Lesson",
                 startTime);
     }
 

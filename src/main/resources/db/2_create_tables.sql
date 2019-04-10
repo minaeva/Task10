@@ -63,7 +63,6 @@ CREATE TABLE IF NOT EXISTS auditoria (
 /* LESSONS */
 CREATE TABLE IF NOT EXISTS lessons (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
     group_id INTEGER NOT NULL,
     teacher_id INTEGER NOT NULL,
     auditorium_id INTEGER NOT NULL,
@@ -73,6 +72,7 @@ CREATE TABLE IF NOT EXISTS lessons (
     FOREIGN KEY (group_id) REFERENCES groups (id),
     FOREIGN KEY (teacher_id) REFERENCES teachers (id),
     FOREIGN KEY (auditorium_id) REFERENCES auditoria (id),
-    FOREIGN KEY (daySchedule_id) REFERENCES daySchedules (id)
+    FOREIGN KEY (daySchedule_id) REFERENCES daySchedules (id),
+    UNIQUE (daySchedule_id, group_id, start_time)
 );
 

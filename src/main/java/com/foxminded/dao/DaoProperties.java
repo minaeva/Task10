@@ -8,14 +8,13 @@ public class DaoProperties {
 
     private static Properties properties;
 
-    public static Properties read() {
+    public static void read() {
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties")) {
             properties = new Properties();
             properties.load(stream);
         } catch (IOException e) {
             throw new DaoException("Property file cannot be reached ", e);
         }
-        return properties;
     }
 
     public static String getPropertyValue(String key){
