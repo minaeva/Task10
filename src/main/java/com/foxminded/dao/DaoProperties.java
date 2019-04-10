@@ -1,15 +1,24 @@
 package com.foxminded.dao;
 
-import lombok.Data;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-@Data
 public class DaoProperties {
 
-    private DaoPropertiesReader properties;
+    private static Properties properties;
 
-    DaoPropertiesReader readProperties() {
-        properties = new DaoPropertiesReader();
-        properties.read();
+    public static Properties read() {
+        try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties")) {
+            properties = new Properties();
+            properties.load(stream);
+        } catch (IOException e) {
+            throw new DaoException("Property file cannot be reached ", e);
+        }
         return properties;
+    }
+
+    public static String getPropertyValue(String key){
+        return properties.getProperty(key);
     }
 }

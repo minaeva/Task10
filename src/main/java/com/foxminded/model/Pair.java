@@ -10,9 +10,9 @@ public class Pair {
     private LocalTime startTime;
     private LocalTime endTime;
     private String groupName;
-    private String subjectName;
-    private String mentorName;
-    private int auditoriumNumber;
+    private Subject subject;
+    private TeacherCard teacher;
+    private Auditorium auditorium;
 
     public Pair(LocalTime startTime){
         this.startTime = startTime;
