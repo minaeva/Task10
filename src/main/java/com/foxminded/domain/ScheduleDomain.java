@@ -4,7 +4,7 @@ import com.foxminded.dao.DaoException;
 import com.foxminded.dao.impl.DayScheduleDaoImpl;
 import com.foxminded.model.DaySchedule;
 
-public class Schedule {
+public class ScheduleDomain {
 
     private DayScheduleDaoImpl dayScheduleDao = new DayScheduleDaoImpl();
 

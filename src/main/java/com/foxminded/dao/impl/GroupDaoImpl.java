@@ -1,6 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.GroupDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.Group;
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupDaoImpl implements CrudDao<Group> {
+public class GroupDaoImpl implements GroupDao {
 
     public Group create(Group group) {
         String sql = "INSERT INTO groups (name) VALUES (?);";

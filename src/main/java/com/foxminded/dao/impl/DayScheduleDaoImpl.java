@@ -1,6 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DayScheduleDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.DaySchedule;
@@ -9,7 +9,7 @@ import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DayScheduleDaoImpl implements CrudDao<DaySchedule> {
+public class DayScheduleDaoImpl implements DayScheduleDao {
 
     public DaySchedule create(DaySchedule daySchedule) {
         String sql = "INSERT INTO dayschedules (day) VALUES (?);";

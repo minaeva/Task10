@@ -1,6 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.SubjectDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.Subject;
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubjectDaoImpl implements CrudDao<Subject> {
+public class SubjectDaoImpl implements SubjectDao {
 
     public Subject create(Subject subject) {
         String sql = "INSERT INTO subjects (name) VALUES (?);";

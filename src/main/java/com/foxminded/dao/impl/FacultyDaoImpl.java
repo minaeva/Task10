@@ -1,6 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.FacultyDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.Faculty;
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FacultyDaoImpl implements CrudDao<Faculty> {
+public class FacultyDaoImpl implements FacultyDao {
 
     public Faculty create(Faculty faculty) {
         String sql = "INSERT INTO faculties (name) VALUES (?);";

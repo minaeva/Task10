@@ -1,6 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.AuditoriumDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.Auditorium;
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuditoriumDaoImpl implements CrudDao<Auditorium> {
+public class AuditoriumDaoImpl implements AuditoriumDao {
 
     public Auditorium create(Auditorium auditorium) {
         String sql = "INSERT INTO auditoria (number) VALUES (?);";

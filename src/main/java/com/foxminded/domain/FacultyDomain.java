@@ -1,12 +1,19 @@
 package com.foxminded.domain;
 
-import com.foxminded.dao.DaoException;
+import com.foxminded.dao.GroupDao;
+import com.foxminded.dao.StudentDao;
+import com.foxminded.dao.TeacherDao;
+import com.foxminded.dao.AuditoriumDao;
+import com.foxminded.dao.SubjectDao;
+import com.foxminded.dao.DayScheduleDao;
+
 import com.foxminded.dao.impl.GroupDaoImpl;
 import com.foxminded.dao.impl.StudentDaoImpl;
 import com.foxminded.dao.impl.TeacherDaoImpl;
 import com.foxminded.dao.impl.AuditoriumDaoImpl;
 import com.foxminded.dao.impl.SubjectDaoImpl;
 import com.foxminded.dao.impl.DayScheduleDaoImpl;
+import com.foxminded.dao.DaoException;
 
 import com.foxminded.model.Group;
 import com.foxminded.model.StudentCard;
@@ -16,14 +23,14 @@ import com.foxminded.model.Subject;
 import  com.foxminded.model.DaySchedule;
 import java.util.*;
 
-public class Faculty {
+public class FacultyDomain {
 
-    private GroupDaoImpl groupDao = new GroupDaoImpl();
-    private StudentDaoImpl studentDao = new StudentDaoImpl();
-    private TeacherDaoImpl teacherDao = new TeacherDaoImpl();
-    private AuditoriumDaoImpl auditoriumDao = new AuditoriumDaoImpl();
-    private SubjectDaoImpl subjectDao = new SubjectDaoImpl();
-    private DayScheduleDaoImpl dayScheduleDao = new DayScheduleDaoImpl();
+    private GroupDao groupDao = new GroupDaoImpl();
+    private StudentDao studentDao = new StudentDaoImpl();
+    private TeacherDao teacherDao = new TeacherDaoImpl();
+    private AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
+    private SubjectDao subjectDao = new SubjectDaoImpl();
+    private DayScheduleDao dayScheduleDao = new DayScheduleDaoImpl();
 
     public Group createGroup(Group group, long facultyId){
         Group createdGroup = groupDao.create(group);

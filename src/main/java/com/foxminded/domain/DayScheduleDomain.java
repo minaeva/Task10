@@ -1,12 +1,13 @@
 package com.foxminded.domain;
 
+import com.foxminded.dao.LessonDao;
 import com.foxminded.dao.DaoException;
 import com.foxminded.dao.impl.LessonDaoImpl;
 import com.foxminded.model.Lesson;
 
-public class DaySchedule {
+public class DayScheduleDomain {
 
-    private LessonDaoImpl lessonDao = new LessonDaoImpl();
+    private LessonDao lessonDao = new LessonDaoImpl();
 
     public Lesson createLesson(Lesson lesson, long dayScheduleId) {
         Lesson newLesson = lessonDao.create(lesson);

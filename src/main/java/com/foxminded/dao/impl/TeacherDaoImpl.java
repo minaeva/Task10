@@ -1,6 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.TeacherDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.TeacherCard;
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeacherDaoImpl implements CrudDao<TeacherCard> {
+public class TeacherDaoImpl implements TeacherDao {
 
     public TeacherCard create(TeacherCard teacher) {
         String sql = "INSERT INTO teachers (name) VALUES (?);";

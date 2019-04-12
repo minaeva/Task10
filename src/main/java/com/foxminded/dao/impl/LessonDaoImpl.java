@@ -1,6 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.LessonDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.Auditorium;
@@ -12,7 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LessonDaoImpl implements CrudDao<Lesson> {
+public class LessonDaoImpl implements LessonDao {
 
     public Lesson create(Lesson lesson) {
         String sql = "INSERT INTO lessons (group_id, teacher_id, auditorium_id," +
