@@ -1,34 +1,28 @@
 package com.foxminded.domain;
 
-import lombok.Data;
-import java.util.*;
-import static com.foxminded.domain.Validator.*;
+import com.foxminded.dao.DaoException;
+import com.foxminded.model.StudentCard;
+import com.foxminded.dao.impl.StudentDaoImpl;
 
-@Data
 public class Group {
 
-    private long id;
-    private String name;
-    private List<StudentCard> students = new ArrayList<>();
+    private StudentDaoImpl studentDao = new StudentDaoImpl();
 
-    public Group(String name){
-        this.name = name;
+    public StudentCard takeStudent(StudentCard student, long groupId){
+        StudentCard newStudent = studentDao.create(student);
+        return studentDao.addGroupId(newStudent, groupId);
     }
 
-    public StudentCard takeStudent(StudentCard studentCard){
-        students.add(studentCard);
-        studentCard.setGroupName(this.name);
-        return studentCard;
+    public StudentCard findStudent(StudentCard student){
+        return studentDao.findById(student.getId());
     }
 
-    public StudentCard findStudent(String studentName){
-        return findObjectByNameIfExists(students,
-                student -> Objects.equals(student.getName(), studentName),
-                "Student",
-                studentName);
-    }
-
-    public boolean dismissStudent(String studentName){
-        return students.removeIf(student -> Objects.equals(student.getName(), studentName));
+    public boolean dismissStudent(StudentCard student){
+        try {
+            studentDao.delete(student);
+        } catch (DaoException e) {
+            return false;
+        }
+        return true;
     }
 }

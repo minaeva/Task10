@@ -1,5 +1,8 @@
-package com.foxminded.dao;
+package com.foxminded.dao.impl;
 
+import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DaoConnection;
+import com.foxminded.dao.DaoException;
 import com.foxminded.model.StudentCard;
 import java.sql.*;
 import java.util.ArrayList;
@@ -82,17 +85,30 @@ public class StudentDaoImpl implements CrudDao<StudentCard> {
         return student;
     }
 
-    public void delete(StudentCard StudentCard) {
+    public void delete(StudentCard student) {
         String sql = "DELETE FROM students WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, StudentCard.getId());
+            statement.setLong(1, student.getId());
             statement.executeUpdate();
-            StudentCard.setId(-1);
+            student.setId(-1);
         } catch (SQLException e) {
             throw new DaoException("Cannot delete student ", e);
         }
+    }
+
+    public StudentCard addGroupId(StudentCard student, long groupId) {
+        String sql = "UPDATE students SET group_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, groupId);
+            statement.setLong(2, student.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add group id " + groupId + " to student " + student.getName(), e);
+        }
+        return student;
     }
 }
 

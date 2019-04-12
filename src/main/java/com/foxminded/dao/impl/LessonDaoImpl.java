@@ -1,5 +1,8 @@
-package com.foxminded.dao;
+package com.foxminded.dao.impl;
 
+import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DaoConnection;
+import com.foxminded.dao.DaoException;
 import com.foxminded.model.Auditorium;
 import com.foxminded.model.Group;
 import com.foxminded.model.Lesson;
@@ -128,5 +131,19 @@ public class LessonDaoImpl implements CrudDao<Lesson> {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete lesson ", e);
         }
+    }
+
+    public Lesson addDayScheduleId(Lesson lesson, long dayScheduleId) {
+        String sql = "UPDATE lessons SET dayschedule_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, dayScheduleId);
+            statement.setLong(2, lesson.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add day schedule id " + dayScheduleId +
+                    " to lesson with start time " + lesson.getStartTime(), e);
+        }
+        return lesson;
     }
 }

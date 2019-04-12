@@ -1,5 +1,8 @@
-package com.foxminded.dao;
+package com.foxminded.dao.impl;
 
+import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DaoConnection;
+import com.foxminded.dao.DaoException;
 import com.foxminded.model.Subject;
 import java.sql.*;
 import java.util.ArrayList;
@@ -92,5 +95,18 @@ public class SubjectDaoImpl implements CrudDao<Subject> {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete subject ", e);
         }
+    }
+
+    public Subject addFacultyId(Subject subject, long facultyId) {
+        String sql = "UPDATE subjects SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, subject.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to subject " + subject.getName(), e);
+        }
+        return subject;
     }
 }

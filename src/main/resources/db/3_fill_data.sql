@@ -36,11 +36,15 @@ INSERT INTO daySchedules (day, faculty_id) VALUES
     ('Thu', 2),
     ('Fri', 2);
 
-INSERT INTO teachers (name, subject_id) VALUES
-    ('Newton', 1),
-    ('Descartes', 3),
-    ('Einstein', 2),
-    ('Planck', 4);
+INSERT INTO teachers (name, subject_id, faculty_id) VALUES
+    ('Newton', 1, 1),
+    ('Descartes', 3, 1),
+    ('Einstein', 2, 1),
+    ('Planck', 4, 1),
+    ('Newton', 1, 2),
+    ('Descartes', 3, 2),
+    ('Einstein', 2, 2),
+    ('Planck', 4, 2);
 
 INSERT INTO auditoria (number, faculty_id) VALUES
     (101, 1),

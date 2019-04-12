@@ -6,18 +6,14 @@ import java.util.Properties;
 
 public class DaoProperties {
 
-    private static Properties properties;
-
-    public static void read() {
+    public static Properties read() {
+        Properties properties = null;
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties")) {
             properties = new Properties();
             properties.load(stream);
         } catch (IOException e) {
             throw new DaoException("Property file cannot be reached ", e);
         }
-    }
-
-    public static String getPropertyValue(String key){
-        return properties.getProperty(key);
+        return properties;
     }
 }

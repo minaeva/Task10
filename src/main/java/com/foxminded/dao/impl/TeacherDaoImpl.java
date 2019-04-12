@@ -1,5 +1,8 @@
-package com.foxminded.dao;
+package com.foxminded.dao.impl;
 
+import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DaoConnection;
+import com.foxminded.dao.DaoException;
 import com.foxminded.model.TeacherCard;
 import java.sql.*;
 import java.util.ArrayList;
@@ -92,5 +95,31 @@ public class TeacherDaoImpl implements CrudDao<TeacherCard> {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete teacher ", e);
         }
+    }
+
+    public TeacherCard addFacultyId(TeacherCard teacher, long facultyId) {
+        String sql = "UPDATE teachers SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, teacher.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to teacher " + teacher.getName(), e);
+        }
+        return teacher;
+    }
+
+    public TeacherCard addSubjectId(TeacherCard teacher, long subjectId) {
+        String sql = "UPDATE teachers SET subject_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, subjectId);
+            statement.setLong(2, teacher.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add subject id " + subjectId + " to teacher " + teacher.getName(), e);
+        }
+        return teacher;
     }
 }

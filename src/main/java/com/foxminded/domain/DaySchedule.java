@@ -1,61 +1,28 @@
 package com.foxminded.domain;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
-import static com.foxminded.domain.Validator.*;
+import com.foxminded.dao.DaoException;
+import com.foxminded.dao.impl.LessonDaoImpl;
+import com.foxminded.model.Lesson;
 
-@Data
 public class DaySchedule {
 
-    private long id;
-    private DayOfWeek workDay;
-    private List<Pair> pairs = new ArrayList<>();
+    private LessonDaoImpl lessonDao = new LessonDaoImpl();
 
-    public DaySchedule(DayOfWeek workDay){
-        this.workDay = workDay;
+    public Lesson createLesson(Lesson lesson, long dayScheduleId) {
+        Lesson newLesson = lessonDao.create(lesson);
+        return lessonDao.addDayScheduleId(newLesson, dayScheduleId);
     }
 
-    public DaySchedule getDaySchedule(){
-        return this;
+    public Lesson findLesson(Lesson lesson){
+        return lessonDao.findById(lesson.getId());
     }
 
-    public Pair createPair(LocalTime startTime, String groupName, String subjectName,
-                           String mentorName, int auditoriumNumber) {
-        if (StringUtils.isBlank(groupName)) {
-            throw new IllegalArgumentException("Group name cannot be empty");
+    public boolean removeLesson(Lesson lesson) {
+        try {
+            lessonDao.delete(lesson);
+        } catch (DaoException e) {
+            return false;
         }
-        if (StringUtils.isBlank(subjectName)) {
-            throw new IllegalArgumentException("Subject cannot be empty");
-        }
-        if (StringUtils.isBlank(mentorName)) {
-            throw new IllegalArgumentException("Mentor name cannot be empty");
-        }
-        if (auditoriumNumber < 0) {
-            throw new IllegalArgumentException("Auditorium number cannot be negative");
-        }
-
-        Pair pair = new Pair(startTime);
-        pair.setGroupName(groupName);
-        pair.setSubjectName(subjectName);
-        pair.setMentorName(mentorName);
-        pair.setAuditoriumNumber(auditoriumNumber);
-        pairs.add(pair);
-        return pair;
-    }
-
-    public Pair findPair(LocalTime startTime){
-        return findObjectByTimeIfExists(pairs,
-                pair -> Objects.equals(pair.getStartTime(), startTime),
-                "Lesson",
-                startTime);
-    }
-
-    public boolean removePair(LocalTime startTime) {
-        return pairs.removeIf(pair -> Objects.equals(pair.getStartTime(), startTime));
+        return true;
     }
 }

@@ -1,5 +1,8 @@
-package com.foxminded.dao;
+package com.foxminded.dao.impl;
 
+import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DaoConnection;
+import com.foxminded.dao.DaoException;
 import com.foxminded.model.Group;
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ public class GroupDaoImpl implements CrudDao<Group> {
         String sql = "INSERT INTO groups (name) VALUES (?);";
 
         try (Connection connection = DaoConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, group.getName());
                 statement.executeUpdate();
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -93,6 +96,19 @@ public class GroupDaoImpl implements CrudDao<Group> {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete group ", e);
         }
+    }
+
+    public Group addFacultyId(Group group, long facultyId) {
+        String sql = "UPDATE groups SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, group.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to group " + group.getName(), e);
+        }
+        return group;
     }
 }
 

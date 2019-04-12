@@ -1,32 +1,29 @@
 package com.foxminded.domain;
 
-import lombok.Data;
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import static com.foxminded.domain.Validator.*;
+import com.foxminded.dao.DaoException;
+import com.foxminded.dao.impl.DayScheduleDaoImpl;
+import com.foxminded.model.DaySchedule;
 
-@Data
 public class Schedule {
 
-    private long id;
-    private List<DaySchedule> daySchedules = new ArrayList<>();
+    private DayScheduleDaoImpl dayScheduleDao = new DayScheduleDaoImpl();
 
-    public DaySchedule createDaySchedule(DayOfWeek workDay){
-        DaySchedule daySchedule = new DaySchedule(workDay);
-        daySchedules.add(daySchedule);
+    public DaySchedule createDaySchedule(DaySchedule daySchedule, long facultyId){
+        DaySchedule newDaySchedule = dayScheduleDao.create(daySchedule);
+        dayScheduleDao.addFacultyId(newDaySchedule, facultyId);
         return daySchedule;
     }
 
-    public boolean removeDaySchedule(DayOfWeek day){
-        return daySchedules.removeIf(daySchedule -> Objects.equals(daySchedule.getWorkDay(), day));
+    public DaySchedule findDaySchedule(DaySchedule daySchedule){
+        return dayScheduleDao.findById(daySchedule.getId());
     }
 
-    public DaySchedule findDaySchedule(DayOfWeek day){
-        return findObjectByWorkdayIfExists(daySchedules,
-                daySchedule -> Objects.equals(daySchedule.getWorkDay(), day),
-                "Day schedule",
-                day);
+    public boolean removeDaySchedule(DaySchedule daySchedule){
+        try {
+            dayScheduleDao.delete(daySchedule);
+        } catch (DaoException e) {
+            return false;
+        }
+        return true;
     }
 }

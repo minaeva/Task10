@@ -1,5 +1,8 @@
-package com.foxminded.dao;
+package com.foxminded.dao.impl;
 
+import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DaoConnection;
+import com.foxminded.dao.DaoException;
 import com.foxminded.model.Auditorium;
 import java.sql.*;
 import java.util.ArrayList;
@@ -94,5 +97,19 @@ public class AuditoriumDaoImpl implements CrudDao<Auditorium> {
             throw new DaoException("Cannot delete auditorium ", e);
         }
     }
+
+    public Auditorium addFacultyId(Auditorium auditorium, long facultyId) {
+        String sql = "UPDATE auditoria SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, auditorium.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to auditorium " + auditorium.getNumber(), e);
+        }
+        return auditorium;
+    }
+
 }
 

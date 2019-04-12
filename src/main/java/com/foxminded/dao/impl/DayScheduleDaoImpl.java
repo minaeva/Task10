@@ -1,5 +1,8 @@
-package com.foxminded.dao;
+package com.foxminded.dao.impl;
 
+import com.foxminded.dao.CrudDao;
+import com.foxminded.dao.DaoConnection;
+import com.foxminded.dao.DaoException;
 import com.foxminded.model.DaySchedule;
 import java.sql.*;
 import java.time.DayOfWeek;
@@ -25,7 +28,7 @@ public class DayScheduleDaoImpl implements CrudDao<DaySchedule> {
         return daySchedule;
     }
 
-    public DaySchedule findById(final long id){
+    public DaySchedule findById(final long id) {
         DaySchedule daySchedule = null;
         String sql = "SELECT id, day FROM dayschedules WHERE id = ?";
 
@@ -51,7 +54,7 @@ public class DayScheduleDaoImpl implements CrudDao<DaySchedule> {
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet == null){
+            if (resultSet == null) {
                 return null;
             }
             result = new ArrayList<>();
@@ -67,7 +70,7 @@ public class DayScheduleDaoImpl implements CrudDao<DaySchedule> {
     }
 
     public DaySchedule update(final DaySchedule daySchedule) {
-        if ((daySchedule.getId() == -1) || (daySchedule.getId() == 0)){
+        if ((daySchedule.getId() == -1) || (daySchedule.getId() == 0)) {
             throw new DaoException("Updating day schedule failed, day schedule should be created before update");
         }
         String sql = "UPDATE dayschedules SET day = (?) WHERE id = (?)";
@@ -93,5 +96,42 @@ public class DayScheduleDaoImpl implements CrudDao<DaySchedule> {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete day schedule ", e);
         }
+    }
+
+    public List<DaySchedule> findAllByFacultyId(final long facultyId) {
+        List<DaySchedule> result = null;
+        String sql = "SELECT id, day FROM dayschedules WHERE faculty_id = ?";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            statement.setLong(1, facultyId);
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                DaySchedule daySchedule = new DaySchedule(DayOfWeek.valueOf(resultSet.getString("day")));
+                daySchedule.setId(resultSet.getInt("id"));
+                result.add(daySchedule);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find day schedules for faculty with id " + facultyId, e);
+        }
+        return result;
+    }
+
+    public DaySchedule addFacultyId(DaySchedule daySchedule, long facultyId) {
+        String sql = "UPDATE dayschedules SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, daySchedule.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to day schedule for the day "
+                    + daySchedule.getWorkDay(), e);
+        }
+        return daySchedule;
     }
 }

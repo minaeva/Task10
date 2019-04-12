@@ -1,162 +1,141 @@
 package com.foxminded.domain;
 
-import java.util.*;
-import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
-import static com.foxminded.domain.Validator.*;
+import com.foxminded.dao.DaoException;
+import com.foxminded.dao.impl.GroupDaoImpl;
+import com.foxminded.dao.impl.StudentDaoImpl;
+import com.foxminded.dao.impl.TeacherDaoImpl;
+import com.foxminded.dao.impl.AuditoriumDaoImpl;
+import com.foxminded.dao.impl.SubjectDaoImpl;
+import com.foxminded.dao.impl.DayScheduleDaoImpl;
 
-@Data
+import com.foxminded.model.Group;
+import com.foxminded.model.StudentCard;
+import com.foxminded.model.TeacherCard;
+import com.foxminded.model.Auditorium;
+import com.foxminded.model.Subject;
+import  com.foxminded.model.DaySchedule;
+import java.util.*;
+
 public class Faculty {
 
-    private long id;
-    private String name;
-    private List<Group> groups = new ArrayList<>();
-    private List<TeacherCard> teacherCards = new ArrayList<>();
-    private List<Subject> subjects = new ArrayList<>();
-    private List<Auditorium> auditoria = new ArrayList<>();
-    private Schedule schedule;
+    private GroupDaoImpl groupDao = new GroupDaoImpl();
+    private StudentDaoImpl studentDao = new StudentDaoImpl();
+    private TeacherDaoImpl teacherDao = new TeacherDaoImpl();
+    private AuditoriumDaoImpl auditoriumDao = new AuditoriumDaoImpl();
+    private SubjectDaoImpl subjectDao = new SubjectDaoImpl();
+    private DayScheduleDaoImpl dayScheduleDao = new DayScheduleDaoImpl();
 
-    public Faculty(String name) {
-        this.name = name;
+    public Group createGroup(Group group, long facultyId){
+        Group createdGroup = groupDao.create(group);
+        return groupDao.addFacultyId(createdGroup, facultyId);
     }
 
-    public Group createGroup(String groupName){
-        if (StringUtils.isBlank(groupName)){
-            throw new IllegalArgumentException("Name cannot be empty");
-        }
-        validateNameIsUnique(groups,
-                group -> Objects.equals(group.getName(), groupName),
-                "Group",
-                groupName);
-        Group newGroup = new Group(groupName);
-        groups.add(newGroup);
-        return newGroup;
-    }
-
-    public Group updateGroup(String groupName, String newGroupName) {
-        Group group = findGroup(groupName);
-        validateNameIsUnique(groups,
-                groupToCheck -> Objects.equals(groupToCheck.getName(), newGroupName),
-                "Group",
-                name);
+    public Group updateGroup(Group group, String newGroupName) {
         group.setName(newGroupName);
-        return group;
+        return groupDao.update(group);
     }
 
-    public boolean dismantleGroup(String groupName){
-        return groups.removeIf(group -> Objects.equals(group.getName(), groupName));
-    }
-
-    public Group findGroup(String groupName) {
-        return findObjectByNameIfExists(groups,
-                group -> Objects.equals(group.getName(), groupName),
-                "Group",
-                groupName);
-    }
-
-    public StudentCard takeStudent(String studentName, String groupName){
-        if (StringUtils.isBlank(studentName)){
-            throw new IllegalArgumentException("Name cannot be empty");
+    public boolean dismantleGroup(Group group){
+        try {
+            groupDao.delete(group);
+        } catch (DaoException e) {
+            return false;
         }
-        Group group = findGroup(groupName);
-        StudentCard newStudent = new StudentCard(studentName);
-        group.takeStudent(newStudent);
-        return newStudent;
+        return true;
     }
 
-    public StudentCard changeStudentGroup(String studentName, String newGroupName) {
-        Group newGroup = findGroup(newGroupName);
-        return newGroup.takeStudent(findStudent(studentName));
+    public Group findGroup(Group group) {
+        return groupDao.findById(group.getId());
     }
 
-    private StudentCard findStudent(String studentName){
-        return findObjectByNameIfExists(getAllStudents(),
-                student -> Objects.equals(student.getName(), studentName),
-                "Student",
-                studentName);
+    public StudentCard takeStudent(StudentCard student, Group group){
+        StudentCard newStudent = studentDao.create(student);
+        return studentDao.addGroupId(student, group.getId());
+    }
+
+    public StudentCard changeStudentGroup(StudentCard student, Group group) {
+        return studentDao.addGroupId(student, group.getId());
+    }
+
+    private StudentCard findStudent(StudentCard student){
+        return studentDao.findById(student.getId());
     }
 
     public List<StudentCard> getAllStudents(){
         List<StudentCard> students = new ArrayList<>();
+        List<Group> groups = groupDao.findAll();
+
         for (Group group: groups){
-            students.addAll(group.getStudents());
+            students.addAll(studentDao.findAll());
         }
         return students;
     }
 
-    public void dismissStudent(String studentName){
-        for (Group group: groups) {
-            group.dismissStudent(studentName);
+    public boolean dismissStudent(StudentCard student){
+        try {
+            studentDao.delete(student);
+        } catch (DaoException e) {
+            return false;
         }
+        return true;
     }
 
-    public Schedule createSchedule() {
-        Schedule newSchedule = new Schedule();
-        this.schedule = newSchedule;
-        return newSchedule;
+    public List<DaySchedule> createSchedule(long facultyId) {
+        return dayScheduleDao.findAllByFacultyId(facultyId);
     }
 
-    public void clearSchedule() {
-        this.schedule = null;
+    public TeacherCard hireTeacher(TeacherCard teacher, long facultyId, long subjectId){
+        TeacherCard newTeacher = teacherDao.create(teacher);
+        teacherDao.addFacultyId(newTeacher, facultyId);
+        return teacherDao.addSubjectId(newTeacher, subjectId);
     }
 
-    public TeacherCard hireTeacher(String teacherName){
-        if (StringUtils.isBlank(teacherName)){
-            throw new IllegalArgumentException("Name cannot be empty");
+    public TeacherCard findTeacher(TeacherCard teacher) {
+        return teacherDao.findById(teacher.getId());
+    }
+
+    public boolean fireTeacher(TeacherCard teacher) {
+        try {
+            teacherDao.delete(teacher);
+        } catch (DaoException e) {
+            return false;
         }
-        TeacherCard newMentor = new TeacherCard(teacherName);
-        teacherCards.add(newMentor);
-        return newMentor;
+        return true;
     }
 
-    public TeacherCard findTeacher(String teacherName) {
-        return findObjectByNameIfExists(teacherCards,
-                mentor -> Objects.equals(mentor.getName(), teacherName),
-                "Mentor",
-                teacherName);
+    public Auditorium addAuditorium(Auditorium auditorium, long facultyId){
+        Auditorium newAuditorium = auditoriumDao.create(auditorium);
+        return auditoriumDao.addFacultyId(newAuditorium, facultyId);
     }
 
-    public boolean fireTeacher(String teacherName) {
-        return teacherCards.removeIf(mentor -> Objects.equals(mentor.getName(), teacherName));
-    }
-
-    public Auditorium addAuditorium(int auditoriumNumber){
-        if (auditoriumNumber <= 0) {
-            throw new IllegalArgumentException("Number should be positive");
+    public boolean removeAuditorium(Auditorium auditorium) {
+        try {
+            auditoriumDao.delete(auditorium);
+        } catch (DaoException e) {
+            return false;
         }
-        Auditorium auditorium = new Auditorium(auditoriumNumber);
-        auditoria.add(auditorium);
-        return auditorium;
+        return true;
     }
 
-    public boolean removeAuditorium(int auditoriumNumber) {
-        return auditoria.removeIf(auditorium -> Objects.equals(auditorium.getNumber(), auditoriumNumber));
+    public Auditorium findAuditorium(Auditorium auditorium){
+        return auditoriumDao.findById(auditorium.getId());
     }
 
-    public Auditorium findAuditorium(int auditoriumNumber){
-        return findObjectByNumberIfExists(auditoria,
-                auditorium -> Objects.equals(auditorium.getNumber(), auditoriumNumber),
-                "Auditorium",
-                auditoriumNumber);
+    public Subject addSubject(Subject subject, long facultyId){
+        Subject newSubject = subjectDao.create(subject);
+        return subjectDao.addFacultyId(newSubject, facultyId);
     }
 
-    public Subject addSubject(String subjectName){
-        if (StringUtils.isBlank(subjectName)){
-            throw new IllegalArgumentException("Subject cannot be empty");
+    public boolean removeSubject(Subject subject){
+        try {
+            subjectDao.delete(subject);
+        } catch (DaoException e) {
+            return false;
         }
-        Subject subject = new Subject(subjectName);
-        subjects.add(subject);
-        return subject;
+        return true;
     }
 
-    public boolean removeSubject(String subjectName){
-        return subjects.removeIf(subject -> Objects.equals(subject.getName(), subjectName));
-    }
-
-    public Subject findSubject(String subjectName){
-        return findObjectByNameIfExists(subjects,
-                subject -> Objects.equals(subject.getName(), subjectName),
-                "Subject",
-                subjectName);
+    public Subject findSubject(Subject subject){
+        return subjectDao.findById(subject.getId());
     }
 }

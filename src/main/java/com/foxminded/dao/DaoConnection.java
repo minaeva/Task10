@@ -3,26 +3,26 @@ package com.foxminded.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import static com.foxminded.dao.DaoProperties.getPropertyValue;
+import java.util.Properties;
 
 public class DaoConnection {
 
-        private static DaoProperties properties = null;
+    private static Properties properties = null;
 
-    static Connection getConnection(){
+    static public Connection getConnection(){
         if (properties == null){
-            properties.read();
+            properties = DaoProperties.read();
             try {
-                Class.forName(getPropertyValue("db.postgre.driver"));
+                Class.forName(properties.getProperty("db.postgre.driver"));
             } catch (ClassNotFoundException ex){
                 throw new DaoException("JDBC driver cannot be initialized ", ex);
             }
         }
         try {
             return DriverManager.getConnection(
-                    getPropertyValue("db.postgre.url"),
-                    getPropertyValue("db.postgre.login"),
-                    getPropertyValue("db.postgre.password"));
+                    properties.getProperty("db.postgre.url"),
+                    properties.getProperty("db.postgre.login"),
+                    properties.getProperty("db.postgre.password"));
         } catch (SQLException ex) {
             throw new DaoException("Connection to DB cannot be established ", ex);
         }

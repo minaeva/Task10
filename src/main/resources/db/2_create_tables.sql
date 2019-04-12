@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS groups (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     faculty_id INTEGER NOT NULL,
-    FOREIGN KEY (faculty_id) REFERENCES faculties (id)
+    FOREIGN KEY (faculty_id) REFERENCES faculties (id),
+    UNIQUE (name, faculty_id)
 );
 
 /*--------------*/
@@ -29,14 +30,15 @@ CREATE TABLE IF NOT EXISTS subjects (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     faculty_id INTEGER NOT NULL,
-    FOREIGN KEY (faculty_id) REFERENCES faculties (id)
+    FOREIGN KEY (faculty_id) REFERENCES faculties (id),
+    UNIQUE (name, faculty_id)
 );
 
 /*--------------*/
 /* DAY SCHEDULE */
 CREATE TABLE IF NOT EXISTS daySchedules (
     id SERIAL PRIMARY KEY,
-    day VARCHAR(20),
+    day UNIQUE VARCHAR(20),
     faculty_id INTEGER NOT NULL,
     FOREIGN KEY (faculty_id) REFERENCES faculties (id)
 );
@@ -47,7 +49,9 @@ CREATE TABLE IF NOT EXISTS teachers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     subject_id INTEGER NOT NULL,
+    faculty_id INTEGER NOT NULL,
     FOREIGN KEY (subject_id) REFERENCES subjects (id)
+    FOREIGN KEY (faculty_id) REFERENCES faculties (id)
 );
 
 /*--------------*/
@@ -56,7 +60,8 @@ CREATE TABLE IF NOT EXISTS auditoria (
     id SERIAL PRIMARY KEY,
     number INTEGER NOT NULL,
     faculty_id INTEGER NOT NULL,
-    FOREIGN KEY (faculty_id) REFERENCES faculties (id)
+    FOREIGN KEY (faculty_id) REFERENCES faculties (id),
+    UNIQUE (number, faculty_id)
 );
 
 /*--------------*/
