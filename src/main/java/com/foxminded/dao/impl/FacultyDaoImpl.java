@@ -3,7 +3,8 @@ package com.foxminded.dao.impl;
 import com.foxminded.dao.FacultyDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
-import com.foxminded.model.Faculty;
+import com.foxminded.model.*;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,5 +97,108 @@ public class FacultyDaoImpl implements FacultyDao {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete faculty ", e);
         }
+    }
+
+    public Group addGroup(long facultyId, Group group){
+        String sql = "UPDATE groups SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, group.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to group " + group.getName(), e);
+        }
+        return group;
+
+    }
+
+    public void removeGroup(long facultyId, Group group){
+        String sql = "UPDATE groups SET faculty_id = NULL WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, group.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot remove group " + group.getId() + " from faculty with id " + facultyId, e);
+        }
+    }
+
+    public List<Group> findAllFacultyGroups(long facultyId) {
+        List<Group> result = null;
+        String sql = "SELECT id, name FROM groups WHERE faculty_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                Group group = new Group(resultSet.getString("name"));
+                group.setId(resultSet.getInt("id"));
+                result.add(group);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all groups of faculty with id " + facultyId, e);
+        }
+        return result;
+    }
+
+    public long findByGroupId(final long groupId) {
+        String sql = "SELECT faculty_id FROM groups WHERE id = ?";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, groupId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find faculty of group with id " + groupId, e);
+        }
+        return -1;
+    }
+
+    public TeacherCard addTeacher(long facultyId, TeacherCard teacher){
+        String sql = "UPDATE teachers SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, teacher.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to teacher " + teacher.getName(), e);
+        }
+        return teacher;
+    }
+
+    public Subject addSubject(long facultyId, Subject subject) {
+        String sql = "UPDATE subjects SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, subject.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to subject " + subject.getName(), e);
+        }
+        return subject;
+    }
+
+    public Auditorium addAuditorium(long facultyId, Auditorium auditorium) {
+        String sql = "UPDATE subjects SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, auditorium.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to auditorium " + auditorium.getNumber(), e);
+        }
+        return auditorium;
     }
 }

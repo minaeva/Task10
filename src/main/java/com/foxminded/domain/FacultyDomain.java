@@ -1,93 +1,60 @@
 package com.foxminded.domain;
 
-import com.foxminded.dao.GroupDao;
-import com.foxminded.dao.StudentDao;
-import com.foxminded.dao.TeacherDao;
-import com.foxminded.dao.AuditoriumDao;
-import com.foxminded.dao.SubjectDao;
-import com.foxminded.dao.DayScheduleDao;
-
-import com.foxminded.dao.impl.GroupDaoImpl;
-import com.foxminded.dao.impl.StudentDaoImpl;
-import com.foxminded.dao.impl.TeacherDaoImpl;
-import com.foxminded.dao.impl.AuditoriumDaoImpl;
-import com.foxminded.dao.impl.SubjectDaoImpl;
-import com.foxminded.dao.impl.DayScheduleDaoImpl;
-import com.foxminded.dao.DaoException;
-
-import com.foxminded.model.Group;
-import com.foxminded.model.StudentCard;
-import com.foxminded.model.TeacherCard;
-import com.foxminded.model.Auditorium;
-import com.foxminded.model.Subject;
-import  com.foxminded.model.DaySchedule;
-import java.util.*;
+import com.foxminded.dao.*;
+import com.foxminded.dao.impl.*;
+import com.foxminded.model.*;
 
 public class FacultyDomain {
 
-    private GroupDao groupDao = new GroupDaoImpl();
-    private StudentDao studentDao = new StudentDaoImpl();
-    private TeacherDao teacherDao = new TeacherDaoImpl();
-    private AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
-    private SubjectDao subjectDao = new SubjectDaoImpl();
-    private DayScheduleDao dayScheduleDao = new DayScheduleDaoImpl();
+    private FacultyDao facultyDao = new FacultyDaoImpl();
 
-    public Group createGroup(Group group, long facultyId){
-        Group createdGroup = groupDao.create(group);
-        return groupDao.addFacultyId(createdGroup, facultyId);
+    public Group addGroup(Faculty faculty, Group group) {
+        Group newGroup = GroupDomain.createGroup(group);
+
+        faculty.getGroups().add(newGroup);
+
+        return facultyDao.addGroup(group.getId(), newGroup);
     }
 
-    public Group updateGroup(Group group, String newGroupName) {
-        group.setName(newGroupName);
-        return groupDao.update(group);
+    public Group updateGroup(Faculty faculty, Group group) {
+        long oldFacultyId = findFacultyByGroup(group);
+        Faculty oldFaculty = findFacultyById(oldFacultyId);
+
+        oldFaculty.getGroups().remove(group);
+        faculty.getGroups().add(group);
+
+        facultyDao.removeGroup(oldFacultyId, group);
+        return facultyDao.addGroup(faculty.getId(), group);
     }
 
-    public boolean dismantleGroup(Group group){
+    public boolean dismantleGroup(Faculty faculty, Group group) {
+        faculty.getGroups().remove(group);
+
         try {
-            groupDao.delete(group);
+            facultyDao.removeGroup(faculty.getId(), group);
         } catch (DaoException e) {
             return false;
         }
         return true;
     }
 
-    public Group findGroup(Group group) {
-        return groupDao.findById(group.getId());
+    public Faculty findFacultyById(long id) {
+        return facultyDao.findById(id);
     }
 
-    public StudentCard takeStudent(StudentCard student, Group group){
-        StudentCard newStudent = studentDao.create(student);
-        return studentDao.addGroupId(student, group.getId());
+    public long findFacultyByGroup(Group group) {
+        return facultyDao.findByGroupId(group.getId());
+    }
+
+    public StudentCard addStudent(Group group, StudentCard student) {
+        return GroupDomain.addStudent(group, student);
     }
 
     public StudentCard changeStudentGroup(StudentCard student, Group group) {
-        return studentDao.addGroupId(student, group.getId());
+        return GroupDomain.changeStudentGroup(group, student);
     }
 
-    private StudentCard findStudent(StudentCard student){
-        return studentDao.findById(student.getId());
-    }
-
-    public List<StudentCard> getAllStudents(){
-        List<StudentCard> students = new ArrayList<>();
-        List<Group> groups = groupDao.findAll();
-
-        for (Group group: groups){
-            students.addAll(studentDao.findAll());
-        }
-        return students;
-    }
-
-    public boolean dismissStudent(StudentCard student){
-        try {
-            studentDao.delete(student);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public List<DaySchedule> createSchedule(long facultyId) {
+/*    public List<DaySchedule> createSchedule(long facultyId) {
         return dayScheduleDao.findAllByFacultyId(facultyId);
     }
 
@@ -145,4 +112,6 @@ public class FacultyDomain {
     public Subject findSubject(Subject subject){
         return subjectDao.findById(subject.getId());
     }
+
+ */
 }

@@ -97,18 +97,5 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException("Cannot delete student ", e);
         }
     }
-
-    public StudentCard addGroupId(StudentCard student, long groupId) {
-        String sql = "UPDATE students SET group_id = (?) WHERE id = (?)";
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, groupId);
-            statement.setLong(2, student.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException("Cannot add group id " + groupId + " to student " + student.getName(), e);
-        }
-        return student;
-    }
 }
 
