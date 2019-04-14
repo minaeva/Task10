@@ -1,11 +1,9 @@
 package com.foxminded.domain;
 
-import com.foxminded.dao.DaoException;
 import com.foxminded.dao.GroupDao;
 import com.foxminded.dao.impl.GroupDaoImpl;
 import com.foxminded.model.StudentCard;
 import com.foxminded.model.Group;
-import java.util.List;
 
 public class GroupDomain {
 
@@ -32,11 +30,11 @@ public class GroupDomain {
     }
 
     public static StudentCard addStudent(Group group, StudentCard student){
-        StudentCard newStudent = StudentDomain.createStudent(student);
+        group.getStudents().add(student);
 
-        group.getStudents().add(newStudent);
+        groupDao.addStudent(group.getId(), student);
 
-        return groupDao.addStudent(group.getId(), newStudent);
+        return student;
     }
 
     public static StudentCard changeStudentGroup(Group newGroup, StudentCard student) {
@@ -47,21 +45,14 @@ public class GroupDomain {
         newGroup.getStudents().add(student);
 
         groupDao.removeStudent(oldGroupId, student);
-        return groupDao.addStudent(newGroup.getId(), student);
+        groupDao.addStudent(newGroup.getId(), student);
+
+        return student;
     }
 
-    public List<StudentCard> findStudentsByGroup(long groupId) {
-        return groupDao.findAllGroupStudents(groupId);
-    }
-
-    public static boolean removeStudent(Group group, StudentCard student) {
+    public static void removeStudent(Group group, StudentCard student) {
         group.getStudents().remove(student);
 
-        try {
-            groupDao.removeStudent(group.getId(), student);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
+        groupDao.removeStudent(group.getId(), student);
     }
 }

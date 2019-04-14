@@ -1,9 +1,10 @@
 package com.foxminded.domain;
 
-import com.foxminded.dao.DaoException;
 import com.foxminded.dao.StudentDao;
 import com.foxminded.dao.impl.StudentDaoImpl;
 import com.foxminded.model.StudentCard;
+
+import java.util.List;
 
 public class StudentDomain {
 
@@ -21,12 +22,11 @@ public class StudentDomain {
         return studentDao.findById(id);
     }
 
-    public boolean dismissStudent(StudentCard student){
-        try {
-            studentDao.delete(student);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
+    public List<StudentCard> findStudentsByGroup(long groupId) {
+        return studentDao.findAllGroupStudents(groupId);
+    }
+
+    public void dismissStudent(StudentCard student){
+        studentDao.delete(student);
     }
 }

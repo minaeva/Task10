@@ -4,6 +4,8 @@ import com.foxminded.dao.DayScheduleDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.DaySchedule;
+import com.foxminded.model.Lesson;
+
 import java.sql.*;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -121,17 +123,17 @@ public class DayScheduleDaoImpl implements DayScheduleDao {
         return result;
     }
 
-    public DaySchedule addFacultyId(DaySchedule daySchedule, long facultyId) {
-        String sql = "UPDATE dayschedules SET faculty_id = (?) WHERE id = (?)";
+    public DaySchedule addLesson(Lesson lesson, long dayScheduleId){
+        String sql = "UPDATE lessons SET dayschedule_id = (?) WHERE id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, facultyId);
-            statement.setLong(2, daySchedule.getId());
+            statement.setLong(1, dayScheduleId);
+            statement.setLong(2, lesson.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add faculty id " + facultyId + " to day schedule for the day "
-                    + daySchedule.getWorkDay(), e);
+            throw new DaoException("Cannot add day schedule id " + dayScheduleId +
+                    " to lesson with start time " + lesson.getStartTime(), e);
         }
-        return daySchedule;
+        return findById(dayScheduleId);
     }
 }

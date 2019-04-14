@@ -99,7 +99,7 @@ public class FacultyDaoImpl implements FacultyDao {
         }
     }
 
-    public Group addGroup(long facultyId, Group group){
+    public Faculty addGroup(long facultyId, Group group){
         String sql = "UPDATE groups SET faculty_id = (?) WHERE id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -109,8 +109,7 @@ public class FacultyDaoImpl implements FacultyDao {
         } catch (SQLException e) {
             throw new DaoException("Cannot add faculty id " + facultyId + " to group " + group.getName(), e);
         }
-        return group;
-
+        return findById(facultyId);
     }
 
     public void removeGroup(long facultyId, Group group){
@@ -163,7 +162,7 @@ public class FacultyDaoImpl implements FacultyDao {
         return -1;
     }
 
-    public TeacherCard addTeacher(long facultyId, TeacherCard teacher){
+    public Faculty addTeacher(long facultyId, TeacherCard teacher){
         String sql = "UPDATE teachers SET faculty_id = (?) WHERE id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -173,10 +172,10 @@ public class FacultyDaoImpl implements FacultyDao {
         } catch (SQLException e) {
             throw new DaoException("Cannot add faculty id " + facultyId + " to teacher " + teacher.getName(), e);
         }
-        return teacher;
+        return findById(facultyId);
     }
 
-    public Subject addSubject(long facultyId, Subject subject) {
+    public Faculty addSubject(long facultyId, Subject subject) {
         String sql = "UPDATE subjects SET faculty_id = (?) WHERE id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -186,10 +185,10 @@ public class FacultyDaoImpl implements FacultyDao {
         } catch (SQLException e) {
             throw new DaoException("Cannot add faculty id " + facultyId + " to subject " + subject.getName(), e);
         }
-        return subject;
+        return findById(facultyId);
     }
 
-    public Auditorium addAuditorium(long facultyId, Auditorium auditorium) {
+    public Faculty addAuditorium(long facultyId, Auditorium auditorium) {
         String sql = "UPDATE subjects SET faculty_id = (?) WHERE id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -199,6 +198,20 @@ public class FacultyDaoImpl implements FacultyDao {
         } catch (SQLException e) {
             throw new DaoException("Cannot add faculty id " + facultyId + " to auditorium " + auditorium.getNumber(), e);
         }
-        return auditorium;
+        return findById(facultyId);
+    }
+
+    public Faculty addDaySchedule(long facultyId, DaySchedule daySchedule) {
+        String sql = "UPDATE dayschedules SET faculty_id = (?) WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            statement.setLong(2, daySchedule.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add faculty id " + facultyId + " to day schedule for the day "
+                    + daySchedule.getWorkDay(), e);
+        }
+        return findById(facultyId);
     }
 }

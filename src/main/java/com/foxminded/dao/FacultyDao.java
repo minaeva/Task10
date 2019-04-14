@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface FacultyDao extends CrudDao<Faculty> {
 
-    Group addGroup(long facultyId, Group group);
+    Faculty addGroup(long facultyId, Group group);
 
     void removeGroup(long facultyId, Group group);
 
@@ -13,10 +13,11 @@ public interface FacultyDao extends CrudDao<Faculty> {
 
     long findByGroupId(final long groupId);
 
-    TeacherCard addTeacher(long facultyId, TeacherCard teacher);
+    Faculty addTeacher(long facultyId, TeacherCard teacher);
 
-    Subject addSubject(long facultyId, Subject subject);
+    Faculty addAuditorium(long facultyId, Auditorium auditorium);
 
-    Auditorium addAuditorium(long facultyId, Auditorium auditorium);
+    Faculty addSubject(long facultyId, Subject subject);
 
+    Faculty addDaySchedule(long facultyId, DaySchedule daySchedule);
 }

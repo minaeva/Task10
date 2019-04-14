@@ -3,6 +3,7 @@ package com.foxminded.domain;
 import com.foxminded.dao.*;
 import com.foxminded.dao.impl.*;
 import com.foxminded.model.*;
+import java.util.List;
 
 public class FacultyDomain {
 
@@ -13,7 +14,9 @@ public class FacultyDomain {
 
         faculty.getGroups().add(newGroup);
 
-        return facultyDao.addGroup(group.getId(), newGroup);
+        facultyDao.addGroup(group.getId(), newGroup);
+
+        return newGroup;
     }
 
     public Group updateGroup(Faculty faculty, Group group) {
@@ -24,18 +27,15 @@ public class FacultyDomain {
         faculty.getGroups().add(group);
 
         facultyDao.removeGroup(oldFacultyId, group);
-        return facultyDao.addGroup(faculty.getId(), group);
+        facultyDao.addGroup(faculty.getId(), group);
+
+        return group;
     }
 
-    public boolean dismantleGroup(Faculty faculty, Group group) {
+    public void dismantleGroup(Faculty faculty, Group group) {
         faculty.getGroups().remove(group);
 
-        try {
-            facultyDao.removeGroup(faculty.getId(), group);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
+        facultyDao.removeGroup(faculty.getId(), group);
     }
 
     public Faculty findFacultyById(long id) {
@@ -54,64 +54,60 @@ public class FacultyDomain {
         return GroupDomain.changeStudentGroup(group, student);
     }
 
-/*    public List<DaySchedule> createSchedule(long facultyId) {
-        return dayScheduleDao.findAllByFacultyId(facultyId);
+    public TeacherCard hireTeacher(Faculty faculty, TeacherCard teacher, Subject subject){
+        TeacherCard newTeacher = TeacherDomain.createTeacher(teacher);
+
+        faculty.getTeachers().add(newTeacher);
+
+        TeacherDomain.addSubject(newTeacher, subject);
+
+        facultyDao.addTeacher(faculty.getId(), newTeacher);
+
+        return newTeacher;
     }
 
-    public TeacherCard hireTeacher(TeacherCard teacher, long facultyId, long subjectId){
-        TeacherCard newTeacher = teacherDao.create(teacher);
-        teacherDao.addFacultyId(newTeacher, facultyId);
-        return teacherDao.addSubjectId(newTeacher, subjectId);
+    public void fireTeacher(Faculty faculty, TeacherCard teacher) {
+        faculty.getTeachers().remove(teacher);
+        TeacherDomain.dismissTeacher(teacher);
     }
 
-    public TeacherCard findTeacher(TeacherCard teacher) {
-        return teacherDao.findById(teacher.getId());
+    public Auditorium addAuditorium(Faculty faculty, Auditorium auditorium){
+        Auditorium newAuditorium = AuditoriumDomain.createAuditorium(auditorium);
+
+        faculty.getAuditoria().add(newAuditorium);
+
+        facultyDao.addAuditorium(faculty.getId(), newAuditorium);
+
+        return newAuditorium;
     }
 
-    public boolean fireTeacher(TeacherCard teacher) {
-        try {
-            teacherDao.delete(teacher);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
+    public void removeAuditorium(Faculty faculty, Auditorium auditorium) {
+        faculty.getAuditoria().remove(faculty);
+
+        AuditoriumDomain.removeAuditorium(auditorium);
     }
 
-    public Auditorium addAuditorium(Auditorium auditorium, long facultyId){
-        Auditorium newAuditorium = auditoriumDao.create(auditorium);
-        return auditoriumDao.addFacultyId(newAuditorium, facultyId);
+    public Subject addSubject(Faculty faculty, Subject subject){
+        Subject newSubject = SubjectDomain.createSubject(subject);
+
+        faculty.getSubjects().add(newSubject);
+
+        facultyDao.addSubject(faculty.getId(), newSubject);
+
+        return newSubject;
     }
 
-    public boolean removeAuditorium(Auditorium auditorium) {
-        try {
-            auditoriumDao.delete(auditorium);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
+    public void removeSubject(Faculty faculty, Subject subject){
+        faculty.getSubjects().remove(subject);
+
+        SubjectDomain.removeSubject(subject);
     }
 
-    public Auditorium findAuditorium(Auditorium auditorium){
-        return auditoriumDao.findById(auditorium.getId());
-    }
+    public List<DaySchedule> createSchedule(Faculty faculty) {
+        List<DaySchedule> newDaySchedules = DayScheduleDomain.findAllDaySchedules(faculty);
 
-    public Subject addSubject(Subject subject, long facultyId){
-        Subject newSubject = subjectDao.create(subject);
-        return subjectDao.addFacultyId(newSubject, facultyId);
-    }
+        faculty.getSchedule().setDaySchedules(newDaySchedules);
 
-    public boolean removeSubject(Subject subject){
-        try {
-            subjectDao.delete(subject);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
+        return newDaySchedules;
     }
-
-    public Subject findSubject(Subject subject){
-        return subjectDao.findById(subject.getId());
-    }
-
- */
 }

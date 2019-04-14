@@ -1,29 +1,46 @@
 package com.foxminded.domain;
 
-import com.foxminded.dao.LessonDao;
-import com.foxminded.dao.DaoException;
-import com.foxminded.dao.impl.LessonDaoImpl;
+import com.foxminded.dao.DayScheduleDao;
+import com.foxminded.dao.impl.DayScheduleDaoImpl;
+import com.foxminded.model.DaySchedule;
+import com.foxminded.model.Faculty;
 import com.foxminded.model.Lesson;
+import java.util.List;
 
 public class DayScheduleDomain {
 
-    private LessonDao lessonDao = new LessonDaoImpl();
+    private static DayScheduleDao dayScheduleDao = new DayScheduleDaoImpl();
 
-    public Lesson createLesson(Lesson lesson, long dayScheduleId) {
-        Lesson newLesson = lessonDao.create(lesson);
-        return lessonDao.addDayScheduleId(newLesson, dayScheduleId);
+    public DaySchedule createDaySchedule(DaySchedule daySchedule){
+        return dayScheduleDao.create(daySchedule);
     }
 
-    public Lesson findLesson(Lesson lesson){
-        return lessonDao.findById(lesson.getId());
+    public DaySchedule findDaySchedule(long id){
+        return dayScheduleDao.findById(id);
     }
 
-    public boolean removeLesson(Lesson lesson) {
-        try {
-            lessonDao.delete(lesson);
-        } catch (DaoException e) {
-            return false;
-        }
-        return true;
+    public void removeDaySchedule(DaySchedule daySchedule){
+        dayScheduleDao.delete(daySchedule);
     }
+
+    public static List<DaySchedule> findAllDaySchedules(Faculty faculty) {
+        return dayScheduleDao.findAllByFacultyId(faculty.getId());
+    }
+
+    public static Lesson addLesson(DaySchedule daySchedule, Lesson lesson) {
+        Lesson newLesson = LessonDomain.createLesson(lesson);
+
+        daySchedule.getLessons().add(newLesson);
+
+        dayScheduleDao.addLesson(lesson, daySchedule.getId());
+
+        return lesson;
+    }
+
+    public static void removeLesson(DaySchedule daySchedule, Lesson lesson) {
+        daySchedule.getLessons().remove(lesson);
+
+        LessonDomain.removeLesson(lesson);
+    }
+
 }

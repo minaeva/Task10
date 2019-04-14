@@ -97,5 +97,27 @@ public class StudentDaoImpl implements StudentDao {
             throw new DaoException("Cannot delete student ", e);
         }
     }
+
+    public List<StudentCard> findAllGroupStudents(long groupId) {
+        List<StudentCard> result = null;
+        String sql = "SELECT id, name FROM students WHERE group_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, groupId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                StudentCard student = new StudentCard(resultSet.getString("name"));
+                student.setId(resultSet.getInt("id"));
+                result.add(student);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all students of group with id " + groupId, e);
+        }
+        return result;
+    }
 }
 

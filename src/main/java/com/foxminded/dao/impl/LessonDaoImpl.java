@@ -3,10 +3,7 @@ package com.foxminded.dao.impl;
 import com.foxminded.dao.LessonDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
-import com.foxminded.model.Auditorium;
-import com.foxminded.model.Group;
-import com.foxminded.model.Lesson;
-import com.foxminded.model.TeacherCard;
+import com.foxminded.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -133,16 +130,30 @@ public class LessonDaoImpl implements LessonDao {
         }
     }
 
-    public Lesson addDayScheduleId(Lesson lesson, long dayScheduleId) {
-        String sql = "UPDATE lessons SET dayschedule_id = (?) WHERE id = (?)";
+    public Lesson addTeacher(Lesson lesson, TeacherCard teacher) {
+        String sql = "UPDATE lessons SET teacher_id = (?) WHERE id = (?)";
+
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, dayScheduleId);
+            statement.setLong(1, teacher.getId());
             statement.setLong(2, lesson.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add day schedule id " + dayScheduleId +
-                    " to lesson with start time " + lesson.getStartTime(), e);
+            throw new DaoException("Cannot add teacher " + teacher.getName() + " to lesson " + lesson.getStartTime(), e);
+        }
+        return lesson;
+    }
+
+    public Lesson addAuditorium(Lesson lesson, Auditorium auditorium) {
+        String sql = "UPDATE lessons SET auditorium_id = (?) WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, auditorium.getId());
+            statement.setLong(2, lesson.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add auditorium " + auditorium.getNumber() + " to lesson " + lesson.getStartTime(), e);
         }
         return lesson;
     }
