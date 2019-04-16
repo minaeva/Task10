@@ -6,7 +6,7 @@ import com.foxminded.model.Auditorium;
 
 import java.util.List;
 
-public class AuditoriumDomain {
+public class  AuditoriumDomain {
 
     private AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
 

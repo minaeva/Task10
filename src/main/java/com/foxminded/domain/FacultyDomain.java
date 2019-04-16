@@ -29,8 +29,12 @@ public class FacultyDomain {
         return faculty;
     }
 
-     public long findFacultyByGroup(Group group) {
+    public long findFacultyByGroup(Group group) {
         return facultyDao.findByGroupId(group.getId());
+    }
+
+    public void removeFaculty(Faculty faculty) {
+        facultyDao.delete(faculty);
     }
 
     public Faculty hireTeacher(Faculty faculty, TeacherCard teacher){
@@ -39,8 +43,8 @@ public class FacultyDomain {
     }
 
     public void fireTeacher(Faculty faculty, TeacherCard teacher) {
-        faculty.getTeachers().remove(teacher);
         facultyDao.removeTeacher(faculty.getId(), teacher);
+        faculty.getTeachers().remove(teacher);
     }
 
     public Faculty addAuditorium(Faculty faculty, Auditorium auditorium){
@@ -49,18 +53,18 @@ public class FacultyDomain {
     }
 
     public void removeAuditorium(Faculty faculty, Auditorium auditorium) {
-        faculty.getAuditoria().remove(faculty);
         facultyDao.removeAuditorium(faculty.getId(), auditorium);
+        faculty.getAuditoria().remove(faculty);
     }
 
     public Faculty addSubject(Faculty faculty, Subject subject){
         faculty.getSubjects().add(subject);
-       return facultyDao.addSubject(faculty.getId(), subject);
+        return facultyDao.addSubject(faculty.getId(), subject);
     }
 
     public void removeSubject(Faculty faculty, Subject subject){
-        faculty.getSubjects().remove(subject);
         facultyDao.removeSubject(faculty.getId(), subject);
+        faculty.getSubjects().remove(subject);
     }
 
     public Faculty addGroup(Faculty faculty, Group group) {
@@ -69,7 +73,7 @@ public class FacultyDomain {
     }
 
     public void dismantleGroup(Faculty faculty, Group group) {
-        faculty.getGroups().remove(group);
         facultyDao.removeGroup(faculty.getId(), group);
+        faculty.getGroups().remove(group);
     }
 }

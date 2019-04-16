@@ -45,7 +45,6 @@ public class GroupDomain {
     }
 
     public void removeGroup(Group group) {
-        group.setStudents(null);
         groupDao.delete(group);
     }
 
@@ -55,7 +54,7 @@ public class GroupDomain {
     }
 
     public void removeStudent(Group group, StudentCard student) {
-        group.getStudents().remove(student);
         groupDao.removeStudent(group.getId(), student);
+        group.getStudents().remove(student);
     }
 }
