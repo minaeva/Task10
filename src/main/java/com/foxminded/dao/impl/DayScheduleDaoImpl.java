@@ -3,7 +3,6 @@ package com.foxminded.dao.impl;
 import com.foxminded.dao.DayScheduleDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
-import com.foxminded.model.DaySchedule;
 import com.foxminded.model.Lesson;
 
 import java.sql.*;

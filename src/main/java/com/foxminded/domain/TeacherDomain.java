@@ -2,31 +2,46 @@ package com.foxminded.domain;
 
 import com.foxminded.dao.TeacherDao;
 import com.foxminded.dao.impl.TeacherDaoImpl;
+import com.foxminded.model.Lesson;
 import com.foxminded.model.Subject;
 import com.foxminded.model.TeacherCard;
+import java.util.List;
 
 public class TeacherDomain {
 
-    private static TeacherDao teacherDao = new TeacherDaoImpl();
+    private TeacherDao teacherDao = new TeacherDaoImpl();
 
-    public static TeacherCard createTeacher(TeacherCard teacher){
+    public TeacherCard createTeacher(TeacherCard teacher){
         return teacherDao.create(teacher);
     }
 
-    public static TeacherCard addSubject(TeacherCard teacher, Subject subject){
-        return teacherDao.addSubjectId(teacher, subject.getId());
-    }
-
-    public static TeacherCard findTeacher(long id) {
+    public TeacherCard findTeacherById(long id) {
         return teacherDao.findById(id);
     }
 
-    public static TeacherCard updateTeacher(TeacherCard teacher){
+    public List<TeacherCard> findAllTeachers() {
+        return teacherDao.findAll();
+    }
+
+    public List<TeacherCard> findTeachersByFacultyId(long facultyId) {
+        return teacherDao.findTeachersByFacultyId(facultyId);
+    }
+
+    public TeacherCard updateTeacher(TeacherCard teacher){
         return teacherDao.update(teacher);
     }
 
-    public static void dismissTeacher(TeacherCard teacher){
+    public void dismissTeacher(TeacherCard teacher){
         teacherDao.delete(teacher);
+    }
+
+    public TeacherCard addSubject(TeacherCard teacher, Subject subject){
+        return teacherDao.addSubjectId(teacher, subject.getId());
+    }
+
+    public List<Lesson> createSchedule(TeacherCard teacher) {
+        LessonDomain lessonDomain = new LessonDomain();
+        return lessonDomain.findLessonsByTeacherId(teacher.getId());
     }
 
 }

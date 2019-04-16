@@ -27,7 +27,7 @@ public class TeacherDaoImpl implements TeacherDao {
         return teacher;
     }
 
-    public TeacherCard findById(final long id){
+    public TeacherCard findById(final long id) {
         TeacherCard teacher = null;
         String sql = "SELECT id, name FROM teachers WHERE id = ?";
 
@@ -68,6 +68,28 @@ public class TeacherDaoImpl implements TeacherDao {
         return result;
     }
 
+    public List<TeacherCard> findTeachersByFacultyId(long facultyId) {
+        List<TeacherCard> result = null;
+        String sql = "SELECT id, name FROM teachers WHERE faculty_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                TeacherCard teacher = new TeacherCard(resultSet.getString("name"));
+                teacher.setId(resultSet.getInt("id"));
+                result.add(teacher);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all teachers of faculty with id " + facultyId, e);
+        }
+        return result;
+    }
+
     public TeacherCard update(final TeacherCard teacher) {
         if ((teacher.getId() == -1) || (teacher.getId() == 0)){
             throw new DaoException("Updating teacher failed, teacher should be created before update");
@@ -95,19 +117,6 @@ public class TeacherDaoImpl implements TeacherDao {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete teacher ", e);
         }
-    }
-
-    public TeacherCard addFacultyId(TeacherCard teacher, long facultyId) {
-        String sql = "UPDATE teachers SET faculty_id = (?) WHERE id = (?)";
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, facultyId);
-            statement.setLong(2, teacher.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException("Cannot add faculty id " + facultyId + " to teacher " + teacher.getName(), e);
-        }
-        return teacher;
     }
 
     public TeacherCard addSubjectId(TeacherCard teacher, long subjectId) {

@@ -15,9 +15,13 @@ public interface FacultyDao extends CrudDao<Faculty> {
 
     Faculty addTeacher(long facultyId, TeacherCard teacher);
 
+    Faculty removeTeacher(long facultyId, TeacherCard teacher);
+
     Faculty addAuditorium(long facultyId, Auditorium auditorium);
+
+    Faculty removeSubject(long facultyId, Subject subject);
 
     Faculty addSubject(long facultyId, Subject subject);
 
-    Faculty addDaySchedule(long facultyId, DaySchedule daySchedule);
+    Faculty removeAuditorium(long facultyId, Auditorium auditorium);
 }

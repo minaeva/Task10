@@ -13,7 +13,7 @@ public class Faculty {
     private List<TeacherCard> teachers = new ArrayList<>();
     private List<Subject> subjects = new ArrayList<>();
     private List<Auditorium> auditoria = new ArrayList<>();
-    private Schedule schedule;
+    private List<Lesson> schedule = new ArrayList<>();
 
     public Faculty(String name) {
         this.name = name;

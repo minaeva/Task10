@@ -2,31 +2,45 @@ package com.foxminded.domain;
 
 import com.foxminded.dao.StudentDao;
 import com.foxminded.dao.impl.StudentDaoImpl;
+import com.foxminded.model.Group;
+import com.foxminded.model.Lesson;
 import com.foxminded.model.StudentCard;
-
 import java.util.List;
 
 public class StudentDomain {
 
-    private static StudentDao studentDao = new StudentDaoImpl();
+    private StudentDao studentDao = new StudentDaoImpl();
 
-    public static StudentCard createStudent(StudentCard student) {
+    public StudentCard createStudent(StudentCard student) {
         return studentDao.create(student);
     }
 
-    public static StudentCard updateStudent(StudentCard student) {
-        return studentDao.update(student);
-    }
-
-    public static StudentCard findStudent(long id) {
+    public StudentCard findStudentById(long id) {
         return studentDao.findById(id);
     }
 
+    public List<StudentCard> findAllStudents() {
+        return studentDao.findAll();
+    }
+
     public List<StudentCard> findStudentsByGroup(long groupId) {
-        return studentDao.findAllGroupStudents(groupId);
+        return studentDao.findStudentsByGroupId(groupId);
+    }
+
+    public StudentCard updateStudent(StudentCard student) {
+        return studentDao.update(student);
     }
 
     public void dismissStudent(StudentCard student){
         studentDao.delete(student);
     }
+
+    public List<Lesson> createSchedule(StudentCard student) {
+        GroupDomain groupDomain = new GroupDomain();
+        Group group = groupDomain.findGroupByStudent(student);
+
+        LessonDomain lessonDomain = new LessonDomain();
+        return lessonDomain.findLessonsByGroupId(group.getId());
+    }
+
 }

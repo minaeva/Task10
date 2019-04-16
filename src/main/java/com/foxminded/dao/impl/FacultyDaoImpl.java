@@ -116,8 +116,7 @@ public class FacultyDaoImpl implements FacultyDao {
         String sql = "UPDATE groups SET faculty_id = NULL WHERE id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, facultyId);
-            statement.setLong(2, group.getId());
+            statement.setLong(1, group.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException("Cannot remove group " + group.getId() + " from faculty with id " + facultyId, e);
@@ -170,7 +169,19 @@ public class FacultyDaoImpl implements FacultyDao {
             statement.setLong(2, teacher.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add faculty id " + facultyId + " to teacher " + teacher.getName(), e);
+            throw new DaoException("Cannot add teacher " + teacher.getName() + " to faculty with id " + facultyId, e);
+        }
+        return findById(facultyId);
+    }
+
+    public Faculty removeTeacher(long facultyId, TeacherCard teacher){
+        String sql = "UPDATE teachers SET faculty_id = NULL WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, teacher.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot remove teacher " + teacher.getName() + " from faculty with id " + facultyId, e);
         }
         return findById(facultyId);
     }
@@ -183,7 +194,19 @@ public class FacultyDaoImpl implements FacultyDao {
             statement.setLong(2, subject.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add faculty id " + facultyId + " to subject " + subject.getName(), e);
+            throw new DaoException("Cannot add subject " + subject.getName() + " to faculty with id " + facultyId, e);
+        }
+        return findById(facultyId);
+    }
+
+    public Faculty removeSubject(long facultyId, Subject subject) {
+        String sql = "UPDATE subjects SET faculty_id = NULL WHERE id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, subject.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot remove subject " + subject.getName() + " from faculty with id " + facultyId, e);
         }
         return findById(facultyId);
     }
@@ -196,21 +219,19 @@ public class FacultyDaoImpl implements FacultyDao {
             statement.setLong(2, auditorium.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add faculty id " + facultyId + " to auditorium " + auditorium.getNumber(), e);
+            throw new DaoException("Cannot add auditorium " + auditorium.getNumber() + " to faculty with id " + facultyId, e);
         }
         return findById(facultyId);
     }
 
-    public Faculty addDaySchedule(long facultyId, DaySchedule daySchedule) {
-        String sql = "UPDATE dayschedules SET faculty_id = (?) WHERE id = (?)";
+    public Faculty removeAuditorium(long facultyId, Auditorium auditorium) {
+        String sql = "UPDATE auditoria SET faculty_id = NULL WHERE id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, facultyId);
-            statement.setLong(2, daySchedule.getId());
+            statement.setLong(1, auditorium.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add faculty id " + facultyId + " to day schedule for the day "
-                    + daySchedule.getWorkDay(), e);
+            throw new DaoException("Cannot remove auditorium " + auditorium.getNumber() + " from faculty with id " + facultyId, e);
         }
         return findById(facultyId);
     }

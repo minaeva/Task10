@@ -4,23 +4,29 @@ import com.foxminded.dao.SubjectDao;
 import com.foxminded.dao.impl.SubjectDaoImpl;
 import com.foxminded.model.Subject;
 
+import java.util.List;
+
 public class SubjectDomain {
 
-    private static SubjectDao subjectDao = new SubjectDaoImpl();
+    private SubjectDao subjectDao = new SubjectDaoImpl();
 
-    public static Subject createSubject(Subject subject) {
+    public Subject createSubject(Subject subject) {
         return subjectDao.create(subject);
     }
 
-    public static Subject findSubject(long id){
+    public Subject findSubjectById(long id) {
         return subjectDao.findById(id);
     }
 
-    public static Subject updateSubject(Subject subject){
+    public List<Subject> findAllSubjects() {
+        return subjectDao.findAll();
+    }
+
+    public Subject updateSubject(Subject subject){
         return subjectDao.update(subject);
     }
 
-    public static void removeSubject(Subject subject) {
+    public void removeSubject(Subject subject) {
         subjectDao.delete(subject);
     }
 }

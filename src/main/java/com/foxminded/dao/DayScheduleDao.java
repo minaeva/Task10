@@ -1,6 +1,5 @@
 package com.foxminded.dao;
 
-import com.foxminded.model.DaySchedule;
 import com.foxminded.model.Lesson;
 
 import java.util.List;

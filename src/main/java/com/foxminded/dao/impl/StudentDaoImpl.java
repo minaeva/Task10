@@ -27,7 +27,7 @@ public class StudentDaoImpl implements StudentDao {
         return student;
     }
 
-    public StudentCard findById(final long id){
+    public StudentCard findById(final long id) {
         StudentCard student = null;
         String sql = "SELECT id, name FROM students WHERE id = ?";
 
@@ -98,7 +98,7 @@ public class StudentDaoImpl implements StudentDao {
         }
     }
 
-    public List<StudentCard> findAllGroupStudents(long groupId) {
+    public List<StudentCard> findStudentsByGroupId(long groupId) {
         List<StudentCard> result = null;
         String sql = "SELECT id, name FROM students WHERE group_id = (?)";
         try (Connection connection = DaoConnection.getConnection();

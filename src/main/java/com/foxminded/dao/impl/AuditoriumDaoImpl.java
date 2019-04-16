@@ -27,7 +27,7 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
         return auditorium;
     }
 
-    public Auditorium findById(final long id){
+    public Auditorium findById(final long id) {
         Auditorium auditorium = null;
         String sql = "SELECT id, number FROM auditoria WHERE id = ?";
 
@@ -64,6 +64,28 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
             }
         } catch (SQLException e) {
             throw new DaoException("Cannot find all auditoria ", e);
+        }
+        return result;
+    }
+
+    public List<Auditorium> findAuditoriaByFacultyId(long facultyId) {
+        List<Auditorium> result = null;
+        String sql = "SELECT id, name FROM auditoria WHERE faculty_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                Auditorium auditorium = new Auditorium(resultSet.getInt("number"));
+                auditorium.setId(resultSet.getInt("id"));
+                result.add(auditorium);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all auditoria of faculty with id " + facultyId, e);
         }
         return result;
     }

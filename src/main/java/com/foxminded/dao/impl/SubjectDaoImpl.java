@@ -27,7 +27,7 @@ public class SubjectDaoImpl implements SubjectDao {
         return subject;
     }
 
-    public Subject findById(final long id){
+    public Subject findById(final long id) {
         Subject subject = null;
         String sql = "SELECT id, name FROM subjects WHERE id = ?";
 
@@ -68,6 +68,28 @@ public class SubjectDaoImpl implements SubjectDao {
         return result;
     }
 
+    public List<Subject> findSubjectsByFacultyId(long facultyId) {
+        List<Subject> result = null;
+        String sql = "SELECT id, name FROM subjects WHERE faculty_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                Subject subject = new Subject(resultSet.getString("name"));
+                subject.setId(resultSet.getInt("id"));
+                result.add(subject);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all subjects of faculty with id " + facultyId, e);
+        }
+        return result;
+    }
+
     public Subject update(final Subject subject) {
         if ((subject.getId() == -1) || (subject.getId() == 0)){
             throw new DaoException("Updating subject failed, subject should be created before update");
@@ -95,18 +117,5 @@ public class SubjectDaoImpl implements SubjectDao {
         } catch (SQLException e) {
             throw new DaoException("Cannot delete subject ", e);
         }
-    }
-
-    public Subject addFacultyId(Subject subject, long facultyId) {
-        String sql = "UPDATE subjects SET faculty_id = (?) WHERE id = (?)";
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, facultyId);
-            statement.setLong(2, subject.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException("Cannot add faculty id " + facultyId + " to subject " + subject.getName(), e);
-        }
-        return subject;
     }
 }

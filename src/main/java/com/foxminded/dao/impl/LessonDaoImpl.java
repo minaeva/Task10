@@ -1,8 +1,6 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.LessonDao;
-import com.foxminded.dao.DaoConnection;
-import com.foxminded.dao.DaoException;
+import com.foxminded.dao.*;
 import com.foxminded.model.*;
 
 import java.sql.*;
@@ -12,37 +10,37 @@ import java.util.List;
 public class LessonDaoImpl implements LessonDao {
 
     public Lesson create(Lesson lesson) {
-        String sql = "INSERT INTO lessons (group_id, teacher_id, auditorium_id," +
-                "start_time, end_time) VALUES (?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO lessons (group_id, teacher_id, subject_id, auditorium_id," +
+                "start_date_time) VALUES (?, ?, ?, ?, ?);";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, lesson.getGroup().getId());
             statement.setLong(2, lesson.getTeacher().getId());
-            statement.setLong(3, lesson.getAuditorium().getId());
-            statement.setTime(4, Time.valueOf(lesson.getStartTime()));
-            statement.setTime(5, Time.valueOf(lesson.getEndTime()));
+            statement.setLong(3, lesson.getSubject().getId());
+            statement.setLong(4, lesson.getAuditorium().getId());
+            statement.setTimestamp(5, Timestamp.valueOf(lesson.getStartDateTime()));
             statement.executeUpdate();
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 generatedKeys.next();
                 lesson.setId(generatedKeys.getLong("id"));
             }
         } catch (SQLException e) {
-            throw new DaoException("Cannot create lesson " + lesson.getStartTime(), e);
+            throw new DaoException("Cannot create lesson " + lesson.getStartDateTime(), e);
         }
         return lesson;
     }
 
     public Lesson findById(final long id){
         Lesson lesson = null;
-        String sql = "SELECT id, group_id, teacher_id, auditorium_id, start_time, end_time FROM lessons WHERE id = ?";
+        String sql = "SELECT id, group_id, teacher_id, subject_id, auditorium_id, start_date_time FROM lessons WHERE id = ?";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    lesson = new Lesson(resultSet.getTime("start_time").toLocalTime());
+                    lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                     lesson.setId(resultSet.getInt("id"));
                     fillReferenceFields(resultSet, lesson);
                 }
@@ -55,22 +53,68 @@ public class LessonDaoImpl implements LessonDao {
 
     private void fillReferenceFields(ResultSet resultSet, Lesson lesson){
         try {
-            GroupDaoImpl groupDao = new GroupDaoImpl();
+            GroupDao groupDao = new GroupDaoImpl();
             Group group = groupDao.findById(resultSet.getLong("group_id"));
             lesson.setGroup(group);
 
-            TeacherDaoImpl teacherDao = new TeacherDaoImpl();
+            TeacherDao teacherDao = new TeacherDaoImpl();
             TeacherCard teacher = teacherDao.findById(resultSet.getLong("teacher_id"));
             lesson.setTeacher(teacher);
 
-            AuditoriumDaoImpl auditoriumDao = new AuditoriumDaoImpl();
+            AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
             Auditorium auditorium = auditoriumDao.findById(resultSet.getLong("auditorium_id"));
             lesson.setAuditorium(auditorium);
 
-            lesson.setEndTime(resultSet.getTime("end_time").toLocalTime());
+            SubjectDao subjectDao = new SubjectDaoImpl();
+            Subject subject = subjectDao.findById(resultSet.getLong("subject_id"));
+            lesson.setSubject(subject);
         } catch (SQLException e) {
-            throw new DaoException("Cannot fill fields for lesson " + lesson.getStartTime(), e);
+            throw new DaoException("Cannot fill fields for lesson " + lesson.getStartDateTime(), e);
         }
+    }
+
+    public List<Lesson> findLessonsByGroupId(long groupId) {
+        List<Lesson> result = null;
+        String sql = "SELECT id, teacher_id, subject_id, auditorium_id, start_date_time FROM lessons WHERE group_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, groupId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
+                lesson.setId(resultSet.getInt("id"));
+                result.add(lesson);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all lessons of group with id " + groupId, e);
+        }
+        return result;
+    }
+
+    public List<Lesson> findLessonsByTeacherId(long teacherId) {
+        List<Lesson> result = null;
+        String sql = "SELECT id, group_id, subject_id, auditorium_id, start_date_time FROM lessons WHERE group_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, teacherId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
+                lesson.setId(resultSet.getInt("id"));
+                result.add(lesson);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all lessons of teacher with id " + teacherId, e);
+        }
+        return result;
     }
 
     public List<Lesson> findAll() {
@@ -85,7 +129,7 @@ public class LessonDaoImpl implements LessonDao {
             }
             result = new ArrayList<>();
             while (resultSet.next()) {
-                Lesson lesson = new Lesson(resultSet.getTime("start_time").toLocalTime());
+                Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                 lesson.setId(resultSet.getInt("id"));
                 fillReferenceFields(resultSet, lesson);
                 result.add(lesson);
@@ -100,19 +144,19 @@ public class LessonDaoImpl implements LessonDao {
         if ((lesson.getId() == -1) || (lesson.getId() == 0)){
             throw new DaoException("Updating lesson failed, lesson should be created before update");
         }
-        String sql = "UPDATE lessons SET group_id = (?), teacher_id = (?), auditorium_id = (?)," +
-                "start_time = (?), end_time = (?) WHERE id = (?)";
+        String sql = "UPDATE lessons SET group_id = (?), teacher_id = (?), subject_id = (?), auditorium_id = (?)," +
+                "start_date_time = (?) WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, lesson.getGroup().getId());
-            statement.setLong(2, lesson.getTeacher().getId());
-            statement.setLong(3, lesson.getAuditorium().getId());
-            statement.setTime(4, Time.valueOf(lesson.getStartTime()));
-            statement.setTime(5, Time.valueOf(lesson.getEndTime()));
+            statement.setLong(2, lesson.getSubject().getId());
+            statement.setLong(3, lesson.getTeacher().getId());
+            statement.setLong(4, lesson.getAuditorium().getId());
+            statement.setTimestamp(5, Timestamp.valueOf(lesson.getStartDateTime()));
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot update lesson " + lesson.getStartTime(), e);
+            throw new DaoException("Cannot update lesson " + lesson.getStartDateTime(), e);
         }
         return lesson;
     }
@@ -139,7 +183,21 @@ public class LessonDaoImpl implements LessonDao {
             statement.setLong(2, lesson.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add teacher " + teacher.getName() + " to lesson " + lesson.getStartTime(), e);
+            throw new DaoException("Cannot add teacher " + teacher.getName() + " to lesson " + lesson.getStartDateTime(), e);
+        }
+        return lesson;
+    }
+
+    public Lesson addSubject(Lesson lesson, Subject subject) {
+        String sql = "UPDATE lessons SET subject_id = (?) WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, subject.getId());
+            statement.setLong(2, lesson.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException("Cannot add subject " + subject.getName() + " to lesson " + lesson.getStartDateTime(), e);
         }
         return lesson;
     }
@@ -153,7 +211,7 @@ public class LessonDaoImpl implements LessonDao {
             statement.setLong(2, lesson.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Cannot add auditorium " + auditorium.getNumber() + " to lesson " + lesson.getStartTime(), e);
+            throw new DaoException("Cannot add auditorium " + auditorium.getNumber() + " to lesson " + lesson.getStartDateTime(), e);
         }
         return lesson;
     }

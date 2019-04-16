@@ -35,15 +35,6 @@ CREATE TABLE IF NOT EXISTS subjects (
 );
 
 /*--------------*/
-/* DAY SCHEDULE */
-CREATE TABLE IF NOT EXISTS daySchedules (
-    id SERIAL PRIMARY KEY,
-    day UNIQUE VARCHAR(20),
-    faculty_id INTEGER,
-    FOREIGN KEY (faculty_id) REFERENCES faculties (id)
-);
-
-/*--------------*/
 /* TEACHERS */
 CREATE TABLE IF NOT EXISTS teachers (
     id SERIAL PRIMARY KEY,
@@ -70,13 +61,12 @@ CREATE TABLE IF NOT EXISTS lessons (
     id SERIAL PRIMARY KEY,
     group_id INTEGER,
     teacher_id INTEGER,
+    subject_id INTEGER,
     auditorium_id INTEGER,
-    start_time TIME NOT NULL,
-    end_time TIME,
-    daySchedule_id INTEGER,
+    start_date_time TIMESTAMP NOT NULL,
     FOREIGN KEY (group_id) REFERENCES groups (id),
     FOREIGN KEY (teacher_id) REFERENCES teachers (id),
+    FOREIGN KEY (subject_id) REFERENCES subjects (id),
     FOREIGN KEY (auditorium_id) REFERENCES auditoria (id),
-    FOREIGN KEY (daySchedule_id) REFERENCES daySchedules (id),
-    UNIQUE (daySchedule_id, group_id, start_time)
+    UNIQUE (group_id, start_dateTime)
 );

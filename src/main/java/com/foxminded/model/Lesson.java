@@ -1,7 +1,8 @@
 package com.foxminded.model;
 
 import lombok.Data;
-import java.time.LocalTime;
+
+import java.time.LocalDateTime;
 
 @Data
 public class Lesson {
@@ -9,11 +10,11 @@ public class Lesson {
     private long id;
     private Group group;
     private TeacherCard teacher;
+    private Subject subject;
     private Auditorium auditorium;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private LocalDateTime startDateTime;
 
-    public Lesson(LocalTime startTime) {
-        this.startTime = startTime;
+    public Lesson(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
     }
 }

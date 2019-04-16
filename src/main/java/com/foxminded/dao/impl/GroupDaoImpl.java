@@ -5,7 +5,6 @@ import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.Group;
 import com.foxminded.model.StudentCard;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +69,28 @@ public class GroupDaoImpl implements GroupDao {
         return result;
     }
 
+    public List<Group> findGroupsByFacultyId(long facultyId) {
+        List<Group> result = null;
+        String sql = "SELECT id, name FROM groups WHERE faculty_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                Group group = new Group(resultSet.getString("name"));
+                group.setId(resultSet.getInt("id"));
+                result.add(group);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all groups of faculty with id " + facultyId, e);
+        }
+        return result;
+    }
+
     public Group update(final Group group) {
         if ((group.getId() == -1) || (group.getId() == 0)){
             throw new DaoException("Updating group failed, group should be created before update");
@@ -125,7 +146,7 @@ public class GroupDaoImpl implements GroupDao {
         }
     }
 
-    public long findByStudentId(final long studentId) {
+    public Group findGroupByStudentId(final long studentId) {
         String sql = "SELECT group_id FROM students WHERE id = ?";
 
         try (Connection connection = DaoConnection.getConnection();
@@ -133,13 +154,13 @@ public class GroupDaoImpl implements GroupDao {
             statement.setLong(1, studentId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    return resultSet.getInt("id");
+                    return findById(resultSet.getInt("id"));
                 }
             }
         } catch (SQLException e) {
             throw new DaoException("Cannot find group of student with id " + studentId, e);
         }
-        return -1;
+        return null;
     }
 }
 

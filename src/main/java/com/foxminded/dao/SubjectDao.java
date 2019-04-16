@@ -2,7 +2,9 @@ package com.foxminded.dao;
 
 import com.foxminded.model.Subject;
 
+import java.util.List;
+
 public interface SubjectDao extends CrudDao<Subject> {
 
-    Subject addFacultyId(Subject subject, long facultyId);
+    List<Subject> findSubjectsByFacultyId(long facultyId);
 }
