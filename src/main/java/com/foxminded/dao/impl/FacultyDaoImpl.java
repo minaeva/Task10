@@ -4,7 +4,6 @@ import com.foxminded.dao.FacultyDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.*;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
