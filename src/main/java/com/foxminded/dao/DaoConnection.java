@@ -8,7 +8,8 @@ import org.apache.log4j.Logger;
 
 public class DaoConnection {
 
-    private final static Logger log = Logger.getLogger(DaoConnection.class);
+    private static final Logger log = Logger.getLogger(DaoConnection.class);
+
     private static Properties properties = null;
 
     static public Connection getConnection(){

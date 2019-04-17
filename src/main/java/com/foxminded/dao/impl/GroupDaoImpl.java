@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 public class GroupDaoImpl implements GroupDao {
 
-    private final static Logger log = Logger.getLogger(GroupDaoImpl.class);
+    private static final Logger log = Logger.getLogger(GroupDaoImpl.class);
 
     public Group create(Group group) {
         log.trace("Creating group " + group);
@@ -20,8 +20,8 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                log.trace("Preparing statement" + sql);
                 statement.setString(1, group.getName());
+                log.debug("Executing statement" + statement);
                 statement.executeUpdate();
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     log.trace("Getting result set");
@@ -43,8 +43,8 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement" + sql);
             statement.setLong(1, id);
+            log.debug("Executing statement" + statement);
             try (ResultSet resultSet = statement.executeQuery()) {
                 log.trace("Getting resultSet");
                 if (resultSet.next()) {
@@ -93,9 +93,8 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement" + sql);
             statement.setLong(1, facultyId);
-            log.trace("Getting result set");
+            log.debug("Executing statement" + statement);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet == null) {
             log.trace("None found");
@@ -125,10 +124,9 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement" + sql);
             statement.setString(1, group.getName());
             statement.setLong(2, group.getId());
-            log.trace("Executing update");
+            log.debug("Executing statement" + statement);
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error("Cannot update group " + group, e);
@@ -143,9 +141,8 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement" + sql);
             statement.setLong(1, group.getId());
-            log.trace("Executing update");
+            log.debug("Executing statement" + statement);
             statement.executeUpdate();
             group.setId(-1);
         } catch (SQLException e) {
@@ -160,10 +157,9 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement" + sql);
             statement.setLong(1, groupId);
             statement.setLong(2, student.getId());
-            log.trace("Executing update");
+            log.debug("Executing statement" + statement);
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error("Cannot add student " + student + " to group with id " + groupId, e);
@@ -178,10 +174,9 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement" + sql);
             statement.setLong(1, groupId);
             statement.setLong(2, student.getId());
-            log.trace("Executing update");
+            log.debug("Executing statement" + statement);
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error("Cannot remove student " + student + " from group with id " + groupId, e);
@@ -195,8 +190,8 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement" + sql);
             statement.setLong(1, studentId);
+            log.debug("Executing statement" + statement);
             try (ResultSet resultSet = statement.executeQuery()) {
                 log.trace("Getting result set");
                 if (resultSet.next()) {
@@ -211,4 +206,3 @@ public class GroupDaoImpl implements GroupDao {
         return null;
     }
 }
-
