@@ -9,9 +9,12 @@ public class Lesson {
 
     private long id;
     private Group group;
-    @EqualsAndHashCode.Exclude private TeacherCard teacher;
-    @EqualsAndHashCode.Exclude private Subject subject;
-    @EqualsAndHashCode.Exclude private Auditorium auditorium;
+    @EqualsAndHashCode.Exclude
+    private TeacherCard teacher;
+    @EqualsAndHashCode.Exclude
+    private Subject subject;
+    @EqualsAndHashCode.Exclude
+    private Auditorium auditorium;
     private LocalDateTime startDateTime;
 
     public Lesson(LocalDateTime startDateTime) {

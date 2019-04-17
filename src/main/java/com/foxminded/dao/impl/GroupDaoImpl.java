@@ -12,15 +12,15 @@ import org.apache.log4j.Logger;
 
 public class GroupDaoImpl implements GroupDao {
 
-    private static Logger log = Logger.getLogger(GroupDaoImpl.class.getName());
+    private final static Logger log = Logger.getLogger(GroupDaoImpl.class);
 
     public Group create(Group group) {
-        log.info("Creating group with name " + group.getName());
+        log.trace("Creating group " + group);
         String sql = "INSERT INTO groups (name) VALUES (?);";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                log.trace("Preparing statement");
+                log.trace("Preparing statement" + sql);
                 statement.setString(1, group.getName());
                 statement.executeUpdate();
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -30,20 +30,20 @@ public class GroupDaoImpl implements GroupDao {
                     group.setId(generatedKeys.getLong("id"));
                 }
         } catch (SQLException e) {
-            log.error("Cannot create group " + group.getName(), e);
-            throw new DaoException("Cannot create group " + group.getName(), e);
+            log.error("Cannot create group " + group, e);
+            throw new DaoException("Cannot create group " + group, e);
         }
         return group;
     }
 
     public Group findById(final long id){
-        log.info("Finding group with id " + id);
+        log.trace("Finding group with id " + id);
         Group group = null;
         String sql = "SELECT id, name FROM groups WHERE id = ?";
 
         try (Connection connection = DaoConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement");
+            log.trace("Preparing statement" + sql);
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 log.trace("Getting resultSet");
@@ -61,7 +61,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     public List<Group> findAll() {
-        log.info("Finding all groups");
+        log.trace("Finding all groups");
         List<Group> result = null;
         String sql = "SELECT * FROM groups;";
 
@@ -87,13 +87,13 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     public List<Group> findGroupsByFacultyId(long facultyId) {
-        log.info("Finding group by faculty id " + facultyId);
+        log.trace("Finding group by faculty id " + facultyId);
         List<Group> result = null;
         String sql = "SELECT id, name FROM groups WHERE faculty_id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement");
+            log.trace("Preparing statement" + sql);
             statement.setLong(1, facultyId);
             log.trace("Getting result set");
             ResultSet resultSet = statement.executeQuery();
@@ -116,7 +116,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     public Group update(final Group group) {
-        log.info("Updating group with name " + group.getName());
+        log.trace("Updating group " + group);
         if ((group.getId() == -1) || (group.getId() == 0)){
             log.error("Updating group failed, group should be created before update");
             throw new DaoException("Updating group failed, group should be created before update");
@@ -125,77 +125,77 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement");
+            log.trace("Preparing statement" + sql);
             statement.setString(1, group.getName());
             statement.setLong(2, group.getId());
             log.trace("Executing update");
             statement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Cannot update group " + group.getName(), e);
-            throw new DaoException("Cannot update group " + group.getName(), e);
+            log.error("Cannot update group " + group, e);
+            throw new DaoException("Cannot update group " + group, e);
         }
         return group;
     }
 
     public void delete(Group group) {
-        log.info("Deleting group with name " + group.getName());
+        log.trace("Deleting group " + group);
         String sql = "DELETE FROM groups WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement");
+            log.trace("Preparing statement" + sql);
             statement.setLong(1, group.getId());
             log.trace("Executing update");
             statement.executeUpdate();
             group.setId(-1);
         } catch (SQLException e) {
-            log.error("Cannot delete group " + group.getName(), e);
-            throw new DaoException("Cannot delete group " + group.getName(), e);
+            log.error("Cannot delete group " + group, e);
+            throw new DaoException("Cannot delete group " + group, e);
         }
     }
 
     public Group addStudent(long groupId, StudentCard student) {
-        log.info("Adding student with name " + student.getName() + " to group with id " + groupId);
+        log.trace("Adding student " + student + " to group with id " + groupId);
         String sql = "UPDATE students SET group_id = (?) WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement");
+            log.trace("Preparing statement" + sql);
             statement.setLong(1, groupId);
             statement.setLong(2, student.getId());
             log.trace("Executing update");
             statement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Cannot add student " + student.getName() + " to group with id " + groupId, e);
-            throw new DaoException("Cannot add student " + student.getName() + " to group with id " + groupId, e);
+            log.error("Cannot add student " + student + " to group with id " + groupId, e);
+            throw new DaoException("Cannot add student " + student + " to group with id " + groupId, e);
         }
         return findById(groupId);
     }
 
     public void removeStudent(long groupId, StudentCard student) {
-        log.info("Removing student " + student.getName() + " from group with id " + groupId);
+        log.trace("Removing student " + student + " from group with id " + groupId);
         String sql = "UPDATE students SET group_id = NULL WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement");
+            log.trace("Preparing statement" + sql);
             statement.setLong(1, groupId);
             statement.setLong(2, student.getId());
             log.trace("Executing update");
             statement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Cannot remove student " + student.getName() + " from group with id " + groupId, e);
-            throw new DaoException("Cannot remove student" + student.getName() + " from group with id " + groupId, e);
+            log.error("Cannot remove student " + student + " from group with id " + groupId, e);
+            throw new DaoException("Cannot remove student" + student + " from group with id " + groupId, e);
         }
     }
 
     public Group findGroupByStudentId(final long studentId) {
-        log.info("Finding group by student id " + studentId);
+        log.trace("Finding group by student id " + studentId);
         String sql = "SELECT group_id FROM students WHERE id = ?";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            log.trace("Preparing statement");
+            log.trace("Preparing statement" + sql);
             statement.setLong(1, studentId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 log.trace("Getting result set");

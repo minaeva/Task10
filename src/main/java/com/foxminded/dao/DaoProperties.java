@@ -7,17 +7,19 @@ import org.apache.log4j.Logger;
 
 public class DaoProperties {
 
-    private static Logger log = Logger.getLogger(DaoProperties.class.getName());
+    private final static Logger log = Logger.getLogger(DaoProperties.class);
+    private final static String CONFIG_PROPERTIES = "config.properties";
 
     public static Properties read() {
         Properties properties = null;
-        try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties")) {
-            log.trace("Opening config.properties file");
+        try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_PROPERTIES)) {
+            log.trace("Loading file" + CONFIG_PROPERTIES);
             properties = new Properties();
             properties.load(stream);
+            log.info("File " + CONFIG_PROPERTIES + " loaded");
         } catch (IOException e) {
-            log.error("Cannot open config.properties file ", e);
-            throw new DaoException("Config.properties file cannot be opened ", e);
+            log.error("Cannot open file " + CONFIG_PROPERTIES, e);
+            throw new DaoException("Cannot open file " + CONFIG_PROPERTIES, e);
         }
         return properties;
     }

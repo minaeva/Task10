@@ -8,8 +8,8 @@ import org.apache.log4j.Logger;
 
 public class DaoConnection {
 
+    private final static Logger log = Logger.getLogger(DaoConnection.class);
     private static Properties properties = null;
-    private static Logger log = Logger.getLogger(DaoConnection.class.getName());
 
     static public Connection getConnection(){
         if (properties == null){
@@ -19,7 +19,7 @@ public class DaoConnection {
                 Class.forName(properties.getProperty("db.postgre.driver"));
             } catch (ClassNotFoundException ex){
                 log.error("Cannot initialize JDBC driver ", ex);
-                throw new DaoException("JDBC driver cannot be initialized ", ex);
+                throw new DaoException("Cannot initialize JDBC driver ", ex);
             }
         }
         try {
@@ -30,7 +30,7 @@ public class DaoConnection {
                     properties.getProperty("db.postgre.password"));
         } catch (SQLException ex) {
             log.error("Cannot establish postgres connection ", ex);
-            throw new DaoException("Connection to postgres cannot be established ", ex);
+            throw new DaoException("Cannot establish postgres connection ", ex);
         }
     }
 }
