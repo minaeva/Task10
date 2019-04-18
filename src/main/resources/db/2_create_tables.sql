@@ -38,11 +38,12 @@ CREATE TABLE IF NOT EXISTS subjects (
 /* TEACHERS */
 CREATE TABLE IF NOT EXISTS teachers (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
     subject_id INTEGER,
     faculty_id INTEGER,
-    FOREIGN KEY (subject_id) REFERENCES subjects (id)
-    FOREIGN KEY (faculty_id) REFERENCES faculties (id)
+    FOREIGN KEY (subject_id) REFERENCES subjects (id),
+    FOREIGN KEY (faculty_id) REFERENCES faculties (id),
+    UNIQUE (name, faculty_id)
 );
 
 /*--------------*/
@@ -63,7 +64,7 @@ CREATE TABLE IF NOT EXISTS lessons (
     teacher_id INTEGER,
     subject_id INTEGER,
     auditorium_id INTEGER,
-    start_date_time TIMESTAMP NOT NULL,
+    start_dateTime TIMESTAMP NOT NULL,
     FOREIGN KEY (group_id) REFERENCES groups (id),
     FOREIGN KEY (teacher_id) REFERENCES teachers (id),
     FOREIGN KEY (subject_id) REFERENCES subjects (id),
