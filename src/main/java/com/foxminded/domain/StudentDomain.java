@@ -19,7 +19,7 @@ public class StudentDomain {
         return studentDao.findById(id);
     }
 
-    public List<StudentCard> findAllStudents() {
+    public List<StudentCard> findAll() {
         return studentDao.findAll();
     }
 

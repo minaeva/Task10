@@ -32,11 +32,11 @@ public class GroupDomain {
         return groupDao.findGroupByStudentId(student.getId());
     }
 
-    public List<Group> findGroupsByFacultyId(long facultyId) {
+    public List<Group> findGroupsByFaculty(long facultyId) {
         return groupDao.findGroupsByFacultyId(facultyId);
     }
 
-    public List<Group> findAllGroups() {
+    public List<Group> findAll() {
         return groupDao.findAll();
     }
 

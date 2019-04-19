@@ -19,7 +19,7 @@ public class TeacherDomain {
         return teacherDao.findById(id);
     }
 
-    public List<TeacherCard> findAllTeachers() {
+    public List<TeacherCard> findAll() {
         return teacherDao.findAll();
     }
 

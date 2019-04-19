@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS teachers (
     faculty_id INTEGER,
     FOREIGN KEY (subject_id) REFERENCES subjects (id),
     FOREIGN KEY (faculty_id) REFERENCES faculties (id),
-    UNIQUE (name, faculty_id)
 );
 
 /*--------------*/
@@ -64,10 +63,10 @@ CREATE TABLE IF NOT EXISTS lessons (
     teacher_id INTEGER,
     subject_id INTEGER,
     auditorium_id INTEGER,
-    start_dateTime TIMESTAMP NOT NULL,
+    start_date_time TIMESTAMP NOT NULL,
     FOREIGN KEY (group_id) REFERENCES groups (id),
     FOREIGN KEY (teacher_id) REFERENCES teachers (id),
     FOREIGN KEY (subject_id) REFERENCES subjects (id),
     FOREIGN KEY (auditorium_id) REFERENCES auditoria (id),
-    UNIQUE (group_id, start_dateTime)
+    UNIQUE (group_id, start_date_time)
 );

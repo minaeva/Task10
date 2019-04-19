@@ -46,7 +46,7 @@ INSERT INTO auditoria (number, faculty_id) VALUES
     (204, 2),
     (205, 2);
 
-INSERT INTO lessons (group_id, teacher_id, subject_id, auditorium_id, start_dateTime) VALUES
+INSERT INTO lessons (group_id, teacher_id, subject_id, auditorium_id, start_date_time) VALUES
     (1, 1, 1, 1, '2019-04-15 08:30:00+2'),
     (1, 3, 2, 2, '2019-04-15 10:20:00+2'),
     (1, 2, 1, 3, '2019-04-15 12:20:00+2'),

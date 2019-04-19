@@ -4,6 +4,8 @@ import com.foxminded.dao.*;
 import com.foxminded.dao.impl.*;
 import com.foxminded.model.*;
 
+import java.util.List;
+
 public class FacultyDomain {
 
     private FacultyDao facultyDao = new FacultyDaoImpl();
@@ -20,6 +22,9 @@ public class FacultyDomain {
         return facultyDao.findById(id);
     }
 
+    public List<Faculty> findAll() {
+        return facultyDao.findAll();
+    }
     public Faculty findFacultyByIdFull(long id) {
         Faculty faculty = facultyDao.findById(id);
         faculty.setAuditoria(auditoriumDao.findAuditoriaByFacultyId(faculty.getId()));

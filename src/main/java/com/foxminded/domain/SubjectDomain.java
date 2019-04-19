@@ -18,7 +18,7 @@ public class SubjectDomain {
         return subjectDao.findById(id);
     }
 
-    public List<Subject> findAllSubjects() {
+    public List<Subject> findAll() {
         return subjectDao.findAll();
     }
 
