@@ -39,7 +39,7 @@ public class GroupDaoImpl implements GroupDao {
     public Group findById(final long id){
         log.trace("Finding group with id " + id);
         Group group = null;
-        String sql = "SELECT id, name FROM groups WHERE id = ?";
+        String sql = "SELECT id, name FROM groups WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -186,7 +186,7 @@ public class GroupDaoImpl implements GroupDao {
 
     public Group findGroupByStudentId(final long studentId) {
         log.trace("Finding group by student id " + studentId);
-        String sql = "SELECT group_id FROM students WHERE id = ?";
+        String sql = "SELECT group_id FROM students WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -196,7 +196,7 @@ public class GroupDaoImpl implements GroupDao {
                 log.trace("Getting result set");
                 if (resultSet.next()) {
                     log.trace("Group for student with id " + studentId + " found");
-                    return findById(resultSet.getInt("id"));
+                    return findById(resultSet.getInt("group_id"));
                 }
             }
         } catch (SQLException e) {
@@ -205,4 +205,36 @@ public class GroupDaoImpl implements GroupDao {
         }
         return null;
     }
+
+    /*
+        public List<Group> findGroupsByFacultyId(long facultyId) {
+        log.trace("Finding group by faculty id " + facultyId);
+        List<Group> result = null;
+        String sql = "SELECT id, name FROM groups WHERE faculty_id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, facultyId);
+            log.debug("Executing statement" + statement);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+            log.trace("None found");
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                log.trace("Creating a group from resultSet.next()");
+                Group group = new Group(resultSet.getString("name"));
+                group.setId(resultSet.getInt("id"));
+                result.add(group);
+            }
+        } catch (SQLException e) {
+            log.error("Cannot find all groups of faculty with id " + facultyId, e);
+            throw new DaoException("Cannot find all groups of faculty with id " + facultyId, e);
+        }
+        return result;
+    }
+
+
+     */
 }

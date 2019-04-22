@@ -9,11 +9,12 @@
         <div class ="container">
             <h1 class="title">University</h1>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
-                <tr>
-                    <td><a href="search?q=faculty&no=all">Faculties </td>
-                    <td><a href="search?q=group&no=all">Groups </td>
-                    <td><a href="search?q=student&no=all">Students </td>
-                </tr>
+                <tr><td><a href="faculties">Faculties </td></tr>
+                <tr><td><a href="groups">Groups </td></tr>
+                <tr><td><a href="students">Students </td></tr>
+                <tr><td><a href="teachers">Teachers </td></tr>
+                <tr><td><a href="subjects">Subjects </td></tr>
+                <tr><td><a href="auditoria">Auditoria </td></tr>
             </table>
         </div>
     </body>

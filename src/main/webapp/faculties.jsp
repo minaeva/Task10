@@ -11,7 +11,7 @@
             <table class="table is-responsive is-bordered is-striped is-hoverable">
             <c:forEach items="${faculties}" var="faculty">
                 <tr>
-                    <td><a href="search?q=faculty&no=${faculty.id}">${faculty.id} </td>
+                    <td><a href="faculty?id=${faculty.id}">${faculty.id} </td>
                     <td>${faculty.name} </td>
                 </tr>
                 </c:forEach>

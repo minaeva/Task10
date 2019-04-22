@@ -1,6 +1,10 @@
 package com.foxminded.dao.impl;
 
 import com.foxminded.dao.*;
+import com.foxminded.domain.AuditoriumDomain;
+import com.foxminded.domain.GroupDomain;
+import com.foxminded.domain.SubjectDomain;
+import com.foxminded.domain.TeacherDomain;
 import com.foxminded.model.*;
 
 import java.sql.*;
@@ -87,6 +91,23 @@ public class LessonDaoImpl implements LessonDao {
             while (resultSet.next()) {
                 Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                 lesson.setId(resultSet.getInt("id"));
+
+                GroupDomain groupDomain = new GroupDomain();
+                Group group = groupDomain.findGroupById(groupId);
+                lesson.setGroup(group);
+
+                TeacherDomain teacherDomain = new TeacherDomain();
+                TeacherCard teacher = teacherDomain.findTeacherById(resultSet.getInt("teacher_id"));
+                lesson.setTeacher(teacher);
+
+                SubjectDomain subjectDomain = new SubjectDomain();
+                Subject subject = subjectDomain.findSubjectById(resultSet.getInt("subject_id"));
+                lesson.setSubject(subject);
+
+                AuditoriumDomain auditoriumDomain = new AuditoriumDomain();
+                Auditorium auditorium = auditoriumDomain.findAuditoriumById(resultSet.getInt("auditorium_id"));
+                lesson.setAuditorium(auditorium);
+
                 result.add(lesson);
             }
         } catch (SQLException e) {
@@ -97,7 +118,7 @@ public class LessonDaoImpl implements LessonDao {
 
     public List<Lesson> findLessonsByTeacherId(long teacherId) {
         List<Lesson> result = null;
-        String sql = "SELECT id, group_id, subject_id, auditorium_id, start_date_time FROM lessons WHERE group_id = (?)";
+        String sql = "SELECT id, group_id, subject_id, auditorium_id, start_date_time FROM lessons WHERE teacher_id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, teacherId);
@@ -109,6 +130,23 @@ public class LessonDaoImpl implements LessonDao {
             while (resultSet.next()) {
                 Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                 lesson.setId(resultSet.getInt("id"));
+
+                GroupDomain groupDomain = new GroupDomain();
+                Group group = groupDomain.findGroupById(resultSet.getInt("group_id"));
+                lesson.setGroup(group);
+
+                TeacherDomain teacherDomain = new TeacherDomain();
+                TeacherCard teacher = teacherDomain.findTeacherById(teacherId);
+                lesson.setTeacher(teacher);
+
+                SubjectDomain subjectDomain = new SubjectDomain();
+                Subject subject = subjectDomain.findSubjectById(resultSet.getInt("subject_id"));
+                lesson.setSubject(subject);
+
+                AuditoriumDomain auditoriumDomain = new AuditoriumDomain();
+                Auditorium auditorium = auditoriumDomain.findAuditoriumById(resultSet.getInt("auditorium_id"));
+                lesson.setAuditorium(auditorium);
+
                 result.add(lesson);
             }
         } catch (SQLException e) {

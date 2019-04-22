@@ -2,17 +2,17 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
     <head>
-        <title>Groups</title>
+        <title>Faculty ${faculty.id} ${faculty.name}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     </head>
     <body>
         <div class ="container">
-            <h1 class="title">Groups</h1>
+            <h1 class="title">Auditoria</h1>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
-            <c:forEach items="${groups}" var="group">
+            <c:forEach items="${auditoria}" var="auditorium">
                 <tr>
-                    <td><a href="group?id=${group.id}">${group.id} </td>
-                    <td>${group.name} </td>
+                    <td><a href="auditorium?id=${auditorium.id}">${auditorium.id} </td>
+                    <td>${auditorium.number} </td>
                 </tr>
                 </c:forEach>
             </table>

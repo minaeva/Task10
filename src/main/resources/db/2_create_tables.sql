@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS teachers (
     subject_id INTEGER,
     faculty_id INTEGER,
     FOREIGN KEY (subject_id) REFERENCES subjects (id),
-    FOREIGN KEY (faculty_id) REFERENCES faculties (id),
+    FOREIGN KEY (faculty_id) REFERENCES faculties (id)
 );
 
 /*--------------*/

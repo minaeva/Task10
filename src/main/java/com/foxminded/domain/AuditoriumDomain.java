@@ -22,6 +22,10 @@ public class  AuditoriumDomain {
         return auditoriumDao.findAuditoriaByFacultyId(facultyId);
     }
 
+    public List<Auditorium> findAll() {
+        return auditoriumDao.findAll();
+    }
+
     public Auditorium updateAuditorium (Auditorium auditorium) {
         return auditoriumDao.update(auditorium);
     }

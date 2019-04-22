@@ -70,7 +70,7 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
 
     public List<Auditorium> findAuditoriaByFacultyId(long facultyId) {
         List<Auditorium> result = null;
-        String sql = "SELECT id, name FROM auditoria WHERE faculty_id = (?)";
+        String sql = "SELECT id, number FROM auditoria WHERE faculty_id = (?)";
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, facultyId);

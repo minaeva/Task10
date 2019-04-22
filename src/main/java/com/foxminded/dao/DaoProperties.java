@@ -14,10 +14,10 @@ public class DaoProperties {
     public static Properties read() {
         Properties properties = null;
         try (InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
-            log.trace("Loading file" + CONFIG_FILE_NAME);
+            log.info("Loading file " + CONFIG_FILE_NAME);
             properties = new Properties();
             properties.load(stream);
-            log.info("File " + CONFIG_FILE_NAME + " loaded");
+            log.trace("File " + CONFIG_FILE_NAME + " loaded");
         } catch (IOException e) {
             log.error("Cannot open file " + CONFIG_FILE_NAME, e);
             throw new DaoException("Cannot open file " + CONFIG_FILE_NAME, e);
