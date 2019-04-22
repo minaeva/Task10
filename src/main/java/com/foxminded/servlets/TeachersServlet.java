@@ -1,6 +1,7 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.TeacherDomain;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,10 +12,16 @@ import java.io.IOException;
 @WebServlet("/teachers")
 public class TeachersServlet extends HttpServlet {
 
+    private TeacherDomain teacherDomain;
+
+    @Override
+    public void init(ServletConfig config) {
+        teacherDomain = new TeacherDomain();
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        TeacherDomain teacherDomain = new TeacherDomain();
         req.setAttribute("teachers", teacherDomain.findAll());
         req.getRequestDispatcher("teachers.jsp").forward(req, resp);
     }

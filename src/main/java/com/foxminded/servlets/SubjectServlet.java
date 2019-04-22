@@ -1,6 +1,7 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.SubjectDomain;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,11 +12,17 @@ import java.io.IOException;
 @WebServlet("/subject")
 public class SubjectServlet extends HttpServlet {
 
+    private SubjectDomain subjectDomain;
+
+    @Override
+    public void init(ServletConfig config) {
+        subjectDomain = new SubjectDomain();
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        SubjectDomain subjectDomain = new SubjectDomain();
         req.setAttribute("subject", subjectDomain.findSubjectById(id));
         req.getRequestDispatcher("subject.jsp").forward(req, resp);
     }

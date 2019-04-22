@@ -13,7 +13,6 @@
             <table class="table is-responsive is-bordered is-striped is-hoverable">
             <tr>
                 <td>Lesson id</td>
-                <td>Weekday</td>
                 <td>Start time</td>
                 <td>Group</td>
                 <td>Subject</td>
@@ -22,8 +21,6 @@
             <c:forEach items="${lessons}" var="lesson">
             <tr>
                 <td><a href="lesson?id=${lesson.id}">${lesson.id} </td>
-                <td>
-                </td>
                 <td>${lesson.startDateTime} </td>
                 <td>${lesson.group.name} </td>
                 <td>${lesson.subject.name} </td>

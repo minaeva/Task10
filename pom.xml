@@ -52,7 +52,17 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-    </dependencies>
+     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>localhost</id>
+            <name>localhost</name>
+            <url>http://localhost:8080/</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 
     <build>
         <finalName>university</finalName>
@@ -64,6 +74,23 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/</path>
+                 </configuration>
             </plugin>
         </plugins>
     </build>

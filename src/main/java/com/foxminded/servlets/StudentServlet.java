@@ -2,6 +2,7 @@ package com.foxminded.servlets;
 
 import com.foxminded.domain.StudentDomain;
 import com.foxminded.model.StudentCard;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,11 +13,17 @@ import java.io.IOException;
 @WebServlet("/student")
 public class StudentServlet extends HttpServlet {
 
+    private StudentDomain studentDomain;
+
+    @Override
+    public void init(ServletConfig config) {
+        studentDomain = new StudentDomain();
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        StudentDomain studentDomain = new StudentDomain();
         StudentCard student = studentDomain.findStudentById(id);
         req.setAttribute("student", student);
         req.setAttribute("lessons", studentDomain.createSchedule(student));

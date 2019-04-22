@@ -92,20 +92,20 @@ public class LessonDaoImpl implements LessonDao {
                 Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                 lesson.setId(resultSet.getInt("id"));
 
-                GroupDomain groupDomain = new GroupDomain();
-                Group group = groupDomain.findGroupById(groupId);
+                GroupDao groupDao = new GroupDaoImpl();
+                Group group = groupDao.findById(groupId);
                 lesson.setGroup(group);
 
-                TeacherDomain teacherDomain = new TeacherDomain();
-                TeacherCard teacher = teacherDomain.findTeacherById(resultSet.getInt("teacher_id"));
+                TeacherDao teacherDao = new TeacherDaoImpl();
+                TeacherCard teacher = teacherDao.findById(resultSet.getInt("teacher_id"));
                 lesson.setTeacher(teacher);
 
-                SubjectDomain subjectDomain = new SubjectDomain();
-                Subject subject = subjectDomain.findSubjectById(resultSet.getInt("subject_id"));
+                SubjectDao subjectDao = new SubjectDaoImpl();
+                Subject subject = subjectDao.findById(resultSet.getInt("subject_id"));
                 lesson.setSubject(subject);
 
-                AuditoriumDomain auditoriumDomain = new AuditoriumDomain();
-                Auditorium auditorium = auditoriumDomain.findAuditoriumById(resultSet.getInt("auditorium_id"));
+                AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
+                Auditorium auditorium = auditoriumDao.findById(resultSet.getInt("auditorium_id"));
                 lesson.setAuditorium(auditorium);
 
                 result.add(lesson);
@@ -131,20 +131,20 @@ public class LessonDaoImpl implements LessonDao {
                 Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                 lesson.setId(resultSet.getInt("id"));
 
-                GroupDomain groupDomain = new GroupDomain();
-                Group group = groupDomain.findGroupById(resultSet.getInt("group_id"));
+                GroupDao groupDao = new GroupDaoImpl();
+                Group group = groupDao.findById(resultSet.getInt("group_id"));
                 lesson.setGroup(group);
 
-                TeacherDomain teacherDomain = new TeacherDomain();
-                TeacherCard teacher = teacherDomain.findTeacherById(teacherId);
+                TeacherDao teacherDao = new TeacherDaoImpl();
+                TeacherCard teacher = teacherDao.findById(teacherId);
                 lesson.setTeacher(teacher);
 
-                SubjectDomain subjectDomain = new SubjectDomain();
-                Subject subject = subjectDomain.findSubjectById(resultSet.getInt("subject_id"));
+                SubjectDao subjectDao = new SubjectDaoImpl();
+                Subject subject = subjectDao.findById(resultSet.getInt("subject_id"));
                 lesson.setSubject(subject);
 
-                AuditoriumDomain auditoriumDomain = new AuditoriumDomain();
-                Auditorium auditorium = auditoriumDomain.findAuditoriumById(resultSet.getInt("auditorium_id"));
+                AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
+                Auditorium auditorium = auditoriumDao.findById(resultSet.getInt("auditorium_id"));
                 lesson.setAuditorium(auditorium);
 
                 result.add(lesson);

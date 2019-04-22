@@ -1,6 +1,7 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.FacultyDomain;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,16 +12,18 @@ import java.io.IOException;
 @WebServlet("/faculty")
 public class FacultyServlet extends HttpServlet {
 
+    private FacultyDomain facultyDomain;
+
+    @Override
+    public void init(ServletConfig config) {
+        facultyDomain = new FacultyDomain();
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        FacultyDomain facultyDomain = new FacultyDomain();
-        req.setAttribute("faculty", facultyDomain.findFacultyById(id));
-        req.setAttribute("groups", facultyDomain.findFacultyByIdFull(id).getGroups());
-        req.setAttribute("teachers", facultyDomain.findFacultyByIdFull(id).getTeachers());
-        req.setAttribute("subjects", facultyDomain.findFacultyByIdFull(id).getSubjects());
-        req.setAttribute("auditoria", facultyDomain.findFacultyByIdFull(id).getAuditoria());
+        req.setAttribute("faculty", facultyDomain.findFacultyByIdFull(id));
         req.getRequestDispatcher("faculty.jsp").forward(req, resp);
     }
 }

@@ -1,6 +1,7 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.AuditoriumDomain;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,10 +12,16 @@ import java.io.IOException;
 @WebServlet("/auditoria")
 public class AuditoriaServlet extends HttpServlet {
 
+    private AuditoriumDomain auditoriumDomain;
+
+    @Override
+    public void init(ServletConfig config) {
+        auditoriumDomain = new AuditoriumDomain();
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        AuditoriumDomain auditoriumDomain = new AuditoriumDomain();
         req.setAttribute("auditoria", auditoriumDomain.findAll());
         req.getRequestDispatcher("auditoria.jsp").forward(req, resp);
     }
