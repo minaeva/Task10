@@ -11,6 +11,8 @@
     <body>
         <div class ="container">
             <h1 class="title">Student ${student.id} ${student.name}</h1>
+
+<c:if test="${not empty lessons}">
             <h2 class="title">Schedule</h2>
             <p class="subtitle is-3">Today's date: <%= (new java.util.Date()).toLocaleString()%></p>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
@@ -34,6 +36,8 @@
             </tr>
             </c:forEach>
             </table>
+</c:if>
+
         </div>
     </body>
 </html>

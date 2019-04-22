@@ -8,6 +8,8 @@
     <body>
         <div class ="container">
             <h1 class="title">Faculty ${faculty.id} ${faculty.name}</h1>
+
+<c:if test="${not empty groups}">
             <h2 class="subtitle">Groups</h2>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
             <c:forEach items="${groups}" var="group">
@@ -17,8 +19,10 @@
                 </tr>
                 </c:forEach>
             </table>
+</c:if>
 
-            <h2 class="subtitle">Teachers</h2>
+<c:if test="${not empty teachers}">
+           <h2 class="subtitle">Teachers</h2>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
             <c:forEach items="${teachers}" var="teacher">
                 <tr>
@@ -27,8 +31,10 @@
                 </tr>
                 </c:forEach>
             </table>
+</c:if>
 
-            <h2 class="subtitle">Subjects</h2>
+<c:if test="${not empty subjects}">
+             <h2 class="subtitle">Subjects</h2>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
             <c:forEach items="${subjects}" var="subject">
                 <tr>
@@ -37,7 +43,9 @@
                 </tr>
                 </c:forEach>
             </table>
+</c:if>
 
+<c:if test="${not empty auditoria}">
             <h2 class="subtitle">Auditoria</h2>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
             <c:forEach items="${auditoria}" var="auditorium">
@@ -47,6 +55,8 @@
                 </tr>
                 </c:forEach>
             </table>
+</c:if>
+
         </div>
     </body>
 </html>
