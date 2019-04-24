@@ -9,6 +9,4 @@ public interface TeacherDao extends CrudDao<TeacherCard> {
     List<TeacherCard> findTeachersByFacultyId(long facultyId);
 
     TeacherCard addSubjectId(TeacherCard teacher, long subjectId);
-
-    TeacherCard findTeacherByLessonId(final long teacherId);
 }

@@ -39,10 +39,10 @@ public class LessonDomain {
     public List<Lesson> findLessonsByGroupId(long groupId) {
         List<Lesson> lessons = lessonDao.findLessonsByGroupId(groupId);
         for (Lesson lesson: lessons) {
-            lesson.setGroup(groupDao.findGroupByLessonId(lesson.getId()));
-            lesson.setTeacher(teacherDao.findTeacherByLessonId(lesson.getId()));
-            lesson.setSubject(subjectDao.findSubjectByLessonId(lesson.getId()));
-            lesson.setAuditorium(auditoriumDao.findAuditoriumByLessonId(lesson.getId()));
+            lesson.setGroup(groupDao.findById(lessonDao.findGroupIdByLessonId(lesson.getId())));
+            lesson.setTeacher(teacherDao.findById(lessonDao.findTeacherIdByLessonId(lesson.getId())));
+            lesson.setSubject(subjectDao.findById(lessonDao.findSubjectIdByLessonId(lesson.getId())));
+            lesson.setAuditorium(auditoriumDao.findById(lessonDao.findAuditoriumIdByLessonId(lesson.getId())));
         }
         return lessons;
     }
@@ -50,10 +50,10 @@ public class LessonDomain {
     public List<Lesson> findLessonsByTeacherId(long teacherId) {
         List<Lesson> lessons = lessonDao.findLessonsByTeacherId(teacherId);
         for (Lesson lesson: lessons) {
-            lesson.setGroup(groupDao.findGroupByLessonId(lesson.getId()));
-            lesson.setTeacher(teacherDao.findTeacherByLessonId(lesson.getId()));
-            lesson.setSubject(subjectDao.findSubjectByLessonId(lesson.getId()));
-            lesson.setAuditorium(auditoriumDao.findAuditoriumByLessonId(lesson.getId()));
+            lesson.setGroup(groupDao.findById(lessonDao.findGroupIdByLessonId(lesson.getId())));
+            lesson.setTeacher(teacherDao.findById(lessonDao.findTeacherIdByLessonId(lesson.getId())));
+            lesson.setSubject(subjectDao.findById(lessonDao.findSubjectIdByLessonId(lesson.getId())));
+            lesson.setAuditorium(auditoriumDao.findById(lessonDao.findAuditoriumIdByLessonId(lesson.getId())));
         }
         return lessons;
     }

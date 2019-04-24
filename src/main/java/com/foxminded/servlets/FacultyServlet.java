@@ -25,10 +25,11 @@ public class FacultyServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        Faculty faculty = facultyDomain.findFacultyByIdFull(id);
+        Faculty faculty = facultyDomain.findFacultyById(id);
         if (faculty == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            req.getRequestDispatcher("error-404.jsp").forward(req, resp);
         } else {
+            faculty = facultyDomain.findFacultyByIdFull(id);
             req.setAttribute("faculty", faculty);
             req.getRequestDispatcher("faculty.jsp").forward(req, resp);
         }

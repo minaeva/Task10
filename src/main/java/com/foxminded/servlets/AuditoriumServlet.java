@@ -27,7 +27,7 @@ public class AuditoriumServlet extends HttpServlet {
         int id = Integer.valueOf(req.getParameter("id"));
         Auditorium auditorium = auditoriumDomain.findAuditoriumById(id);
         if (auditorium == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            req.getRequestDispatcher("error-404.jsp").forward(req, resp);
         }
         else {
             req.setAttribute("auditorium", auditorium);

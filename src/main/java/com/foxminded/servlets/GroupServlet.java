@@ -27,8 +27,9 @@ public class GroupServlet extends HttpServlet {
         int id = Integer.valueOf(req.getParameter("id"));
         Group group = groupDomain.findGroupById(id);
         if (group == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            req.getRequestDispatcher("error-404.jsp").forward(req, resp);
         } else {
+            group = groupDomain.findGroupByIdFull(id);
             req.setAttribute("group", group);
             req.getRequestDispatcher("group.jsp").forward(req, resp);
         }

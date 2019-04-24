@@ -118,21 +118,4 @@ public class SubjectDaoImpl implements SubjectDao {
             throw new DaoException("Cannot delete subject ", e);
         }
     }
-
-    public Subject findSubjectByLessonId(final long subjectId) {
-        String sql = "SELECT subject_id FROM lessons WHERE id = (?)";
-
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, subjectId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return findById(resultSet.getInt("subject_id"));
-                }
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Cannot find subject of a lesson with id " + subjectId, e);
-        }
-        return null;
-    }
 }

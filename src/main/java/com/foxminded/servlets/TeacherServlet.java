@@ -26,7 +26,7 @@ public class TeacherServlet extends HttpServlet {
         int id = Integer.valueOf(req.getParameter("id"));
         TeacherCard teacher = teacherDomain.findTeacherById(id);
         if (teacher == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            req.getRequestDispatcher("error-404.jsp").forward(req, resp);
         }
         else {
             req.setAttribute("teacher", teacher);

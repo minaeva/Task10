@@ -25,7 +25,11 @@ public class LessonServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
         Lesson lesson = lessonDomain.findLessonById(id);
-        req.setAttribute("lesson", lesson);
-        req.getRequestDispatcher("lesson.jsp").forward(req, resp);
+        if (lesson == null) {
+            req.getRequestDispatcher("error-404.jsp").forward(req, resp);
+        } else {
+            req.setAttribute("lesson", lesson);
+            req.getRequestDispatcher("lesson.jsp").forward(req, resp);
+        }
     }
 }

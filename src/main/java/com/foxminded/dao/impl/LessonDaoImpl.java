@@ -215,4 +215,73 @@ public class LessonDaoImpl implements LessonDao {
         }
         return lesson;
     }
+
+    public long findGroupIdByLessonId(final long lessonId) {
+        String sql = "SELECT group_id FROM lessons WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, lessonId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("group_id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find group of a lesson with id " + lessonId, e);
+        }
+        return -1;
+    }
+
+    public long findSubjectIdByLessonId(final long subjectId) {
+        String sql = "SELECT subject_id FROM lessons WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, subjectId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("subject_id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find subject of a lesson with id " + subjectId, e);
+        }
+        return -1;
+    }
+
+    public long findTeacherIdByLessonId(final long teacherId) {
+        String sql = "SELECT teacher_id FROM lessons WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, teacherId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("teacher_id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find teacher of a lesson with id " + teacherId, e);
+        }
+        return -1;
+    }
+
+    public long findAuditoriumIdByLessonId(final long lessonId) {
+        String sql = "SELECT auditorium_id FROM lessons WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, lessonId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("auditorium_id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find auditorium of a lesson with id " + lessonId, e);
+        }
+        return -1;
+    }
+
 }
