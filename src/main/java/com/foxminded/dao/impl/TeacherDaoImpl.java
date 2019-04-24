@@ -131,4 +131,21 @@ public class TeacherDaoImpl implements TeacherDao {
         }
         return teacher;
     }
+
+    public TeacherCard findTeacherByLessonId(final long teacherId) {
+        String sql = "SELECT teacher_id FROM lessons WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, teacherId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return findById(resultSet.getInt("teacher_id"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find teacher of a lesson with id " + teacherId, e);
+        }
+        return null;
+    }
 }

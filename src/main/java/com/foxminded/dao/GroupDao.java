@@ -14,4 +14,6 @@ public interface GroupDao extends CrudDao<Group> {
     Group findGroupByStudentId(final long studentId);
 
     List<Group> findGroupsByFacultyId(long facultyId);
+
+    Group findGroupByLessonId(final long lessonId);
 }

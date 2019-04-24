@@ -1,17 +1,20 @@
 package com.foxminded.domain;
 
-import com.foxminded.dao.LessonDao;
-import com.foxminded.dao.impl.LessonDaoImpl;
+import com.foxminded.dao.*;
+import com.foxminded.dao.impl.*;
 import com.foxminded.model.Auditorium;
 import com.foxminded.model.Lesson;
 import com.foxminded.model.Subject;
 import com.foxminded.model.TeacherCard;
-
 import java.util.List;
 
 public class LessonDomain {
 
     private LessonDao lessonDao = new LessonDaoImpl();
+    private AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
+    private GroupDao groupDao = new GroupDaoImpl();
+    private SubjectDao subjectDao = new SubjectDaoImpl();
+    private TeacherDao teacherDao = new TeacherDaoImpl();
 
     public Lesson createLesson(Lesson lesson) {
         return lessonDao.create(lesson);
@@ -34,11 +37,25 @@ public class LessonDomain {
     }
 
     public List<Lesson> findLessonsByGroupId(long groupId) {
-        return lessonDao.findLessonsByGroupId(groupId);
+        List<Lesson> lessons = lessonDao.findLessonsByGroupId(groupId);
+        for (Lesson lesson: lessons) {
+            lesson.setGroup(groupDao.findGroupByLessonId(lesson.getId()));
+            lesson.setTeacher(teacherDao.findTeacherByLessonId(lesson.getId()));
+            lesson.setSubject(subjectDao.findSubjectByLessonId(lesson.getId()));
+            lesson.setAuditorium(auditoriumDao.findAuditoriumByLessonId(lesson.getId()));
+        }
+        return lessons;
     }
 
     public List<Lesson> findLessonsByTeacherId(long teacherId) {
-        return lessonDao.findLessonsByTeacherId(teacherId);
+        List<Lesson> lessons = lessonDao.findLessonsByTeacherId(teacherId);
+        for (Lesson lesson: lessons) {
+            lesson.setGroup(groupDao.findGroupByLessonId(lesson.getId()));
+            lesson.setTeacher(teacherDao.findTeacherByLessonId(lesson.getId()));
+            lesson.setSubject(subjectDao.findSubjectByLessonId(lesson.getId()));
+            lesson.setAuditorium(auditoriumDao.findAuditoriumByLessonId(lesson.getId()));
+        }
+        return lessons;
     }
 
     public List<Lesson> findAllLessons() {

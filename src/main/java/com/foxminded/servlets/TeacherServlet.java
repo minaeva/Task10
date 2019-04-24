@@ -25,8 +25,13 @@ public class TeacherServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
         TeacherCard teacher = teacherDomain.findTeacherById(id);
-        req.setAttribute("teacher", teacher);
-        req.setAttribute("lessons", teacherDomain.createSchedule(teacher));
-        req.getRequestDispatcher("teacher.jsp").forward(req, resp);
+        if (teacher == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            req.setAttribute("teacher", teacher);
+            req.setAttribute("lessons", teacherDomain.createSchedule(teacher));
+            req.getRequestDispatcher("teacher.jsp").forward(req, resp);
+        }
     }
 }

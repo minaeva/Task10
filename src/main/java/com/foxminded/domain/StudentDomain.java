@@ -35,7 +35,7 @@ public class StudentDomain {
         studentDao.delete(student);
     }
 
-    public List<Lesson> createSchedule(StudentCard student) {
+    public List<Lesson> findSchedule(StudentCard student) {
         GroupDomain groupDomain = new GroupDomain();
         Group group = groupDomain.findGroupByStudent(student);
 

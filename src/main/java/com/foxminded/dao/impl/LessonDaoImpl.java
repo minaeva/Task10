@@ -1,10 +1,6 @@
 package com.foxminded.dao.impl;
 
 import com.foxminded.dao.*;
-import com.foxminded.domain.AuditoriumDomain;
-import com.foxminded.domain.GroupDomain;
-import com.foxminded.domain.SubjectDomain;
-import com.foxminded.domain.TeacherDomain;
 import com.foxminded.model.*;
 
 import java.sql.*;
@@ -91,23 +87,6 @@ public class LessonDaoImpl implements LessonDao {
             while (resultSet.next()) {
                 Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                 lesson.setId(resultSet.getInt("id"));
-
-                GroupDao groupDao = new GroupDaoImpl();
-                Group group = groupDao.findById(groupId);
-                lesson.setGroup(group);
-
-                TeacherDao teacherDao = new TeacherDaoImpl();
-                TeacherCard teacher = teacherDao.findById(resultSet.getInt("teacher_id"));
-                lesson.setTeacher(teacher);
-
-                SubjectDao subjectDao = new SubjectDaoImpl();
-                Subject subject = subjectDao.findById(resultSet.getInt("subject_id"));
-                lesson.setSubject(subject);
-
-                AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
-                Auditorium auditorium = auditoriumDao.findById(resultSet.getInt("auditorium_id"));
-                lesson.setAuditorium(auditorium);
-
                 result.add(lesson);
             }
         } catch (SQLException e) {
@@ -130,23 +109,6 @@ public class LessonDaoImpl implements LessonDao {
             while (resultSet.next()) {
                 Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                 lesson.setId(resultSet.getInt("id"));
-
-                GroupDao groupDao = new GroupDaoImpl();
-                Group group = groupDao.findById(resultSet.getInt("group_id"));
-                lesson.setGroup(group);
-
-                TeacherDao teacherDao = new TeacherDaoImpl();
-                TeacherCard teacher = teacherDao.findById(teacherId);
-                lesson.setTeacher(teacher);
-
-                SubjectDao subjectDao = new SubjectDaoImpl();
-                Subject subject = subjectDao.findById(resultSet.getInt("subject_id"));
-                lesson.setSubject(subject);
-
-                AuditoriumDao auditoriumDao = new AuditoriumDaoImpl();
-                Auditorium auditorium = auditoriumDao.findById(resultSet.getInt("auditorium_id"));
-                lesson.setAuditorium(auditorium);
-
                 result.add(lesson);
             }
         } catch (SQLException e) {

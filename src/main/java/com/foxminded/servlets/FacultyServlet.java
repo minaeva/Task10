@@ -1,6 +1,8 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.FacultyDomain;
+import com.foxminded.model.Faculty;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +25,12 @@ public class FacultyServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        req.setAttribute("faculty", facultyDomain.findFacultyByIdFull(id));
-        req.getRequestDispatcher("faculty.jsp").forward(req, resp);
+        Faculty faculty = facultyDomain.findFacultyByIdFull(id);
+        if (faculty == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            req.setAttribute("faculty", faculty);
+            req.getRequestDispatcher("faculty.jsp").forward(req, resp);
+        }
     }
 }

@@ -9,10 +9,10 @@
         <div class ="container">
             <h1 class="title">Group ${group.id} ${group.name}</h1>
 
- <c:if test="${not empty students}">
+ <c:if test="${not empty group.students}">
             <h2 class="subtitle">Students</h2>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
-            <c:forEach items="${students}" var="student">
+            <c:forEach items="${group.students}" var="student">
                 <tr>
                     <td><a href="student?id=${student.id}">${student.id} </td>
                     <td>${student.name} </td>

@@ -1,6 +1,8 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.AuditoriumDomain;
+import com.foxminded.model.Auditorium;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +25,13 @@ public class AuditoriumServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        req.setAttribute("auditorium", auditoriumDomain.findAuditoriumById(id));
-        req.getRequestDispatcher("auditorium.jsp").forward(req, resp);
+        Auditorium auditorium = auditoriumDomain.findAuditoriumById(id);
+        if (auditorium == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            req.setAttribute("auditorium", auditorium);
+            req.getRequestDispatcher("auditorium.jsp").forward(req, resp);
+        }
     }
 }

@@ -25,8 +25,12 @@ public class StudentServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
         StudentCard student = studentDomain.findStudentById(id);
-        req.setAttribute("student", student);
-        req.setAttribute("lessons", studentDomain.createSchedule(student));
-        req.getRequestDispatcher("student.jsp").forward(req, resp);
+        if (student == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            req.setAttribute("student", student);
+            req.setAttribute("lessons", studentDomain.findSchedule(student));
+            req.getRequestDispatcher("student.jsp").forward(req, resp);
+        }
     }
 }

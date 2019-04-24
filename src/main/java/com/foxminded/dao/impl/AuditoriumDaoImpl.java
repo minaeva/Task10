@@ -133,5 +133,21 @@ public class AuditoriumDaoImpl implements AuditoriumDao {
         return auditorium;
     }
 
+    public Auditorium findAuditoriumByLessonId(final long auditoriumId) {
+        String sql = "SELECT auditorium_id FROM lessons WHERE id = (?)";
+
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, auditoriumId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return findById(resultSet.getInt("auditorium_id"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find auditorium of a lesson with id " + auditoriumId, e);
+        }
+        return null;
+    }
 }
 

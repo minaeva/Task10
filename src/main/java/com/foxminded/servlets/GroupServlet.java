@@ -1,6 +1,8 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.GroupDomain;
+import com.foxminded.model.Group;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,8 +25,12 @@ public class GroupServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        req.setAttribute("group", groupDomain.findGroupById(id));
-        req.setAttribute("students", groupDomain.findGroupByIdFull(id).getStudents());
-        req.getRequestDispatcher("group.jsp").forward(req, resp);
+        Group group = groupDomain.findGroupById(id);
+        if (group == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            req.setAttribute("group", group);
+            req.getRequestDispatcher("group.jsp").forward(req, resp);
+        }
     }
 }

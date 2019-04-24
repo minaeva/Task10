@@ -206,35 +206,25 @@ public class GroupDaoImpl implements GroupDao {
         return null;
     }
 
-    /*
-        public List<Group> findGroupsByFacultyId(long facultyId) {
-        log.trace("Finding group by faculty id " + facultyId);
-        List<Group> result = null;
-        String sql = "SELECT id, name FROM groups WHERE faculty_id = (?)";
+    public Group findGroupByLessonId(final long lessonId) {
+        log.trace("Finding group by lesson id " + lessonId);
+        String sql = "SELECT group_id FROM lessons WHERE id = (?)";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, facultyId);
+            statement.setLong(1, lessonId);
             log.debug("Executing statement" + statement);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet == null) {
-            log.trace("None found");
-                return null;
-            }
-            result = new ArrayList<>();
-            while (resultSet.next()) {
-                log.trace("Creating a group from resultSet.next()");
-                Group group = new Group(resultSet.getString("name"));
-                group.setId(resultSet.getInt("id"));
-                result.add(group);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                log.trace("Getting result set");
+                if (resultSet.next()) {
+                    log.trace("Group for lesson with id " + lessonId + " found");
+                    return findById(resultSet.getInt("group_id"));
+                }
             }
         } catch (SQLException e) {
-            log.error("Cannot find all groups of faculty with id " + facultyId, e);
-            throw new DaoException("Cannot find all groups of faculty with id " + facultyId, e);
+            log.error("Cannot find group of a lesson with id " + lessonId, e);
+            throw new DaoException("Cannot find group of a lesson with id " + lessonId, e);
         }
-        return result;
+        return null;
     }
-
-
-     */
 }

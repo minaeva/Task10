@@ -1,6 +1,8 @@
 package com.foxminded.servlets;
 
 import com.foxminded.domain.SubjectDomain;
+import com.foxminded.model.Subject;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +25,12 @@ public class SubjectServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
-        req.setAttribute("subject", subjectDomain.findSubjectById(id));
-        req.getRequestDispatcher("subject.jsp").forward(req, resp);
+        Subject subject = subjectDomain.findSubjectById(id);
+        if (subject == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            req.setAttribute("subject", subject);
+            req.getRequestDispatcher("subject.jsp").forward(req, resp);
+        }
     }
 }
