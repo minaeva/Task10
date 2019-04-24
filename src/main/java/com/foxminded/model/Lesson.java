@@ -2,9 +2,11 @@ package com.foxminded.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class Lesson {
 
     private long id;

@@ -26,7 +26,7 @@ public class LessonServlet extends HttpServlet {
         int id = Integer.valueOf(req.getParameter("id"));
         Lesson lesson = lessonDomain.findLessonById(id);
         if (lesson == null) {
-            req.getRequestDispatcher("error-404.jsp").forward(req, resp);
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } else {
             req.setAttribute("lesson", lesson);
             req.getRequestDispatcher("lesson.jsp").forward(req, resp);

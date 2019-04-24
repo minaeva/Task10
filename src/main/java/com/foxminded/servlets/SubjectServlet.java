@@ -27,7 +27,7 @@ public class SubjectServlet extends HttpServlet {
         int id = Integer.valueOf(req.getParameter("id"));
         Subject subject = subjectDomain.findSubjectById(id);
         if (subject == null) {
-            req.getRequestDispatcher("error-404.jsp").forward(req, resp);
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } else {
             req.setAttribute("subject", subject);
             req.getRequestDispatcher("subject.jsp").forward(req, resp);

@@ -18,12 +18,4 @@ public interface LessonDao extends CrudDao<Lesson> {
     List<Lesson> findLessonsByGroupId(long groupId);
 
     List<Lesson> findLessonsByTeacherId(long teacherId);
-
-    long findGroupIdByLessonId(final long lessonId);
-
-    long findSubjectIdByLessonId(final long subjectId);
-
-    long findTeacherIdByLessonId(final long teacherId);
-
-    long findAuditoriumIdByLessonId(final long lessonId);
 }
