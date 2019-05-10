@@ -30,7 +30,7 @@
         <div class ="container">
             <h1 class="title">Student ${student.id} ${student.name}</h1>
 
-        <form method = "post" action = "student">
+        <form method = "get" action = "student">
             <p class="subtitle is-5">
             	<c:if test="${not empty from}">
                     From: <input type="text" id="dateFrom" name="from" value="<%=request.getAttribute("from")%>">
@@ -47,7 +47,7 @@
             	</c:if>
                 <input type="hidden" name="id" value="${student.id}"><br>
             </p>
-            <input type = "submit" value = "Apply"/>
+            <button type="submit">Apply</button>
         </form>
 
 <c:if test="${not empty lessons}">

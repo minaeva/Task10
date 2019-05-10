@@ -9,13 +9,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @WebServlet("/student")
 public class StudentServlet extends HttpServlet {
 
     private StudentDomain studentDomain;
 
-    @Override
+     @Override
     public void init(ServletConfig config) {
         studentDomain = new StudentDomain();
     }
@@ -23,34 +26,53 @@ public class StudentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        int id = Integer.valueOf(req.getParameter("id"));
-        StudentCard student = studentDomain.findStudentById(id);
-        if (student == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        String fromDate;
+        String toDate;
+        int id;
+
+        if (  !validateId(req.getParameter("id"))
+           || !validateDate(req.getParameter("from"))
+           || !validateDate(req.getParameter("to"))) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } else {
-            req.setAttribute("student", student);
-            req.setAttribute("lessons", studentDomain.findSchedule(student));
-            req.getRequestDispatcher("student.jsp").forward(req, resp);
+            id = Integer.valueOf(req.getParameter("id"));
+            fromDate = req.getParameter("from");
+            if (fromDate == null) {
+                fromDate = "";
+            }
+            toDate = req.getParameter("to");
+            if (toDate == null) {
+                toDate = "";
+            }
+            StudentCard student = studentDomain.findStudentById(id);
+            if (student == null) {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } else {
+                req.setAttribute("student", student);
+                req.setAttribute("from", fromDate);
+                req.setAttribute("to", toDate);
+                if (!fromDate.isEmpty() || !toDate.isEmpty()) {
+                    req.setAttribute("lessons", studentDomain.findScheduleInPeriod(student, fromDate, toDate));
+                }
+                req.getRequestDispatcher("student.jsp").forward(req, resp);
+            }
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    private boolean validateId (String stringId){
+        return (stringId.matches("[0-9]+") && stringId.length() < 9)? true : false;
+    }
 
-        String fromDate = req.getParameter("from");
-        String toDate = req.getParameter("to");
-        int id = Integer.valueOf(req.getParameter("id"));
-
-        StudentCard student = studentDomain.findStudentById(id);
-        if (student == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-        } else {
-            req.setAttribute("student", student);
-            req.setAttribute("from", fromDate);
-            req.setAttribute("to", toDate);
-            req.setAttribute("lessons", studentDomain.findScheduleInPeriod(student, fromDate, toDate));
-            req.getRequestDispatcher("student.jsp").forward(req, resp);
-        }
+    private boolean validateDate(String stringDate){
+         if ((stringDate == null) || (stringDate.isEmpty())) {
+             return true;
+         }
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+         try {
+            LocalDate date = LocalDate.parse(stringDate, formatter);
+         } catch (DateTimeParseException ex) {
+            return false;
+         }
+         return true;
     }
 }

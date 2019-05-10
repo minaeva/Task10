@@ -3,7 +3,6 @@ package com.foxminded.domain;
 import com.foxminded.dao.*;
 import com.foxminded.dao.impl.*;
 import com.foxminded.model.*;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
