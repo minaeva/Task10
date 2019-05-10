@@ -33,4 +33,24 @@ public class StudentServlet extends HttpServlet {
             req.getRequestDispatcher("student.jsp").forward(req, resp);
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String fromDate = req.getParameter("from");
+        String toDate = req.getParameter("to");
+        int id = Integer.valueOf(req.getParameter("id"));
+
+        StudentCard student = studentDomain.findStudentById(id);
+        if (student == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            req.setAttribute("student", student);
+            req.setAttribute("from", fromDate);
+            req.setAttribute("to", toDate);
+            req.setAttribute("lessons", studentDomain.findScheduleInPeriod(student, fromDate, toDate));
+            req.getRequestDispatcher("student.jsp").forward(req, resp);
+        }
+    }
 }

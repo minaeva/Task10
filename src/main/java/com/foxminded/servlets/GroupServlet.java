@@ -2,7 +2,6 @@ package com.foxminded.servlets;
 
 import com.foxminded.domain.GroupDomain;
 import com.foxminded.model.Group;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

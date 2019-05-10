@@ -43,4 +43,22 @@ public class StudentDomain {
         return lessonDomain.findLessonsByGroupId(group.getId());
     }
 
+    public List<Lesson> findScheduleInPeriod(StudentCard student, String fromDate, String toDate) {
+        GroupDomain groupDomain = new GroupDomain();
+        Group group = groupDomain.findGroupByStudent(student);
+        LessonDomain lessonDomain = new LessonDomain();
+
+        if (fromDate.isEmpty() && toDate.isEmpty()) {
+            return lessonDomain.findLessonsByGroupId(group.getId());
+        }
+        if (fromDate.isEmpty()){
+            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), "01/01/0001", toDate);
+        }
+        if (toDate.isEmpty()){
+            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, "12/31/9999");
+        }
+
+        //from and to dates are not empty
+        return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, toDate);
+    }
 }

@@ -2,7 +2,6 @@ package com.foxminded.servlets;
 
 import com.foxminded.domain.FacultyDomain;
 import com.foxminded.model.Faculty;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

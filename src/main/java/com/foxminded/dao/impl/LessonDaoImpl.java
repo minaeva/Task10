@@ -91,17 +91,11 @@ public class LessonDaoImpl implements LessonDao {
                 group.setId(groupId);
                 lesson.setGroup(group);
 
-                Auditorium auditorium = new Auditorium();
-                auditorium.setId(resultSet.getInt("auditorium_id"));
-                lesson.setAuditorium(auditorium);
-
                 TeacherCard teacher = new TeacherCard();
                 teacher.setId(resultSet.getInt("teacher_id"));
                 lesson.setTeacher(teacher);
 
-                Subject subject = new Subject();
-                subject.setId(resultSet.getInt("subject_id"));
-                lesson.setSubject(subject);
+                addAuditoriumSubjectToLesson(resultSet.getInt("auditorium_id"), resultSet.getInt("subject_id"), lesson);
 
                 result.add(lesson);
             }
@@ -109,6 +103,16 @@ public class LessonDaoImpl implements LessonDao {
             throw new DaoException("Cannot find all lessons of group with id " + groupId, e);
         }
         return result;
+    }
+
+    private void addAuditoriumSubjectToLesson (int auditoriumId, int subjectId, Lesson lesson) {
+        Auditorium auditorium = new Auditorium();
+        auditorium.setId(auditoriumId);
+        lesson.setAuditorium(auditorium);
+
+        Subject subject = new Subject();
+        subject.setId(subjectId);
+        lesson.setSubject(subject);
     }
 
     public List<Lesson> findLessonsByTeacherId(long teacherId) {
@@ -130,17 +134,11 @@ public class LessonDaoImpl implements LessonDao {
                 group.setId(resultSet.getInt("group_id"));
                 lesson.setGroup(group);
 
-                Auditorium auditorium = new Auditorium();
-                auditorium.setId(resultSet.getInt("auditorium_id"));
-                lesson.setAuditorium(auditorium);
-
                 TeacherCard teacher = new TeacherCard();
                 teacher.setId(teacherId);
                 lesson.setTeacher(teacher);
 
-                Subject subject = new Subject();
-                subject.setId(resultSet.getInt("subject_id"));
-                lesson.setSubject(subject);
+                addAuditoriumSubjectToLesson(resultSet.getInt("auditorium_id"), resultSet.getInt("subject_id"), lesson);
 
                 result.add(lesson);
             }

@@ -4,6 +4,9 @@ import com.foxminded.dao.*;
 import com.foxminded.dao.impl.*;
 import com.foxminded.model.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LessonDomain {
@@ -54,6 +57,23 @@ public class LessonDomain {
             lesson.setAuditorium(auditoriumDao.findById(lesson.getAuditorium().getId()));
         }
         return lessons;
+    }
+
+    public List<Lesson> findLessonsByGroupIdInPeriod(long groupId, String fromDate, String toDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+        LocalDate from = LocalDate.parse(fromDate, formatter);
+        LocalDate to = LocalDate.parse(toDate, formatter);
+
+        List<Lesson> allLessons = findLessonsByGroupId(groupId);
+        List<Lesson> lessonsInPeriod = new ArrayList<>();
+        for (Lesson lesson: allLessons) {
+            LocalDate date = lesson.getStartDateTime().toLocalDate();
+            if ((date.isAfter(from) || date.equals(from)) && (date.isBefore(to) || date.equals(to))) {
+                lessonsInPeriod.add(lesson);
+            }
+        }
+        return lessonsInPeriod;
     }
 
     public List<Lesson> findAllLessons() {
