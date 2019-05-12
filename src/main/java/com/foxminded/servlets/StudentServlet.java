@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 @WebServlet("/student")
 public class StudentServlet extends HttpServlet {
@@ -30,11 +27,7 @@ public class StudentServlet extends HttpServlet {
         String toDate;
         int id;
 
-        if (  !validateId(req.getParameter("id"))
-           || !validateDate(req.getParameter("from"))
-           || !validateDate(req.getParameter("to"))) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
+        try{
             id = Integer.valueOf(req.getParameter("id"));
             fromDate = req.getParameter("from");
             if (fromDate == null) {
@@ -56,23 +49,8 @@ public class StudentServlet extends HttpServlet {
                 }
                 req.getRequestDispatcher("student.jsp").forward(req, resp);
             }
+        } catch (Exception e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
-    }
-
-    private boolean validateId (String stringId){
-        return (stringId.matches("[0-9]+") && stringId.length() < 9)? true : false;
-    }
-
-    private boolean validateDate(String stringDate){
-         if ((stringDate == null) || (stringDate.isEmpty())) {
-             return true;
-         }
-         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-         try {
-            LocalDate date = LocalDate.parse(stringDate, formatter);
-         } catch (DateTimeParseException ex) {
-            return false;
-         }
-         return true;
     }
 }
