@@ -58,17 +58,12 @@ public class LessonDomain {
         return lessons;
     }
 
-    public List<Lesson> findLessonsByGroupIdInPeriod(long groupId, String fromDate, String toDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-
-        LocalDate from = LocalDate.parse(fromDate, formatter);
-        LocalDate to = LocalDate.parse(toDate, formatter);
-
+    public List<Lesson> findLessonsByGroupIdInPeriod(long groupId, LocalDate fromDate, LocalDate toDate) {
         List<Lesson> allLessons = findLessonsByGroupId(groupId);
         List<Lesson> lessonsInPeriod = new ArrayList<>();
         for (Lesson lesson: allLessons) {
             LocalDate date = lesson.getStartDateTime().toLocalDate();
-            if ((date.isAfter(from) || date.equals(from)) && (date.isBefore(to) || date.equals(to))) {
+            if ((date.isAfter(fromDate) || date.equals(fromDate)) && (date.isBefore(toDate) || date.equals(toDate))) {
                 lessonsInPeriod.add(lesson);
             }
         }

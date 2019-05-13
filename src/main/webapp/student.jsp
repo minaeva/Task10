@@ -32,19 +32,20 @@
 
         <form method = "get" action = "student">
             <p class="subtitle is-5">
-            	<c:if test="${not empty from}">
-                    From: <input type="text" id="dateFrom" name="from" value="<%=request.getAttribute("from")%>">
+            	<c:if test="${not empty param.from}">
+                    From: <input type="text" id="dateFrom" name="from" value="${param.from}">
             	</c:if>
-            	<c:if test="${empty from}">
+            	<c:if test="${empty param.from}">
                     From: <input type="text" id="dateFrom" name="from">
             	</c:if>
 
-               	<c:if test="${not empty to}">
-                    To: <input type="text" id="dateTo" name="to" value="<%=request.getAttribute("to")%>">
-            	</c:if>
-               	<c:if test="${empty to}">
+               	<c:if test="${not empty param.to}">
+                    To: <input type="text" id="dateTo" name="to" value="${param.to}">
+             	</c:if>
+               	<c:if test="${empty param.to}">
                     To: <input type="text" id="dateTo" name="to">
             	</c:if>
+
                 <input type="hidden" name="id" value="${student.id}"><br>
             </p>
             <button type="submit">Apply</button>
@@ -52,7 +53,6 @@
 
 <c:if test="${not empty lessons}">
             <h2 class="title">Schedule</h2>
-            <p class="subtitle is-3">Today's date: <%= (new java.util.Date()).toLocaleString()%></p>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
             <tr>
                 <td>Lesson id</td>

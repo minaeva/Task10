@@ -5,6 +5,8 @@ import com.foxminded.dao.impl.StudentDaoImpl;
 import com.foxminded.model.Group;
 import com.foxminded.model.Lesson;
 import com.foxminded.model.StudentCard;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class StudentDomain {
@@ -43,16 +45,22 @@ public class StudentDomain {
         return lessonDomain.findLessonsByGroupId(group.getId());
     }
 
-    public List<Lesson> findScheduleInPeriod(StudentCard student, String fromDate, String toDate) {
+    public List<Lesson> findScheduleInPeriod(StudentCard student, LocalDate fromDate, LocalDate toDate) {
         GroupDomain groupDomain = new GroupDomain();
         Group group = groupDomain.findGroupByStudent(student);
         LessonDomain lessonDomain = new LessonDomain();
 
-        if (fromDate.isEmpty()){
-            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), "01/01/0001", toDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        if ((fromDate == null) && (toDate == null)) {
+            return findSchedule(student);
         }
-        if (toDate.isEmpty()){
-            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, "12/31/9999");
+        if (fromDate == null) {
+            LocalDate start = LocalDate.parse("01/01/0001", formatter);
+            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), start, toDate);
+        }
+        if (toDate == null) {
+            LocalDate end = LocalDate.parse("12/31/9999", formatter);
+            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, end);
         }
 
         return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, toDate);
