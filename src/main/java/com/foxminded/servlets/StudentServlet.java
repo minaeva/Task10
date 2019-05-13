@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 
 @WebServlet("/student")
 public class StudentServlet extends HttpServlet {
@@ -49,7 +50,7 @@ public class StudentServlet extends HttpServlet {
                 }
                 req.getRequestDispatcher("student.jsp").forward(req, resp);
             }
-        } catch (Exception e) {
+        } catch (DateTimeParseException | NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
