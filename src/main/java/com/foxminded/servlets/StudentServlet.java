@@ -30,11 +30,15 @@ public class StudentServlet extends HttpServlet {
          int id = 0;
          LocalDate fromDate = null;
          LocalDate toDate = null;
+         boolean clicked = false;
 
         try {
             id = Integer.valueOf(req.getParameter("id"));
-            fromDate = stringToLocalDate(req.getParameter("from"));
-            toDate = stringToLocalDate(req.getParameter("to"));
+            if ((req.getParameter("from") != null) && (req.getParameter("to") != null)) {
+                fromDate = stringToLocalDate(req.getParameter("from"));
+                toDate = stringToLocalDate(req.getParameter("to"));
+                clicked = true;
+            }
         } catch (DateTimeParseException | NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
@@ -46,7 +50,7 @@ public class StudentServlet extends HttpServlet {
             return;
         }
         req.setAttribute("student", student);
-        if (filterApplied(req.getParameter("from"), req.getParameter("to"))) {
+        if (clicked) {
             req.setAttribute("lessons", studentDomain.findScheduleInPeriod(student, fromDate, toDate));
         }
         req.getRequestDispatcher("student.jsp").forward(req, resp);
