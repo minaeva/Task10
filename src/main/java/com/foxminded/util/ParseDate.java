@@ -14,11 +14,11 @@ public class ParseDate {
         return LocalDate.parse(date, formatter);
     }
 
-    public static boolean firstEntry(String from, String to) {
+    public static boolean filterApplied(String from, String to) {
         if ((from == null) && (to == null)) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
 }
