@@ -29,17 +29,15 @@ public class StudentServlet extends HttpServlet {
             throws ServletException, IOException {
         try{
             int id = Integer.valueOf(req.getParameter("id"));
-            StudentCard student = studentDomain.findStudentById(id);
+            LocalDate fromDate = stringToLocalDate(req.getParameter("from"));
+            LocalDate toDate = stringToLocalDate(req.getParameter("to"));
 
+            StudentCard student = studentDomain.findStudentById(id);
             if (student == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-
             } else {
                 req.setAttribute("student", student);
-
                 if (!firstEntry(req.getParameter("from"), req.getParameter("to"))) {
-                    LocalDate fromDate = stringToLocalDate(req.getParameter("from"));
-                    LocalDate toDate = stringToLocalDate(req.getParameter("to"));
                     req.setAttribute("lessons", studentDomain.findScheduleInPeriod(student, fromDate, toDate));
                 }
                 req.getRequestDispatcher("student.jsp").forward(req, resp);
