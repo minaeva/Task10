@@ -45,7 +45,7 @@
                	<c:if test="${empty param.to}">
                     To: <input type="text" id="dateTo" name="to">
             	</c:if>
-
+                <input type="hidden" name="schedule">
                 <input type="hidden" name="id" value="${student.id}"><br>
             </p>
             <button type="submit">Apply</button>

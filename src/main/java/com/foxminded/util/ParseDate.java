@@ -13,13 +13,4 @@ public class ParseDate {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return LocalDate.parse(date, formatter);
     }
-
-    public static boolean filterApplied(String from, String to) {
-        if ((from == null) && (to == null)) {
-            return false;
-        }
-        return true;
-    }
-
 }
-
