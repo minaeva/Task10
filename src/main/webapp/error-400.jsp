@@ -12,7 +12,7 @@
 
             <p class="title is-5 is-spaced">You can:</p>
             <button class="button" name="Back" onclick="history.back()">Go Back</button>
-            <button class="button" name="Homepage" onclick="window.location.href='/university/'">Go to Homepage</button>
+            <button class="button" name="Homepage" onclick="window.location.href='${pageContext.request.contextPath}'">Go to Homepage</button>
          </div>
     </body>
 </html>

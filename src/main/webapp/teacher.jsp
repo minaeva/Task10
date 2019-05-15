@@ -8,27 +8,29 @@
     <body>
         <div class ="container">
             <h1 class="title">Teacher ${teacher.id} ${teacher.name}</h1>
- <c:if test="${not empty lessons}">
-            <h2 class="title">Schedule</h2>
-            <table class="table is-responsive is-bordered is-striped is-hoverable">
-            <tr>
-                <td>Lesson id</td>
-                <td>Start time</td>
-                <td>Group</td>
-                <td>Subject</td>
-                <td>Auditorium</td>
-            </tr>
-            <c:forEach items="${lessons}" var="lesson">
-            <tr>
-                <td><a href="lesson?id=${lesson.id}">${lesson.id} </td>
-                <td>${lesson.startDateTime} </td>
-                <td>${lesson.group.name} </td>
-                <td>${lesson.subject.name} </td>
-                <td>${lesson.auditorium.number} </td>
-            </tr>
-            </c:forEach>
-            </table>
- </c:if>
+
+            <c:if test="${not empty lessons}">
+                <h2 class="title">Schedule</h2>
+                <table class="table is-responsive is-bordered is-striped is-hoverable">
+                    <tr>
+                        <td>Lesson id</td>
+                        <td>Start time</td>
+                        <td>Group</td>
+                        <td>Subject</td>
+                        <td>Auditorium</td>
+                    </tr>
+                    <c:forEach items="${lessons}" var="lesson">
+                        <tr>
+                            <td><a href="lesson?id=${lesson.id}">${lesson.id} </td>
+                            <td>${lesson.startDateTime} </td>
+                            <td>${lesson.group.name} </td>
+                            <td>${lesson.subject.name} </td>
+                            <td>${lesson.auditorium.number} </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:if>
+
         </div>
     </body>
 </html>

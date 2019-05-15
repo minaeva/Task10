@@ -20,15 +20,15 @@ public class LessonDomain {
         return lessonDao.create(lesson);
     }
 
-    public Lesson addTeacher (Lesson lesson, TeacherCard teacher) {
+    public Lesson addTeacher(Lesson lesson, TeacherCard teacher) {
         return lessonDao.addTeacher(lesson, teacher);
     }
 
-    public Lesson addAuditorium (Lesson lesson, Auditorium auditorium) {
+    public Lesson addAuditorium(Lesson lesson, Auditorium auditorium) {
         return lessonDao.addAuditorium(lesson, auditorium);
     }
 
-    public Lesson addSubject (Lesson lesson, Subject subject) {
+    public Lesson addSubject(Lesson lesson, Subject subject) {
         return lessonDao.addSubject(lesson, subject);
     }
 
@@ -58,19 +58,7 @@ public class LessonDomain {
         return lessons;
     }
 
-    public List<Lesson> findLessonsByGroupIdInPeriod(long groupId, LocalDate fromDate, LocalDate toDate) {
-        List<Lesson> allLessons = findLessonsByGroupId(groupId);
-        List<Lesson> lessonsInPeriod = new ArrayList<>();
-        for (Lesson lesson: allLessons) {
-            LocalDate date = lesson.getStartDateTime().toLocalDate();
-            if ((date.isAfter(fromDate) || date.equals(fromDate)) && (date.isBefore(toDate) || date.equals(toDate))) {
-                lessonsInPeriod.add(lesson);
-            }
-        }
-        return lessonsInPeriod;
-    }
-
-    public List<Lesson> findAllLessons() {
+     public List<Lesson> findAllLessons() {
         return lessonDao.findAll();
     }
 

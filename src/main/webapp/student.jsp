@@ -30,48 +30,48 @@
         <div class ="container">
             <h1 class="title">Student ${student.id} ${student.name}</h1>
 
-        <form method = "get" action = "student">
-            <p class="subtitle is-5">
-            	<c:if test="${not empty param.from}">
-                    From: <input type="text" id="dateFrom" name="from" value="${param.from}">
-            	</c:if>
-            	<c:if test="${empty param.from}">
-                    From: <input type="text" id="dateFrom" name="from">
-            	</c:if>
+            <form method = "get" action = "student">
+                <p class="subtitle is-5">
+                    <c:if test="${not empty param.from}">
+                        From: <input type="text" id="dateFrom" name="from" value="${param.from}">
+                    </c:if>
+                    <c:if test="${empty param.from}">
+                        From: <input type="text" id="dateFrom" name="from">
+                    </c:if>
 
-               	<c:if test="${not empty param.to}">
-                    To: <input type="text" id="dateTo" name="to" value="${param.to}">
-             	</c:if>
-               	<c:if test="${empty param.to}">
-                    To: <input type="text" id="dateTo" name="to">
-            	</c:if>
-                <input type="hidden" name="schedule">
-                <input type="hidden" name="id" value="${student.id}"><br>
-            </p>
-            <button type="submit">Apply</button>
-        </form>
+                    <c:if test="${not empty param.to}">
+                        To: <input type="text" id="dateTo" name="to" value="${param.to}">
+                    </c:if>
+                    <c:if test="${empty param.to}">
+                        To: <input type="text" id="dateTo" name="to">
+                    </c:if>
+                    <input type="hidden" name="schedule">
+                    <input type="hidden" name="id" value="${student.id}"><br>
+                </p>
+                <button type="submit">Apply</button>
+            </form>
 
-<c:if test="${not empty lessons}">
-            <h2 class="title">Schedule</h2>
-            <table class="table is-responsive is-bordered is-striped is-hoverable">
-            <tr>
-                <td>Lesson id</td>
-                <td>Start time</td>
-                <td>Teacher</td>
-                <td>Subject</td>
-                <td>Auditorium</td>
-            </tr>
-            <c:forEach items="${lessons}" var="lesson">
-            <tr>
-                <td><a href="lesson?id=${lesson.id}">${lesson.id} </td>
-                <td>${lesson.startDateTime} </td>
-                <td>${lesson.teacher.name} </td>
-                <td>${lesson.subject.name} </td>
-                <td>${lesson.auditorium.number} </td>
-            </tr>
-            </c:forEach>
-            </table>
-</c:if>
+            <c:if test="${not empty lessons}">
+                <h2 class="title">Schedule</h2>
+                <table class="table is-responsive is-bordered is-striped is-hoverable">
+                    <tr>
+                        <td>Lesson id</td>
+                        <td>Start time</td>
+                        <td>Teacher</td>
+                        <td>Subject</td>
+                        <td>Auditorium</td>
+                    </tr>
+                    <c:forEach items="${lessons}" var="lesson">
+                        <tr>
+                            <td><a href="lesson?id=${lesson.id}">${lesson.id} </td>
+                            <td>${lesson.startDateTime} </td>
+                            <td>${lesson.teacher.name} </td>
+                            <td>${lesson.subject.name} </td>
+                            <td>${lesson.auditorium.number} </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:if>
 
         </div>
     </body>

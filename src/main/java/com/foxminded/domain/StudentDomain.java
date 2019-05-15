@@ -7,6 +7,7 @@ import com.foxminded.model.Lesson;
 import com.foxminded.model.StudentCard;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDomain {
@@ -37,32 +38,37 @@ public class StudentDomain {
         studentDao.delete(student);
     }
 
-    public List<Lesson> findSchedule(StudentCard student) {
-        GroupDomain groupDomain = new GroupDomain();
-        Group group = groupDomain.findGroupByStudent(student);
-
-        LessonDomain lessonDomain = new LessonDomain();
-        return lessonDomain.findLessonsByGroupId(group.getId());
-    }
-
     public List<Lesson> findScheduleInPeriod(StudentCard student, LocalDate fromDate, LocalDate toDate) {
         GroupDomain groupDomain = new GroupDomain();
         Group group = groupDomain.findGroupByStudent(student);
         LessonDomain lessonDomain = new LessonDomain();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        List<Lesson> allLessons = lessonDomain.findLessonsByGroupId(group.getId());
+
         if ((fromDate == null) && (toDate == null)) {
-            return findSchedule(student);
-        }
-        if (fromDate == null) {
-            LocalDate start = LocalDate.parse("01/01/0001", formatter);
-            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), start, toDate);
-        }
-        if (toDate == null) {
-            LocalDate end = LocalDate.parse("12/31/9999", formatter);
-            return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, end);
+            return allLessons;
         }
 
-        return lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, toDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        if (fromDate == null) {
+            fromDate = LocalDate.parse("01/01/0001", formatter);
+        }
+        if (toDate == null) {
+            toDate = LocalDate.parse("12/31/9999", formatter);
+        }
+
+        return findLessonsInPeriod(allLessons, fromDate, toDate);
+    }
+
+    public List<Lesson> findLessonsInPeriod(List<Lesson> lessons, LocalDate fromDate, LocalDate toDate) {
+        List<Lesson> result = new ArrayList<>();
+
+        for (Lesson lesson: lessons) {
+            LocalDate date = lesson.getStartDateTime().toLocalDate();
+            if ((date.isAfter(fromDate) || date.equals(fromDate)) && (date.isBefore(toDate) || date.equals(toDate))) {
+                result.add(lesson);
+            }
+        }
+        return result;
     }
 }

@@ -9,11 +9,11 @@
         <div class ="container">
             <h1 class="title">Teachers</h1>
             <table class="table is-responsive is-bordered is-striped is-hoverable">
-            <c:forEach items="${teachers}" var="teacher">
-                <tr>
-                    <td><a href="teacher?id=${teacher.id}">${teacher.id} </td>
-                    <td>${teacher.name} </td>
-                </tr>
+                <c:forEach items="${teachers}" var="teacher">
+                    <tr>
+                        <td><a href="teacher?id=${teacher.id}">${teacher.id} </td>
+                        <td>${teacher.name} </td>
+                    </tr>
                 </c:forEach>
             </table>
         </div>
