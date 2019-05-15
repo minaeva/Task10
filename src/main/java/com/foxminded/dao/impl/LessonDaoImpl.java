@@ -108,10 +108,14 @@ public class LessonDaoImpl implements LessonDao {
 
     public List<Lesson> findLessonsByGroupIdInPeriod(long groupId, LocalDate from, LocalDate to) {
         List<Lesson> result = null;
-        String sql = "SELECT id, teacher_id, subject_id, auditorium_id, start_date_time FROM lessons WHERE group_id = (?)";
+        String sql = "SELECT id, teacher_id, subject_id, auditorium_id, start_date_time FROM lessons " +
+                "WHERE group_id = (?) AND start_date_time >= (?) AND start_date_time < (?)";
+
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, groupId);
+            statement.setDate(2, Date.valueOf(from));
+            statement.setDate(3, Date.valueOf(to.plusDays(1)));
             ResultSet resultSet = statement.executeQuery();
             if (resultSet == null) {
                 return null;
@@ -119,7 +123,6 @@ public class LessonDaoImpl implements LessonDao {
             result = new ArrayList<>();
             while (resultSet.next()) {
                 LocalDate date = resultSet.getTimestamp("start_date_time").toLocalDateTime().toLocalDate();
-                if ((date.isAfter(from) || date.equals(from)) && (date.isBefore(to) || date.equals(to))) {
                     Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
                     lesson.setId(resultSet.getInt("id"));
 
@@ -134,7 +137,6 @@ public class LessonDaoImpl implements LessonDao {
                     addAuditoriumSubjectToLesson(resultSet.getInt("auditorium_id"), resultSet.getInt("subject_id"), lesson);
 
                     result.add(lesson);
-                }
             }
         } catch (SQLException e) {
             throw new DaoException("Cannot find all lessons of group with id " + groupId + " in period " + from + "-" +to, e);
