@@ -3,6 +3,7 @@ package com.foxminded.dao.impl;
 import com.foxminded.dao.*;
 import com.foxminded.model.*;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,7 +106,43 @@ public class LessonDaoImpl implements LessonDao {
         return result;
     }
 
-    private void addAuditoriumSubjectToLesson (int auditoriumId, int subjectId, Lesson lesson) {
+    public List<Lesson> findLessonsByGroupIdInPeriod(long groupId, LocalDate from, LocalDate to) {
+        List<Lesson> result = null;
+        String sql = "SELECT id, teacher_id, subject_id, auditorium_id, start_date_time FROM lessons WHERE group_id = (?)";
+        try (Connection connection = DaoConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, groupId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            result = new ArrayList<>();
+            while (resultSet.next()) {
+                LocalDate date = resultSet.getTimestamp("start_date_time").toLocalDateTime().toLocalDate();
+                if ((date.isAfter(from) || date.equals(from)) && (date.isBefore(to) || date.equals(to))) {
+                    Lesson lesson = new Lesson(resultSet.getTimestamp("start_date_time").toLocalDateTime());
+                    lesson.setId(resultSet.getInt("id"));
+
+                    Group group = new Group();
+                    group.setId(groupId);
+                    lesson.setGroup(group);
+
+                    TeacherCard teacher = new TeacherCard();
+                    teacher.setId(resultSet.getInt("teacher_id"));
+                    lesson.setTeacher(teacher);
+
+                    addAuditoriumSubjectToLesson(resultSet.getInt("auditorium_id"), resultSet.getInt("subject_id"), lesson);
+
+                    result.add(lesson);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Cannot find all lessons of group with id " + groupId + " in period " + from + "-" +to, e);
+        }
+        return result;
+    }
+
+    private void addAuditoriumSubjectToLesson(int auditoriumId, int subjectId, Lesson lesson) {
         Auditorium auditorium = new Auditorium();
         auditorium.setId(auditoriumId);
         lesson.setAuditorium(auditorium);

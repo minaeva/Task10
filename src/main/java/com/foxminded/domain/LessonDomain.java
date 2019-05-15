@@ -4,8 +4,6 @@ import com.foxminded.dao.*;
 import com.foxminded.dao.impl.*;
 import com.foxminded.model.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LessonDomain {
@@ -38,6 +36,18 @@ public class LessonDomain {
 
     public List<Lesson> findLessonsByGroupId(long groupId) {
         List<Lesson> lessons = lessonDao.findLessonsByGroupId(groupId);
+        for (Lesson lesson: lessons) {
+            lesson.setGroup(groupDao.findById(lesson.getGroup().getId()));
+            lesson.setTeacher(teacherDao.findById(lesson.getTeacher().getId()));
+            lesson.setSubject(subjectDao.findById(lesson.getSubject().getId()));
+            lesson.setAuditorium(auditoriumDao.findById(lesson.getAuditorium().getId()));
+        }
+        return lessons;
+    }
+
+    public List<Lesson> findLessonsByGroupIdInPeriod(long groupId, LocalDate fromDate, LocalDate toDate) {
+        List<Lesson> lessons = lessonDao.findLessonsByGroupIdInPeriod(groupId, fromDate, toDate);
+
         for (Lesson lesson: lessons) {
             lesson.setGroup(groupDao.findById(lesson.getGroup().getId()));
             lesson.setTeacher(teacherDao.findById(lesson.getTeacher().getId()));

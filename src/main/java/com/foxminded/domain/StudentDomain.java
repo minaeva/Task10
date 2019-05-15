@@ -7,7 +7,6 @@ import com.foxminded.model.Lesson;
 import com.foxminded.model.StudentCard;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDomain {
@@ -42,33 +41,21 @@ public class StudentDomain {
         GroupDomain groupDomain = new GroupDomain();
         Group group = groupDomain.findGroupByStudent(student);
         LessonDomain lessonDomain = new LessonDomain();
-
-        List<Lesson> allLessons = lessonDomain.findLessonsByGroupId(group.getId());
+        List<Lesson> result = null;
 
         if ((fromDate == null) && (toDate == null)) {
-            return allLessons;
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        if (fromDate == null) {
-            fromDate = LocalDate.parse("01/01/0001", formatter);
-        }
-        if (toDate == null) {
-            toDate = LocalDate.parse("12/31/9999", formatter);
-        }
-
-        return findLessonsInPeriod(allLessons, fromDate, toDate);
-    }
-
-    public List<Lesson> findLessonsInPeriod(List<Lesson> lessons, LocalDate fromDate, LocalDate toDate) {
-        List<Lesson> result = new ArrayList<>();
-
-        for (Lesson lesson: lessons) {
-            LocalDate date = lesson.getStartDateTime().toLocalDate();
-            if ((date.isAfter(fromDate) || date.equals(fromDate)) && (date.isBefore(toDate) || date.equals(toDate))) {
-                result.add(lesson);
+            result = lessonDomain.findLessonsByGroupId(group.getId());
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            if (fromDate == null) {
+                fromDate = LocalDate.parse("01/01/0001", formatter);
             }
+            if (toDate == null) {
+                toDate = LocalDate.parse("12/31/9999", formatter);
+            }
+            result = lessonDomain.findLessonsByGroupIdInPeriod(group.getId(), fromDate, toDate);
         }
         return result;
     }
+
 }

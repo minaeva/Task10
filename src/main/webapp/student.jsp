@@ -45,7 +45,7 @@
                     <c:if test="${empty param.to}">
                         To: <input type="text" id="dateTo" name="to">
                     </c:if>
-                    <input type="hidden" name="schedule">
+                    <input type="hidden" name="schedule" value="1">
                     <input type="hidden" name="id" value="${student.id}"><br>
                 </p>
                 <button type="submit">Apply</button>
@@ -71,6 +71,10 @@
                         </tr>
                     </c:forEach>
                 </table>
+            </c:if>
+
+           <c:if test="${empty lessons && param.schedule == '1'}">
+                   <p class="title is-5 is-spaced">No record found</p>
             </c:if>
 
         </div>
