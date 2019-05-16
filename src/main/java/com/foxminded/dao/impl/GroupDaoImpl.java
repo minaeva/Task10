@@ -174,8 +174,7 @@ public class GroupDaoImpl implements GroupDao {
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, groupId);
-            statement.setLong(2, student.getId());
+            statement.setLong(1, student.getId());
             log.debug("Executing statement" + statement);
             statement.executeUpdate();
         } catch (SQLException e) {

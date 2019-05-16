@@ -32,6 +32,12 @@ public class GroupDomain {
         return groupDao.findGroupByStudentId(student.getId());
     }
 
+    public Group findGroupByStudentFull(StudentCard student) {
+        Group group = groupDao.findGroupByStudentId(student.getId());
+        group.setStudents(studentDao.findStudentsByGroupId(group.getId()));
+        return group;
+    }
+
     public List<Group> findGroupsByFaculty(long facultyId) {
         return groupDao.findGroupsByFacultyId(facultyId);
     }
@@ -48,7 +54,7 @@ public class GroupDomain {
         groupDao.delete(group);
     }
 
-    public Group addStudent(Group group, StudentCard student){
+    public Group addStudent(Group group, StudentCard student) {
         group.getStudents().add(student);
         return groupDao.addStudent(group.getId(), student);
     }

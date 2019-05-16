@@ -18,7 +18,7 @@ public class StudentServlet extends HttpServlet {
 
     private StudentDomain studentDomain;
 
-     @Override
+    @Override
     public void init(ServletConfig config) {
         studentDomain = new StudentDomain();
     }
@@ -26,29 +26,30 @@ public class StudentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-         int id = 0;
-         LocalDate fromDate = null;
-         LocalDate toDate = null;
+        int id = 0;
+        LocalDate fromDate = null;
+        LocalDate toDate = null;
 
-         try {
-             id = Integer.valueOf(req.getParameter("id"));
-             fromDate = stringToLocalDate(req.getParameter("from"));
-             toDate = stringToLocalDate(req.getParameter("to"));
-         } catch (DateTimeParseException | NumberFormatException e) {
-             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-             return;
-         }
+        try {
+            id = Integer.valueOf(req.getParameter("id"));
+            fromDate = stringToLocalDate(req.getParameter("from"));
+            toDate = stringToLocalDate(req.getParameter("to"));
+        } catch (DateTimeParseException | NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
-         StudentCard student = studentDomain.findStudentById(id);
-         if (student == null) {
-             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-             return;
-         }
+        StudentCard student = studentDomain.findStudentById(id);
+        if (student == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
 
-         req.setAttribute("student", student);
-         if (req.getParameterMap().containsKey("schedule")) {
+        req.setAttribute("student", student);
+        if (req.getParameterMap().containsKey("schedule")) {
             req.setAttribute("lessons", studentDomain.findScheduleInPeriod(student, fromDate, toDate));
-         }
-         req.getRequestDispatcher("student.jsp").forward(req, resp);
+        }
+        req.getRequestDispatcher("student.jsp").forward(req, resp);
     }
+
 }
