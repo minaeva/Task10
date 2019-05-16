@@ -4,7 +4,6 @@ import com.foxminded.domain.GroupDomain;
 import com.foxminded.domain.StudentDomain;
 import com.foxminded.model.Group;
 import com.foxminded.model.StudentCard;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,10 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @WebServlet("/students")
 public class StudentsServlet extends HttpServlet {
