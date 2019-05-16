@@ -48,7 +48,7 @@ public class StudentDaoImpl implements StudentDao {
 
     public List<StudentCard> findAll() {
         List<StudentCard> result = null;
-        String sql = "SELECT * FROM students;";
+        String sql = "SELECT * FROM students ORDER BY id ASC;";
 
         try (Connection connection = DaoConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
