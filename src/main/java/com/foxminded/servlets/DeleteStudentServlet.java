@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/students")
-public class StudentsServlet extends HttpServlet {
+@WebServlet("/deleteStudent")
+public class DeleteStudentServlet extends HttpServlet {
 
     private StudentDomain studentDomain;
     private GroupDomain groupDomain;
@@ -25,31 +25,24 @@ public class StudentsServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        req.setAttribute("students", studentDomain.findAll());
-        req.getRequestDispatcher("students.jsp").forward(req, resp);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        int groupId = 0;
+        int id = 0;
         try {
-            groupId = Integer.valueOf(req.getParameter("group"));
-
+            id = Integer.valueOf(req.getParameter("id"));
         } catch (NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        StudentCard newStudent = new StudentCard(req.getParameter("name"));
-        req.setAttribute("student", studentDomain.createStudent(newStudent));
-        Group newGroup = groupDomain.findGroupByIdFull(groupId);
-        if (newGroup == null) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        StudentCard student = studentDomain.findStudentById(id);
+        if (student == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        groupDomain.addStudent(newGroup, newStudent);
-        doGet(req, resp);
+        Group oldGroup = groupDomain.findGroupByStudentFull(student);
+        groupDomain.removeStudent(oldGroup, student);
+        studentDomain.dismissStudent(student);
+
+        resp.sendRedirect(req.getContextPath() + "/students");
     }
 }

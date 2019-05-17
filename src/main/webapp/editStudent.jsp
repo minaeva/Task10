@@ -13,49 +13,71 @@
     <body>
         <div class ="container">
 
-            <form id="saveStudent" method = "post" action = "students">
+            <c:if test="${not empty student}"> <!--UPDATE STUDENT -->
+                <form id="saveStudent" method = "post" action = "student">
+                    <div class="column is-one-quarter">
+                      <label class="label">Name</label>
+                      <div class="control">
+                                <input class="input" type="text" id="name" name="name" value="${student.name}">
+                      </div>
+                    </div>
 
-                <div class="column is-one-quarter">
-                  <label class="label">Name</label>
-                  <div class="control">
-                        <c:if test="${not empty student}">
-                            <input type="hidden" name="action" value ="update">
-                            <input class="input" type="text" id="name" name="name" value="${student.name}">
-                        </c:if>
-                        <c:if test="${empty student}">
-                            <input type="hidden" name="action" value ="create">
-                            <input class="input" type="text" id="name" name="name">
-                        </c:if>
-                  </div>
-                </div>
-
-                <div class="column is-one-quarter">
-                    <label class="label">Group</label>
-                    <div class="control">
-                        <div class="select">
-                            <select name="group">
-                                <c:forEach var="group" items="${groups}">
-                                    <option value="${group.id}"
-                                        <c:if test="${not empty student}">
-                                            <c:if test="${group.id eq studentGroup.id}">selected="selected"</c:if>
-                                        </c:if>
-                                        >
-                                        ${group.name}
-                                    </option>
-                                </c:forEach>
-                            </select>
+                    <div class="column is-one-quarter">
+                        <label class="label">Group</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="group">
+                                    <c:forEach var="group" items="${groups}">
+                                        <option value="${group.id}"
+                                                <c:if test="${group.id eq studentGroup.id}">selected="selected"</c:if>
+                                            >
+                                            ${group.name}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="column is-one-quarter">
-                    <input type="hidden" name="id" value="${student.id}">
-
-                    <div class="control">
-                        <button class ="button" type="submit">Save</button>
+                    <div class="column is-one-quarter">
+                        <input type="hidden" name="id" value="${student.id}">
+                         <div class="control">
+                            <button class ="button" type="submit">Save</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </c:if>
+
+            <c:if test="${empty student}"> <!--CREATE STUDENT -->
+                <form id="saveStudent" method = "post" action = "students">
+                    <div class="column is-one-quarter">
+                      <label class="label">Name</label>
+                      <div class="control">
+                                <input class="input" type="text" id="name" name="name">
+                      </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <label class="label">Group</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="group">
+                                    <c:forEach var="group" items="${groups}">
+                                        <option value="${group.id}">${group.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column is-one-quarter">
+                        <div class="control">
+                         <input type="hidden" name="doPost" value="0">
+                           <button class ="button" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </c:if>
 
         </div>
     </body>

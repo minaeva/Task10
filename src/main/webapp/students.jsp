@@ -20,15 +20,13 @@
                               <div class="control">
                                 <form method = "get" action = "editStudent">
                                     <input type="hidden" name="id" value="${student.id}">
-                                    <input type="hidden" name="action" value ="update">
                                     <button type="submit" class="button is-small">Edit</button>
                                 </form>
                               </div>
                               <div class="control">
-                                <form method = "post" action = "students">
+                                <form method = "post" action = "deleteStudent">
                                     <input type="hidden" name="id" value="${student.id}">
-                                    <input type="hidden" name="action" value ="delete">
-                                    <button type="submit" class="button is-small">Delete</button>
+                                     <button type="submit" class="button is-small">Delete</button>
                                 </form>
                               </div>
                             </div>
@@ -37,8 +35,7 @@
                 </c:forEach>
             </table>
             <div class="control">
-                <form method = "get" action = "editStudent">
-                    <input type="hidden" name="action" value ="create"><br>
+                <form method = "get" action = "createStudent">
                     <button type="submit" class="button is-small">Create new</button>
                 </form>
             </div>

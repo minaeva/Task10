@@ -1,6 +1,8 @@
 package com.foxminded.servlets;
 
+import com.foxminded.domain.GroupDomain;
 import com.foxminded.domain.StudentDomain;
+import com.foxminded.model.Group;
 import com.foxminded.model.StudentCard;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import static com.foxminded.util.ParseDate.stringToLocalDate;
@@ -17,10 +21,12 @@ import static com.foxminded.util.ParseDate.stringToLocalDate;
 public class StudentServlet extends HttpServlet {
 
     private StudentDomain studentDomain;
+    private GroupDomain groupDomain;
 
     @Override
     public void init(ServletConfig config) {
         studentDomain = new StudentDomain();
+        groupDomain = new GroupDomain();
     }
 
     @Override
@@ -52,4 +58,38 @@ public class StudentServlet extends HttpServlet {
         req.getRequestDispatcher("student.jsp").forward(req, resp);
     }
 
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        int id = 0;
+        int groupId = 0;
+        try {
+            id = Integer.valueOf(req.getParameter("id"));
+            groupId = Integer.valueOf(req.getParameter("group"));
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        StudentCard student = studentDomain.findStudentById(id);
+        if (student == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        Group newGroup = groupDomain.findGroupByIdFull(groupId);
+        if (newGroup == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        Group oldGroup = groupDomain.findGroupByStudentFull(student);
+        if (oldGroup != null) {
+            groupDomain.removeStudent(oldGroup, student);
+        }
+        groupDomain.addStudent(newGroup, student);
+        student.setName(req.getParameter("name"));
+        studentDomain.updateStudent(student);
+
+        resp.sendRedirect(req.getContextPath() + "/students");
+    }
 }
