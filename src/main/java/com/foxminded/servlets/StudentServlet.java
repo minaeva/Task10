@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import static com.foxminded.util.ParseDate.stringToLocalDate;
@@ -82,11 +80,7 @@ public class StudentServlet extends HttpServlet {
             return;
         }
 
-        Group oldGroup = groupDomain.findGroupByStudentFull(student);
-        if (oldGroup != null) {
-            groupDomain.removeStudent(oldGroup, student);
-        }
-        groupDomain.addStudent(newGroup, student);
+        groupDomain.moveStudentToGroup(student, newGroup);
         student.setName(req.getParameter("name"));
         studentDomain.updateStudent(student);
 

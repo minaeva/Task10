@@ -35,6 +35,7 @@ public class StudentsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int groupId = 0;
+        Group newGroup = null;
         try {
             groupId = Integer.valueOf(req.getParameter("group"));
 
@@ -42,12 +43,13 @@ public class StudentsServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+
         StudentCard newStudent = new StudentCard(req.getParameter("name"));
         req.setAttribute("student", studentDomain.createStudent(newStudent));
-        Group newGroup = groupDomain.findGroupByIdFull(groupId);
-        if (newGroup == null) {
+        try {
+            newGroup = groupDomain.findGroupByIdFull(groupId);
+        } catch (IllegalArgumentException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
         }
         groupDomain.addStudent(newGroup, newStudent);
         doGet(req, resp);
