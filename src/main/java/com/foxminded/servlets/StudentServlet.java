@@ -1,5 +1,6 @@
 package com.foxminded.servlets;
 
+import com.foxminded.dao.DaoException;
 import com.foxminded.domain.GroupDomain;
 import com.foxminded.domain.StudentDomain;
 import com.foxminded.model.Group;
@@ -33,6 +34,7 @@ public class StudentServlet extends HttpServlet {
         int id = 0;
         LocalDate fromDate = null;
         LocalDate toDate = null;
+        StudentCard student;
 
         try {
             id = Integer.valueOf(req.getParameter("id"));
@@ -43,8 +45,9 @@ public class StudentServlet extends HttpServlet {
             return;
         }
 
-        StudentCard student = studentDomain.findStudentById(id);
-        if (student == null) {
+        try {
+            student = studentDomain.findStudentById(id);
+        } catch (DaoException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
@@ -53,6 +56,7 @@ public class StudentServlet extends HttpServlet {
         if (req.getParameterMap().containsKey("schedule")) {
             req.setAttribute("lessons", studentDomain.findScheduleInPeriod(student, fromDate, toDate));
         }
+
         req.getRequestDispatcher("student.jsp").forward(req, resp);
     }
 
@@ -61,6 +65,9 @@ public class StudentServlet extends HttpServlet {
             throws ServletException, IOException {
         int id = 0;
         int groupId = 0;
+        StudentCard student;
+        Group group;
+
         try {
             id = Integer.valueOf(req.getParameter("id"));
             groupId = Integer.valueOf(req.getParameter("group"));
@@ -69,20 +76,22 @@ public class StudentServlet extends HttpServlet {
             return;
         }
 
-        StudentCard student = studentDomain.findStudentById(id);
-        if (student == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        Group newGroup = groupDomain.findGroupByIdFull(groupId);
-        if (newGroup == null) {
+        try {
+            student = studentDomain.findStudentById(id);
+            group = groupDomain.findGroupById(groupId);
+        } catch (DaoException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        groupDomain.moveStudentToGroup(student, newGroup);
         student.setName(req.getParameter("name"));
-        studentDomain.updateStudent(student);
+        try {
+            studentDomain.updateStudent(student);
+            groupDomain.addStudent(student, group);
+        } catch (DaoException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
 
         resp.sendRedirect(req.getContextPath() + "/students");
     }

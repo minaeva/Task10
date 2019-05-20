@@ -1,9 +1,8 @@
 package com.foxminded.servlets;
 
+import com.foxminded.dao.DaoException;
 import com.foxminded.domain.GroupDomain;
 import com.foxminded.domain.StudentDomain;
-import com.foxminded.model.Group;
-import com.foxminded.model.StudentCard;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,20 +27,20 @@ public class DeleteStudentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = 0;
+
         try {
             id = Integer.valueOf(req.getParameter("id"));
         } catch (NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        StudentCard student = studentDomain.findStudentById(id);
-        if (student == null) {
+
+        try {
+            studentDomain.dismissStudentById(id);
+        } catch (DaoException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        Group oldGroup = groupDomain.findGroupByStudentFull(student);
-        groupDomain.removeStudent(oldGroup, student);
-        studentDomain.dismissStudent(student);
 
         resp.sendRedirect(req.getContextPath() + "/students");
     }

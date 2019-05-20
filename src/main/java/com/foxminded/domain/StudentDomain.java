@@ -37,6 +37,11 @@ public class StudentDomain {
         studentDao.delete(student);
     }
 
+    public void dismissStudentById(long id) {
+        StudentCard student = findStudentById(id);
+        dismissStudent(student);
+    }
+
     public List<Lesson> findScheduleInPeriod(StudentCard student, LocalDate fromDate, LocalDate toDate) {
         GroupDomain groupDomain = new GroupDomain();
         Group group = groupDomain.findGroupByStudent(student);

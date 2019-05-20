@@ -1,5 +1,6 @@
 package com.foxminded.servlets;
 
+import com.foxminded.dao.DaoException;
 import com.foxminded.domain.GroupDomain;
 import com.foxminded.domain.StudentDomain;
 import com.foxminded.model.StudentCard;
@@ -27,6 +28,8 @@ public class EditStudentServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = 0;
+        StudentCard student;
+
         try {
             id = Integer.valueOf(req.getParameter("id"));
         } catch (NumberFormatException e) {
@@ -34,16 +37,17 @@ public class EditStudentServlet extends HttpServlet {
             return;
         }
 
-        StudentCard student = studentDomain.findStudentById(id);
-        if (student == null) {
+        try {
+            student = studentDomain.findStudentById(id);
+        } catch (DaoException e) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
         req.setAttribute("student", student);
         req.setAttribute("studentGroup", groupDomain.findGroupByStudent(student));
-
         req.setAttribute("groups", groupDomain.findAll());
+
         req.getRequestDispatcher("editStudent.jsp").forward(req, resp);
     }
 }

@@ -22,11 +22,8 @@ public class GroupDomain {
         return groupDao.findById(id);
     }
 
-    public Group findGroupByIdFull(long id) throws IllegalArgumentException{
+    public Group findGroupByIdFull(long id) {
         Group group = groupDao.findById(id);
-        if (group == null) {
-            throw new IllegalArgumentException();
-        }
         group.setStudents(studentDao.findStudentsByGroupId(group.getId()));
         return group;
     }
@@ -57,22 +54,12 @@ public class GroupDomain {
         groupDao.delete(group);
     }
 
-    public Group addStudent(Group group, StudentCard student) {
-        group.getStudents().add(student);
+    public Group addStudent(StudentCard student, Group group) {
         return groupDao.addStudent(group.getId(), student);
     }
 
     public void removeStudent(Group group, StudentCard student) {
         groupDao.removeStudent(group.getId(), student);
         group.getStudents().remove(student);
-    }
-
-    public Group moveStudentToGroup(StudentCard student, Group newGroup) {
-        Group oldGroup = findGroupByStudentFull(student);
-        if (oldGroup != null) {
-            removeStudent(oldGroup, student);
-        }
-        addStudent(newGroup, student);
-        return newGroup;
     }
 }
