@@ -1,14 +1,12 @@
 package com.foxminded.domain;
 
 import com.foxminded.dao.DaoException;
-import com.foxminded.dao.DomainException;
 import com.foxminded.dao.GroupDao;
 import com.foxminded.dao.StudentDao;
 import com.foxminded.dao.impl.GroupDaoImpl;
 import com.foxminded.dao.impl.StudentDaoImpl;
 import com.foxminded.model.StudentCard;
 import com.foxminded.model.Group;
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 public class GroupDomain {
@@ -35,7 +33,7 @@ public class GroupDomain {
         }
 
         if (group == null) {
-            throw new EntityNotFoundException();
+            throw new DomainNotFoundException();
         }
         return group;
     }
@@ -49,7 +47,7 @@ public class GroupDomain {
     public Group findGroupByStudent(StudentCard student) {
         Group group = groupDao.findGroupByStudentId(student.getId());
         if (group == null) {
-            throw new EntityNotFoundException();
+            throw new DomainNotFoundException();
         }
         return group;
     }

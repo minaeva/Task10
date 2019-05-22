@@ -1,7 +1,6 @@
 package com.foxminded.domain;
 
 import com.foxminded.dao.DaoException;
-import com.foxminded.dao.DomainException;
 import com.foxminded.dao.StudentDao;
 import com.foxminded.dao.impl.StudentDaoImpl;
 import com.foxminded.model.Group;
@@ -10,7 +9,6 @@ import com.foxminded.model.StudentCard;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import javax.persistence.EntityNotFoundException;
 
 public class StudentDomain {
 
@@ -35,7 +33,7 @@ public class StudentDomain {
         }
 
         if (student == null) {
-            throw new EntityNotFoundException();
+            throw new DomainNotFoundException();
         }
         return student;
     }

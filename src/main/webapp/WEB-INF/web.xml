@@ -15,13 +15,18 @@
     </error-page>
 
     <error-page>
-        <exception-type>com.foxminded.domain.DomainException</exception-type >
-        <location>/error-500.jsp</location>
-    </error-page>
-
-    <error-page>
-        <exception-type>javax.persistence.EntityNotFoundException</exception-type>
+        <exception-type>com.foxminded.domain.DomainNotFoundException</exception-type>
         <location>/error-404.jsp</location>
     </error-page>
 
- </web-app>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error-400.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error-500.jsp</location>
+    </error-page>
+
+</web-app>

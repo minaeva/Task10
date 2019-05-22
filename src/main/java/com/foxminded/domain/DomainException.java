@@ -1,4 +1,4 @@
-package com.foxminded.dao;
+package com.foxminded.domain;
 
 public class DomainException extends RuntimeException {
 

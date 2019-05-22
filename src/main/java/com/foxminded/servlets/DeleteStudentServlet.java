@@ -26,6 +26,7 @@ public class DeleteStudentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         int id = Integer.valueOf(req.getParameter("id"));
+
         studentDomain.dismissStudentById(id);
         resp.sendRedirect(req.getContextPath() + "/students");
     }
