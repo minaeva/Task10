@@ -1,6 +1,5 @@
 package com.foxminded.servlets;
 
-import com.foxminded.dao.DaoException;
 import com.foxminded.domain.GroupDomain;
 import com.foxminded.domain.StudentDomain;
 import com.foxminded.model.Group;
@@ -35,31 +34,12 @@ public class StudentsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        int groupId = 0;
-        Group group = null;
-
-        try {
-            groupId = Integer.valueOf(req.getParameter("group"));
-        } catch (NumberFormatException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+        int groupId = Integer.valueOf(req.getParameter("group"));
 
         StudentCard student = new StudentCard(req.getParameter("name"));
-        try {
-            group = groupDomain.findGroupById(groupId);
-        } catch (DaoException e) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        try {
-            studentDomain.createStudent(student);
-            groupDomain.addStudent(student, group);
-        } catch (DaoException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        }
+        Group group = groupDomain.findGroupById(groupId);
+        studentDomain.createStudent(student);
+        groupDomain.addStudent(student, group);
 
         doGet(req, resp);
     }
