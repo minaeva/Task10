@@ -33,7 +33,7 @@ public class StudentDomain {
         }
 
         if (student == null) {
-            throw new DomainNotFoundException();
+            throw new EntityNotFoundException();
         }
         return student;
     }

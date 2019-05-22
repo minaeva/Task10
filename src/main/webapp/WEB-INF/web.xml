@@ -15,7 +15,7 @@
     </error-page>
 
     <error-page>
-        <exception-type>com.foxminded.domain.DomainNotFoundException</exception-type>
+        <exception-type>com.foxminded.domain.EntityNotFoundException</exception-type>
         <location>/error-404.jsp</location>
     </error-page>
 

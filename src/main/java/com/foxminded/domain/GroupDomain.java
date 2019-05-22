@@ -33,7 +33,7 @@ public class GroupDomain {
         }
 
         if (group == null) {
-            throw new DomainNotFoundException();
+            throw new EntityNotFoundException();
         }
         return group;
     }
@@ -47,7 +47,7 @@ public class GroupDomain {
     public Group findGroupByStudent(StudentCard student) {
         Group group = groupDao.findGroupByStudentId(student.getId());
         if (group == null) {
-            throw new DomainNotFoundException();
+            throw new EntityNotFoundException();
         }
         return group;
     }
