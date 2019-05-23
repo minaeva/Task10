@@ -13,32 +13,31 @@ public class DaoConnection {
     private static final Logger log = Logger.getLogger(DaoConnection.class);
 
     private static Connection connection;
+    private static Context context = null;
+    private static DataSource dataSource = null;
 
-    public static Connection getConnection() {
-        Context context;
+    private static void initContextAndDs() {
         try {
             log.trace("Initializing context");
             context = new InitialContext();
-            if (context == null) {
-                log.error("Initial context is null");
-                throw new DaoException("Initial context is null");
-            }
             log.trace("Initializing data source");
-            DataSource dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/postgres");
-            if (dataSource == null) {
-                log.error("Data source is null");
-                throw new DaoException("Data source is null");
-            }
-            try {
-                log.trace("Establishing postgres connection");
-                connection = dataSource.getConnection();
-            } catch (SQLException e) {
-                log.error("Cannot establish postgres connection ", e);
-                throw new DaoException("Cannot establish postgres connection ", e);
-            }
+            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/postgres");
         } catch (NamingException e) {
             log.error("Cannot initialize context or data source ", e);
             throw new DaoException("Cannot initialize context or data source ", e);
+        }
+    }
+
+    public static Connection getConnection() {
+        if ((context == null) || (dataSource == null)) {
+            initContextAndDs();
+        }
+        try {
+            log.trace("Establishing postgres connection");
+            connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            log.error("Cannot establish postgres connection ", e);
+            throw new DaoException("Cannot establish postgres connection ", e);
         }
         return connection;
     }
