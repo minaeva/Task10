@@ -12,33 +12,23 @@ public class DaoConnection {
 
     private static final Logger log = Logger.getLogger(DaoConnection.class);
 
-    private static Connection connection;
     private static DataSource dataSource = null;
 
-    private static Context initContext() {
-        Context context = null;
+    private static void initDataSource() {
         try {
             log.trace("Initializing context");
-            context = new InitialContext();
-        } catch (NamingException e) {
-            log.error("Cannot initialize context ", e);
-            throw new DaoException("Cannot initialize context ", e);
-        }
-        return context;
-    }
-
-    private static void initDataSource(Context context) {
-        try {
+            Context context = new InitialContext();
             log.trace("Initializing data source");
             dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/postgres");
         } catch (NamingException e) {
-            log.error("Cannot initialize data source ", e);
-            throw new DaoException("Cannot initialize data source ", e);
+            log.error("Cannot initialize context or data source ", e);
+            throw new DaoException("Cannot initialize context or data source ", e);
         }
     }
     public static Connection getConnection() {
+        Connection connection = null;
         if (dataSource == null) {
-            initDataSource(initContext());
+            initDataSource();
         }
         try {
             log.trace("Establishing postgres connection");
