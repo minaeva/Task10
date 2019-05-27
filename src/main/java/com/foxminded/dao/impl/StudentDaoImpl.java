@@ -1,19 +1,32 @@
 package com.foxminded.dao.impl;
 
+import com.foxminded.dao.DaoDataSource;
 import com.foxminded.dao.StudentDao;
 import com.foxminded.dao.DaoConnection;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.StudentCard;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class StudentDaoImpl implements StudentDao {
+
+    private DataSource dataSource;
+
+    public StudentDaoImpl() {
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext("spring/spring-context.xml");
+        DaoDataSource daoDataSource = context.getBean("daoDataSource", DaoDataSource.class);
+        dataSource = daoDataSource.receiveDataSource();
+    }
 
     public StudentCard create(StudentCard student) {
         String sql = "INSERT INTO students (name) VALUES (?);";
 
-        try (Connection connection = DaoConnection.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, student.getName());
             statement.executeUpdate();
@@ -31,7 +44,7 @@ public class StudentDaoImpl implements StudentDao {
         StudentCard student = null;
         String sql = "SELECT id, name FROM students WHERE id = ?";
 
-        try (Connection connection = DaoConnection.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -50,7 +63,7 @@ public class StudentDaoImpl implements StudentDao {
         List<StudentCard> result = null;
         String sql = "SELECT * FROM students ORDER BY id ASC;";
 
-        try (Connection connection = DaoConnection.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
             if (resultSet == null) {
@@ -74,7 +87,7 @@ public class StudentDaoImpl implements StudentDao {
         }
         String sql = "UPDATE students SET name = (?) WHERE id = (?)";
 
-        try (Connection connection = DaoConnection.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, student.getName());
             statement.setLong(2, student.getId());
@@ -88,7 +101,7 @@ public class StudentDaoImpl implements StudentDao {
     public void delete(StudentCard student) {
         String sql = "DELETE FROM students WHERE id = (?)";
 
-        try (Connection connection = DaoConnection.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, student.getId());
             statement.executeUpdate();
@@ -101,7 +114,8 @@ public class StudentDaoImpl implements StudentDao {
     public List<StudentCard> findStudentsByGroupId(long groupId) {
         List<StudentCard> result = null;
         String sql = "SELECT id, name FROM students WHERE group_id = (?)";
-        try (Connection connection = DaoConnection.getConnection();
+
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, groupId);
             ResultSet resultSet = statement.executeQuery();
@@ -120,4 +134,3 @@ public class StudentDaoImpl implements StudentDao {
         return result;
     }
 }
-

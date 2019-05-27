@@ -25,6 +25,7 @@ public class DaoConnection {
             throw new DaoException("Cannot initialize context or data source ", e);
         }
     }
+
     public static Connection getConnection() {
         Connection connection = null;
         if (dataSource == null) {
