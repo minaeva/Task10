@@ -3,9 +3,8 @@ package com.foxminded.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import javax.sql.DataSource;
 
 public class DaoConnection {
@@ -15,15 +14,9 @@ public class DaoConnection {
     private static DataSource dataSource = null;
 
     private static void initDataSource() {
-        try {
-            log.trace("Initializing context");
-            Context context = new InitialContext();
-            log.trace("Initializing data source");
-            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/postgres");
-        } catch (NamingException e) {
-            log.error("Cannot initialize context or data source ", e);
-            throw new DaoException("Cannot initialize context or data source ", e);
-        }
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring/spring-context.xml");
+        DaoDataSource daoDataSource = context.getBean("daoDataSource", DaoDataSource.class);
+        dataSource = daoDataSource.receiveDataSource();
     }
 
     public static Connection getConnection() {
