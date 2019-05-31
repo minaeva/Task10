@@ -1,123 +1,98 @@
 package com.foxminded.dao.impl;
 
-import com.foxminded.dao.DaoConnection;
+import com.foxminded.util.HibernateUtil;
 import com.foxminded.dao.StudentDao;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.StudentCard;
-import java.sql.*;
-import java.util.ArrayList;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
+@Repository
 public class StudentDaoImpl implements StudentDao {
 
     public StudentCard create(StudentCard student) {
-        String sql = "INSERT INTO students (name) VALUES (?);";
-
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, student.getName());
-            statement.executeUpdate();
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                generatedKeys.next();
-                student.setId(generatedKeys.getLong("id"));
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(student);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-        } catch (SQLException e) {
             throw new DaoException("Cannot create student " + student.getName(), e);
         }
         return student;
     }
 
     public StudentCard findById(final long id) {
-        StudentCard student = null;
-        String sql = "SELECT id, name FROM students WHERE id = ?";
-
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    student = new StudentCard(resultSet.getString("name"));
-                    student.setId(resultSet.getInt("id"));
-                }
-            }
-        } catch (SQLException e) {
+        StudentCard student;
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            student = session.get(StudentCard.class, id);
+            transaction.commit();
+        } catch (Exception e) {
             throw new DaoException("Cannot find student with id " + id, e);
         }
         return student;
     }
 
     public List<StudentCard> findAll() {
-        List<StudentCard> result = null;
-        String sql = "SELECT * FROM students ORDER BY id ASC;";
-
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet == null) {
-                return null;
-            }
-            result = new ArrayList<>();
-            while (resultSet.next()) {
-                StudentCard student = new StudentCard(resultSet.getString("name"));
-                student.setId(resultSet.getInt("id"));
-                result.add(student);
-            }
-        } catch (SQLException e) {
-            throw new DaoException("Cannot find all students ", e);
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("from students s order by s.id asc", StudentCard.class).list();
         }
-        return result;
     }
 
     public StudentCard update(final StudentCard student) {
-        if ((student.getId() == -1) || (student.getId() == 0)){
-            throw new DaoException("Updating student failed, student should be created before update");
-        }
-        String sql = "UPDATE students SET name = (?) WHERE id = (?)";
-
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, student.getName());
-            statement.setLong(2, student.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("update students set name =:n where id=:i");
+            query.setParameter("n", student.getName());
+            query.setParameter("i", student.getId());
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             throw new DaoException("Cannot update student " + student.getName(), e);
         }
         return student;
     }
 
     public void delete(StudentCard student) {
-        String sql = "DELETE FROM students WHERE id = (?)";
-
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, student.getId());
-            statement.executeUpdate();
-            student.setId(-1);
-        } catch (SQLException e) {
-            throw new DaoException("Cannot delete student ", e);
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("delete from students where id=:i");
+            query.setParameter("i", student.getId());
+            query.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new DaoException("Cannot delete student " + student.getName(), e);
         }
     }
 
     public List<StudentCard> findStudentsByGroupId(long groupId) {
-        List<StudentCard> result = null;
-        String sql = "SELECT id, name FROM students WHERE group_id = (?)";
-
-        try (Connection connection = DaoConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, groupId);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet == null) {
-                return null;
-            }
-            result = new ArrayList<>();
-            while (resultSet.next()) {
-                StudentCard student = new StudentCard(resultSet.getString("name"));
-                student.setId(resultSet.getInt("id"));
-                result.add(student);
-            }
-        } catch (SQLException e) {
+         List<StudentCard> result = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query query = session.createQuery("from students s order by s.id asc");
+//            Query query = session.createQuery("from students s where s.group_id=:i order by s.id asc");
+//            query.setParameter("i", groupId);
+            result = query.list();
+            System.out.println(result);
+        } catch (Exception e) {
             throw new DaoException("Cannot find all students of group with id " + groupId, e);
         }
         return result;
     }
+
 }

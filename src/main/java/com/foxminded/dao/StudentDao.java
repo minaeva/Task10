@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface StudentDao extends CrudDao<StudentCard> {
 
-    List<StudentCard> findStudentsByGroupId(long groupId);
+      List<StudentCard> findStudentsByGroupId(long groupId);
 }

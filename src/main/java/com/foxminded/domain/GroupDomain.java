@@ -29,7 +29,7 @@ public class GroupDomain {
         try {
             group = groupDao.findById(id);
         } catch (DaoException e) {
-            throw new DomainException("Cannot create group " + group, e);
+            throw new DomainException("Cannot find group with id " + id, e);
         }
 
         if (group == null) {
