@@ -2,29 +2,36 @@ package com.foxminded.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
-@Entity(name = "students")
+@Entity
 @Table(name = "students")
 public class StudentCard {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(generator = "student_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "student_id_seq",
+            sequenceName = "student_id_seq",
+            allocationSize = 50
+    )
     private long id;
 
-    @Column(name = "name", unique = false, nullable = false, length = 100)
+    @Column(name = "name")
     private String name;
 
-/*
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
-*/
 
     public StudentCard(String name){
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Student [id=" + id + ", name=" + name + "]";
     }
 }

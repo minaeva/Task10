@@ -3,7 +3,6 @@ package com.foxminded.domain;
 import com.foxminded.dao.AuditoriumDao;
 import com.foxminded.dao.impl.AuditoriumDaoImpl;
 import com.foxminded.model.Auditorium;
-
 import java.util.List;
 
 public class  AuditoriumDomain {

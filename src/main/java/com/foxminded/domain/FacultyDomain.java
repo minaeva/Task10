@@ -3,7 +3,6 @@ package com.foxminded.domain;
 import com.foxminded.dao.*;
 import com.foxminded.dao.impl.*;
 import com.foxminded.model.*;
-
 import java.util.List;
 
 public class FacultyDomain {

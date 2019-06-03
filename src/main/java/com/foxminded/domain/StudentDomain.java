@@ -2,7 +2,7 @@ package com.foxminded.domain;
 
 import com.foxminded.dao.DaoException;
 import com.foxminded.dao.StudentDao;
-import com.foxminded.dao.impl.StudentDaoImpl;
+import com.foxminded.dao.hibernate.StudentDaoHibernate;
 import com.foxminded.model.Group;
 import com.foxminded.model.Lesson;
 import com.foxminded.model.StudentCard;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class StudentDomain {
 
-    private StudentDao studentDao = new StudentDaoImpl();
+    private StudentDao studentDao = new StudentDaoHibernate();
 
     public StudentCard createStudent(StudentCard student) {
         StudentCard createdStudent = null;

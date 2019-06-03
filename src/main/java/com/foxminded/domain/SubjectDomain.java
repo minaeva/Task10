@@ -3,7 +3,6 @@ package com.foxminded.domain;
 import com.foxminded.dao.SubjectDao;
 import com.foxminded.dao.impl.SubjectDaoImpl;
 import com.foxminded.model.Subject;
-
 import java.util.List;
 
 public class SubjectDomain {

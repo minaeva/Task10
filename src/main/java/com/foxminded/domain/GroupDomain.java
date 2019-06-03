@@ -3,8 +3,8 @@ package com.foxminded.domain;
 import com.foxminded.dao.DaoException;
 import com.foxminded.dao.GroupDao;
 import com.foxminded.dao.StudentDao;
+import com.foxminded.dao.hibernate.StudentDaoHibernate;
 import com.foxminded.dao.impl.GroupDaoImpl;
-import com.foxminded.dao.impl.StudentDaoImpl;
 import com.foxminded.model.StudentCard;
 import com.foxminded.model.Group;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class GroupDomain {
 
     private GroupDao groupDao = new GroupDaoImpl();
-    private StudentDao studentDao = new StudentDaoImpl();
+    private StudentDao studentDao = new StudentDaoHibernate();
 
     public Group createGroup(Group group) {
         Group createdGroup = null;

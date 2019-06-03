@@ -8,23 +8,33 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
-@Entity(name = "groups")
+@Entity
 @Table(name = "groups")
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @GeneratedValue(generator = "group_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(
+            name = "group_id_seq",
+            sequenceName = "group_id_seq",
+            allocationSize = 50
+    )
     private long id;
 
-    @Column(name = "name", unique = false, nullable = false, length = 100)
+    @Column(name = "name")
     private String name;
 
     @EqualsAndHashCode.Exclude
-//    @OneToMany(mappedBy="group")
+    @OneToMany
+    @JoinColumn(name = "group_id")
     private List<StudentCard> students = new ArrayList<>();
 
     public Group(String name){
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Group [id=" + id + ", name=" + name + "]";
     }
 }
