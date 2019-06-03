@@ -12,11 +12,7 @@ public class StudentCard {
 
     @Id
     @GeneratedValue(generator = "student_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(
-            name = "student_id_seq",
-            sequenceName = "student_id_seq",
-            allocationSize = 50
-    )
+    @SequenceGenerator(name = "student_id_seq", sequenceName = "student_id_seq")
     private long id;
 
     @Column(name = "name")
