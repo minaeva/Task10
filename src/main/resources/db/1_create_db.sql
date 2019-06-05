@@ -1,5 +1,3 @@
 CREATE DATABASE university_db ENCODING 'UTF-8';
 CREATE USER dev with password 'admin';
 GRANT ALL PRIVILEGES ON DATABASE university_db TO dev;
-CREATE SEQUENCE public.student_id_seq INCREMENT 50 START 1 MINVALUE 1;
-CREATE SEQUENCE public.group_id_seq INCREMENT 50 START 1 MINVALUE 1;

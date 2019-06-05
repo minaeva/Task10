@@ -14,7 +14,7 @@ public class Group {
 
     @Id
     @GeneratedValue(generator = "group_id_seq", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "group_id_seq", sequenceName = "group_id_seq")
+    @SequenceGenerator(name = "group_id_seq", sequenceName = "groups_id_seq")
     private long id;
 
     @Column(name = "name")

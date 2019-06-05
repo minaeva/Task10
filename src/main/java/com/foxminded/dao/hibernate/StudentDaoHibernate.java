@@ -4,20 +4,24 @@ import com.foxminded.util.HibernateUtil;
 import com.foxminded.dao.StudentDao;
 import com.foxminded.dao.DaoException;
 import com.foxminded.model.StudentCard;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import java.util.List;
 
 public class StudentDaoHibernate implements StudentDao {
 
+    private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
     public StudentCard create(StudentCard student) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.save(student);
             transaction.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -29,11 +33,11 @@ public class StudentDaoHibernate implements StudentDao {
     public StudentCard findById(final long id) {
         StudentCard student;
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             student = session.get(StudentCard.class, id);
             transaction.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             throw new DaoException("Cannot find student with id " + id, e);
         }
         return student;
@@ -47,14 +51,14 @@ public class StudentDaoHibernate implements StudentDao {
 
     public StudentCard update(final StudentCard student) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Query query = session.createQuery("update StudentCard set name =:nameValue where id=:idValue");
-            query.setParameter("nameValue", student.getName());
-            query.setParameter("idValue", student.getId());
+            Query query = session.createQuery("update StudentCard set name =:name where id=:id");
+            query.setParameter("name", student.getName());
+            query.setParameter("id", student.getId());
             query.executeUpdate();
             transaction.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -65,13 +69,13 @@ public class StudentDaoHibernate implements StudentDao {
 
     public void delete(StudentCard student) {
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            Query query = session.createQuery("delete from StudentCard where id=:idValue");
-            query.setParameter("idValue", student.getId());
+            Query query = session.createQuery("delete from StudentCard where id=:id");
+            query.setParameter("id", student.getId());
             query.executeUpdate();
             transaction.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -81,12 +85,12 @@ public class StudentDaoHibernate implements StudentDao {
 
     public List<StudentCard> findStudentsByGroupId(long groupId) {
         List<StudentCard> result = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-             Query query = session.createQuery("from StudentCard s where s.group.id=:idValue order by s.id asc");
-            query.setParameter("idValue", groupId);
+        try (Session session = sessionFactory.openSession()) {
+             Query query = session.createQuery("from StudentCard s where s.group.id=:id order by s.id asc");
+            query.setParameter("id", groupId);
             result = query.list();
             System.out.println(result);
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             throw new DaoException("Cannot find all students of group with id " + groupId, e);
         }
         return result;
